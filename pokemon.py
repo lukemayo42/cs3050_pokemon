@@ -2,8 +2,9 @@ class pokemon:
 
     """
     constructor for pokemon class 
+    attributes of class
     name - name of pokemon - string
-    types - types of pokemon - list of strings - should type be own object
+    types - types of pokemon - list of strings - should type be own class?
     moves - list of move objects - 
     max_hlth - max health of pokemon - int
     curr_hlth - current health of pokemon - int
@@ -13,7 +14,7 @@ class pokemon:
     curr_def - curr defense stat of the pokemon - int 
     base_spd - base speed of the pokemon - int
     curr_spd - current spd of the pokemon - int
-    is_fanited - flag whether or not  apokemon is faineted or not - bool
+    is_fainted - flag whether or not  apokemon is faineted or not - bool
     
     """
     def __init__(self, name, types, moves, max_hlth, base_atk, base_def, base_spd):
@@ -78,7 +79,7 @@ class pokemon:
     def set_curr_spd(self, new_spd):
         self.curr_spd = new_spd
 
-    
+    #add health and remove health functions
     def add_health(self, hlth):
         self.curr_hlth += hlth
         if self.curr_hlth > self.max_hlth:
@@ -89,6 +90,27 @@ class pokemon:
         if self.curr_hlth < 0:
             self.curr_hlth = 0
             self.is_fainted = True
+
+
+    #print functions!!!! - need to know how gui wants text info
+            
+
+    #after wrting move class - write method to get names of moves in list instead of just returning list
+    
+
+    #attack takes in another pokemon and the pokemons move, and does damage to the pokemon, 
+    #take in pokemon as reference to orignal object and do damage to that pokemon
+    #might not work becuase you may have to specify the move
+    #have to write move class before writing this method
+    def attack(enemy_pokemon, move):
+        enemy_def = enemy_pokemon.get_curr_def()
+        
+        pass
+
+    #may want to move out of pokemon class
+    #takes in 
+    def calculate_damage(user_atk, enemy_def, move_power)
+    
 
     
 

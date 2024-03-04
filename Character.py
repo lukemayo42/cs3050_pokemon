@@ -63,6 +63,13 @@ class Character:
             if self.pokemon_list[i] == pokemon:
                 self.pokemon_list.remove(i)
 
+    # Function that allows user to reorder the list of pokemon they have
+    def swap_pokemon(self, pokemon1_index, pokemon2_index):
+        pokemon_temp = self.pokemon_list[pokemon1_index]
+        self.pokemon_list[pokemon1_index] = self.pokemon_list[pokemon2_index]
+        self.pokemon_list[pokemon2_index] = pokemon_temp
+
+
     # Function that adds an item to a characters item_list
     def add_item(self, item, amount):
         if item in self.item_bag:

@@ -2,7 +2,18 @@ import arcade
 from arcade import load_texture
 from arcade.gui import UIManager
 from arcade.gui.widgets import UITextArea, UIInputText, UITexturePane
+import os
+from enum import Enum
 
+
+
+
+class State(Enum):
+    Start = 1
+    World = 2
+    Battle = 3
+
+state = State.Start
 
 SPRITE_SCALING = 3.5
 OPPONENT_SPRITE_SCALING = 3
@@ -37,8 +48,12 @@ class PokemonGame(arcade.Window):
 
     def __init__(self, width, height, title):
 
+        state = State.Battle
         # Call the parent class initializer
         super().__init__(width, height, title)
+
+        # Background image will be stored in this variable
+        self.background = None
 
         # Variables that will hold sprite lists
         self.player_list = None
@@ -82,7 +97,7 @@ class PokemonGame(arcade.Window):
                                width=400,
                                height=150,
                                text="FIGHT BAG\nPOKeMON RUN",
-                               font_size=25,
+                               font_size=50,
                                text_color=(0, 0, 0, 255))
         self.manager.add(
             UITexturePane(
@@ -109,8 +124,11 @@ class PokemonGame(arcade.Window):
 
         # Sprite lists
         self.player_list = arcade.SpriteList()
+        # import os
+        # print("test")
+        # print(os.getcwd())
         # Set up the player
-        self.player_sprite = Player("sprites/bulbasaur-back.png", SPRITE_SCALING)
+        self.player_sprite = Player("../cs3050_pokemon/sprites/bulbasaur-back.png", SPRITE_SCALING)
         self.player_sprite2 = Player("../cs3050_pokemon/sprites/charizard-front.png", OPPONENT_SPRITE_SCALING)
         self.player_sprite.center_x = 200
         self.player_sprite.center_y = 235
@@ -118,6 +136,8 @@ class PokemonGame(arcade.Window):
         self.player_sprite2.center_y = 725
         self.player_list.append(self.player_sprite)
         self.player_list.append(self.player_sprite2)
+
+        self.background = arcade.load_texture("../cs3050_pokemon/images/fight-background.png")
 
     def on_draw(self):
         """ Render the screen. """
@@ -127,6 +147,11 @@ class PokemonGame(arcade.Window):
 
         # Draw all the sprites.
         self.manager.draw()
+
+        # Draw the background texture
+        arcade.draw_lrwh_rectangle_textured(0, 150,
+                                            SCREEN_WIDTH, SCREEN_HEIGHT,
+                                            self.background)
 
         self.player_list.draw()
     
@@ -154,34 +179,36 @@ class PokemonGame(arcade.Window):
     def on_key_press(self, key, modifiers):
         """Listen for a key press from user """
 
-        if key == arcade.key.UP:
-            self.up_pressed = True
-            self.update_player_speed()
-        elif key == arcade.key.DOWN:
-            self.down_pressed = True
-            self.update_player_speed()
-        elif key == arcade.key.LEFT:
-            self.left_pressed = True
-            self.update_player_speed()
-        elif key == arcade.key.RIGHT:
-            self.right_pressed = True
-            self.update_player_speed()
+        if(state == State.World):
+            if key == arcade.key.UP:
+                self.up_pressed = True
+                self.update_player_speed()
+            elif key == arcade.key.DOWN:
+                self.down_pressed = True
+                self.update_player_speed()
+            elif key == arcade.key.LEFT:
+                self.left_pressed = True
+                self.update_player_speed()
+            elif key == arcade.key.RIGHT:
+                self.right_pressed = True
+                self.update_player_speed()
 
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
 
-        if key == arcade.key.UP:
-            self.up_pressed = False
-            self.update_player_speed()
-        elif key == arcade.key.DOWN:
-            self.down_pressed = False
-            self.update_player_speed()
-        elif key == arcade.key.LEFT:
-            self.left_pressed = False
-            self.update_player_speed()
-        elif key == arcade.key.RIGHT:
-            self.right_pressed = False
-            self.update_player_speed()
+        if(state == State.World):
+            if key == arcade.key.UP:
+                self.up_pressed = False
+                self.update_player_speed()
+            elif key == arcade.key.DOWN:
+                self.down_pressed = False
+                self.update_player_speed()
+            elif key == arcade.key.LEFT:
+                self.left_pressed = False
+                self.update_player_speed()
+            elif key == arcade.key.RIGHT:
+                self.right_pressed = False
+                self.update_player_speed()
 
 
 

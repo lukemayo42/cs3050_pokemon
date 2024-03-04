@@ -16,6 +16,7 @@ class State(Enum):
 state = State.Start
 
 SPRITE_SCALING = 3.5
+OPPONENT_SPRITE_SCALING = 3
 MOVEMENT_SPEED = 5
 
 SCREEN_WIDTH = 800
@@ -79,7 +80,8 @@ class PokemonGame(arcade.Window):
                                y=0,
                                width=400,
                                height=150,
-                               text="TEST TEST TEST",
+                               text="What will Bulbasaur do?",
+                               font_size=20,
                                text_color=(0, 0, 0, 255))
         self.manager.add(
             UITexturePane(
@@ -127,9 +129,13 @@ class PokemonGame(arcade.Window):
         # print(os.getcwd())
         # Set up the player
         self.player_sprite = Player("../cs3050_pokemon/sprites/bulbasaur-back.png", SPRITE_SCALING)
+        self.player_sprite2 = Player("../cs3050_pokemon/sprites/charizard-front.png", OPPONENT_SPRITE_SCALING)
         self.player_sprite.center_x = 200
         self.player_sprite.center_y = 235
+        self.player_sprite2.center_x = 600
+        self.player_sprite2.center_y = 725
         self.player_list.append(self.player_sprite)
+        self.player_list.append(self.player_sprite2)
 
         self.background = arcade.load_texture("../cs3050_pokemon/images/fight-background.png")
 

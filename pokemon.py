@@ -109,7 +109,7 @@ class pokemon:
 
     #may want to move out of pokemon class
     #takes in 
-    def calculate_damage(user_atk, enemy_def, move_power)
+    #def calculate_damage(user_atk, enemy_def, move_power)
     
 
     

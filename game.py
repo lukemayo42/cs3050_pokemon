@@ -70,7 +70,6 @@ class PokemonGame(arcade.Window):
         # Set the background color
 
         ############ TEXT BOX EXAMPLE
-        super().__init__(800, 600, "Scrollable Text", resizable=True)
         self.manager = UIManager()
         self.manager.enable()
         arcade.set_background_color(arcade.color.LIGHT_SEA_GREEN)

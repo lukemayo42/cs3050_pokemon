@@ -5,7 +5,7 @@ class pokemon:
     attributes of class
     name - name of pokemon - string
     types - types of pokemon - list of strings - should type be own class?
-    moves - list of move objects - 
+    moves - list of move objects 
     max_hlth - max health of pokemon - int
     curr_hlth - current health of pokemon - int
     base_atk - base attack stat of pokemon - int
@@ -14,8 +14,7 @@ class pokemon:
     curr_def - curr defense stat of the pokemon - int 
     base_spd - base speed of the pokemon - int
     curr_spd - current spd of the pokemon - int
-    is_fainted - flag whether or not  apokemon is faineted or not - bool
-    
+    is_fainted - flag whether or not  a pokemon is faineted or not - bool
     """
     def __init__(self, name, types, moves, max_hlth, base_atk, base_def, base_spd):
         #current stats are set to base stats 
@@ -66,6 +65,9 @@ class pokemon:
     def get_is_fainted(self):
         return self.is_fainted
     
+    def get_curr_pkm(self):
+        return self.pokemon[0]
+    
     #setters
     def set_curr_hlth(self, new_hlth):
         self.curr_hlth = new_hlth
@@ -91,6 +93,12 @@ class pokemon:
             self.curr_hlth = 0
             self.is_fainted = True
 
+    def chk_party(self):
+        valid = False
+        for pkm in self.pokemon:
+            if not pkm.get_is_fainted():
+                valid = True
+        return valid
 
     #print functions!!!! - need to know how gui wants text info
             

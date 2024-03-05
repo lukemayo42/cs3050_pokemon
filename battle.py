@@ -10,7 +10,6 @@ import random
 def battle(player, enemy):
     #send moves and items and pokemon to gui/controller
 
-    btn_info = get_btn_info()
     #while loop to check if both players have pokemon left
     while(player.chk_party() and enemy.chk_party()):
         player_pkm = player.get_curr_pkm()
@@ -18,15 +17,29 @@ def battle(player, enemy):
     #loop to check if pokemon are fainted, throw out first pokemon
         #spd_flag = chk_spd(player_pkm, enemy_pkm)
         if chk_spd(player_pkm, enemy_pkm):
-            btn_info = get_btn_info()
+            # btn_info = get_btn_info()
             player_action = player_turn(player, enemy)
-            if enemy.chk_party():
+            if not enemy.chk_party():
+                # tell gui player wins
+                break
+            elif enemy.get_curr_pkm().get_is_fainted():
+                # force enemy to switch pokemon
                 pass
-            enemy_action = enemy_turn(enemy, player)
+            else:
+                enemy_action = enemy_turn(enemy, player)
+                # send to gui
         else:
             enemy_action = enemy_turn(enemy, player)
-            btn_info = get_btn_info()
-            player_action = player_turn(player, enemy)
+            if not player.chk_party():
+                # tell gui enemy wins
+                break
+            elif player.get_curr_pkm().get_is_fainted():
+                # force player to switch pokemon
+                pass
+            else:
+                # btn_info = get_btn_info()
+                player_action = player_turn(enemy, player)
+                # send to gui
 
     #check speed to see which pokemon goes first
     #get back choice from gui/controller
@@ -137,6 +150,6 @@ def roll_accuracy(move):
 
 
 
-
-
+def main():
+    pass
 

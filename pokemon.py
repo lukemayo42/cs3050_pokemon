@@ -65,9 +65,6 @@ class pokemon:
     def get_is_fainted(self):
         return self.is_fainted
     
-    def get_curr_pkm(self):
-        return self.pokemon[0]
-    
     #setters
     def set_curr_hlth(self, new_hlth):
         self.curr_hlth = new_hlth

@@ -2,44 +2,107 @@ from pokemon import pokemon
 from move import move
 from Character import Character
 import random
+import pokemon_objects
 
 #make item class later
 #we are assuming that we are receiving the type of button that is pressed (pokemon, move, item) and the specific move/pokemon/item that is used/switched
 #please write a method in the button class which we can call that will give us a list containing the type of button that 
 
-def battle(player, enemy):
-    #send moves and items and pokemon to gui/controller
+# def battle(player, enemy, btn_info):
+#     #while loop to check if both players have pokemon left
+#     if (player.chk_party() and enemy.chk_party()):
+#         player_pkm = player.get_curr_pkm()
+#         enemy_pkm = enemy.get_curr_pkm()
+#     #loop to check if pokemon are fainted, throw out first pokemon
+#         #spd_flag = chk_spd(player_pkm, enemy_pkm)
+#         if chk_spd(player_pkm, enemy_pkm):
+#             player_action = player_turn(player, enemy, btn_info)
+#             if not enemy.chk_party():
+#                 # tell gui player wins
+#                 break
+#             elif enemy.get_curr_pkm().get_is_fainted():
+#                 # force enemy to switch pokemon
+#                 pass
+#             else:
+#                 enemy_action = enemy_turn(enemy, player)
+#                 # send to gui
+#         else:
+#             enemy_action = enemy_turn(enemy, player)
+#             if not player.chk_party():
+#                 # tell gui enemy wins
+#                 break
+#             elif player.get_curr_pkm().get_is_fainted():
+#                 # force player to switch pokemon
+#                 pass
+#             else:
+#                 # btn_info = get_btn_info()
+#                 player_action = player_turn(enemy, player)
+#                 # send to gui
 
-    #while loop to check if both players have pokemon left
-    while(player.chk_party() and enemy.chk_party()):
-        player_pkm = player.get_curr_pkm()
-        enemy_pkm = enemy.get_curr_pkm()
-    #loop to check if pokemon are fainted, throw out first pokemon
-        #spd_flag = chk_spd(player_pkm, enemy_pkm)
-        if chk_spd(player_pkm, enemy_pkm):
-            # btn_info = get_btn_info()
-            player_action = player_turn(player, enemy)
-            if not enemy.chk_party():
-                # tell gui player wins
-                break
-            elif enemy.get_curr_pkm().get_is_fainted():
-                # force enemy to switch pokemon
-                pass
-            else:
-                enemy_action = enemy_turn(enemy, player)
-                # send to gui
+# Battle function without while loop
+def battle(player, enemy, btn_info):
+    player_pkm = player.get_curr_pkm()
+    enemy_pkm = enemy.get_curr_pkm()
+    if chk_spd(player_pkm, enemy_pkm):
+        player_action = player_turn(player, enemy, btn_info)
+        # If the player took a fight action and the move hit:
+        if player_action:
+            # Update Gui
+            print("the move hit")
+        else:
+            # Update Gui
+            print("The move didn't hit")
+        if not enemy.chk_party():
+            # tell gui player wins
+            pass
+        elif enemy.get_curr_pkm().get_is_fainted():
+            # force enemy to switch pokemon
+            pass
         else:
             enemy_action = enemy_turn(enemy, player)
+            if enemy_action:
+                # Update Gui
+                print("the move hit")
+            else:
+                # Update Gui
+                print("The move didn't hit")
             if not player.chk_party():
                 # tell gui enemy wins
-                break
+                pass
             elif player.get_curr_pkm().get_is_fainted():
                 # force player to switch pokemon
                 pass
+            # send to gui
+    else:
+        enemy_action = enemy_turn(enemy, player)
+        if enemy_action:
+            # Update Gui
+            print("the move hit")
+        else:
+            # Update Gui
+            print("The move didn't hit")
+        if not player.chk_party():
+            # tell gui enemy wins
+            pass
+        elif player.get_curr_pkm().get_is_fainted():
+            # force player to switch pokemon
+            pass
+        else:
+            player_action = player_turn(player, enemy)
+            if player_action:
+                # Update Gui
+                print("the move hit")
             else:
-                # btn_info = get_btn_info()
-                player_action = player_turn(enemy, player)
-                # send to gui
+                # Update Gui
+                print("The move didn't hit")
+            if not enemy.chk_party():
+                # tell gui player wins
+                pass
+            elif enemy.get_curr_pkm().get_is_fainted():
+                # force enemy to switch pokemon
+                pass
+            # send to gui
+
 
     #check speed to see which pokemon goes first
     #get back choice from gui/controller
@@ -151,15 +214,7 @@ def roll_accuracy(move):
 
 
 def main():
-    charizard_moves = [move("Flamethrower", "Fire", 90), move("Dragon Claw", "Dragon", 80),
-                       move("Air Slash", "Flying", 75), move("Earthquake", "Ground", 100)]
-    charizard = pokemon("Charizard", ["Fire", "Flying"], charizard_moves, 78, 84, 78, 100)
-
-    snorlax_moves = [move("Body Slam", "Normal", 85), move("Earthquake", "Ground", 100), move("Rest", "Psychic", 0),
-                     move("Sleep Talk", "Normal", 0)]
-    snorlax = pokemon("Snorlax", ["Normal"], snorlax_moves, 160, 110, 65, 30)
-
-    pokemon_bag = [charizard, snorlax]
+    pokemon_bag = [pokemon_objects.bulbasaur, pokemon_objects.charazard]
 
     trainer1 = Character("Ash", pokemon_bag, [], 1000,
                               "I'm on a journey to become a Pokemon Master!")

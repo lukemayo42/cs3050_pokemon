@@ -241,22 +241,26 @@ class PokemonGame(arcade.Window):
     def move_1_go(self, event):
         print("accessing first move")
         self.update_background()
-        battle(self.player, self.enemy, self.player.get_curr_pkm().get_moves()[0])
+        btn_info = ["move", self.player.get_curr_pkm().get_moves()[0]]
+        battle(self.player, self.enemy, btn_info)
 
     def move_2_go(self, event):
         print("accessing second move")
         self.update_background()
-        battle(self.player, self.enemy, self.player.get_curr_pkm().get_moves()[1])
+        btn_info = ["move", self.player.get_curr_pkm().get_moves()[1]]
+        battle(self.player, self.enemy, btn_info)
 
     def move_3_go(self, event):
         print("accessing third move")
         self.update_background()
-        battle(self.player, self.enemy, self.player.get_curr_pkm().get_moves()[2])
+        btn_info = ["move", self.player.get_curr_pkm().get_moves()[2]]
+        battle(self.player, self.enemy, btn_info)
 
     def move_4_go(self, event):
         print("accessing fourth move")
         self.update_background()
-        battle(self.player, self.enemy, self.player.get_curr_pkm().get_moves()[3])
+        btn_info = ["move", self.player.get_curr_pkm().get_moves()[3]]
+        battle(self.player, self.enemy, btn_info)
 
     def update_player_speed(self):
 

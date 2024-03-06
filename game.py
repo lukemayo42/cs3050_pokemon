@@ -6,9 +6,10 @@ from arcade.gui.widgets import UITextArea, UIInputText, UITexturePane
 import os
 from enum import Enum
 from battle import battle
-import Character
+from Character import Character
 from pokemon import pokemon
 from move import move
+import pokemon_objects
 
 
 
@@ -335,8 +336,24 @@ class PokemonGame(arcade.Window):
 
 def main():
     """ Main function """
-    
-    
+    # Create Charizard
+    # type6 = ["Fire", "Flying"]
+    # charazard_moves = [move("Flamethrower", "Fire", 90, 100, "Fire", True), move("Dragon Claw", "Dragon Claw", 80, 100, "Dragon", True),
+    #                     move("Air Slash", "Flying", 75, 95, "Flying", True), move("Inferno", "Fire", 100, 50, "Fire", True)]
+    # charazard = pokemon("Charazard", type6, charazard_moves, 78, 84, 78, 100)
+        
+    # type = ["Grass", "Poison"]
+    # bulbasaur_moves = [move("Tackle", "Normal", 40, 100, "Normal", True), move("Vine Whip", "Vine Whip", 40, 100, "Grass", True),
+    #                    move("Venoshock", "Venoshock", 65, 100, "Poison", True), move("Power Whip", "Power Whip", 120, 85, "Grass", True)]
+    # bulbasaur = pokemon("Bulbasaur", type, bulbasaur_moves, 45, 49, 49, 45)
+
+    # pokemon_bag = [charazard, bulbasaur
+    #                ]
+    pokemon_bag = [pokemon_objects.bulbasaur, pokemon_objects.charazard]
+    trainer1 = Character("Ash", pokemon_bag, [], 1000,
+                              "I'm on a journey to become a Pokemon Master!")
+
+    trainer2 = Character("Misty", pokemon_bag, [], 800, "Water types are the best!")
 
     window = PokemonGame(SCREEN_WIDTH, SCREEN_HEIGHT, B_SCREEN_TITLE, trainer1, trainer2)
     window.setup()

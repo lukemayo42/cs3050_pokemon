@@ -15,7 +15,7 @@ class State(Enum):
     Battle = 3
     Moves = 4
 
-state = State.Start
+state = State.Battle
 
 SPRITE_SCALING = 3.5
 OPPONENT_SPRITE_SCALING = 3
@@ -127,7 +127,7 @@ class PokemonGame(arcade.Window):
 
         # Create a widget to hold the v_box widget, that will center the buttons
         self.manager.add(
-            arcade.gui.UIAnchorWidget(align_x=200, align_y= -200,
+            arcade.gui.UIAnchorWidget(align_x=100, align_y= -200,
                 anchor_x="center_x",
                 anchor_y="center_y",
                 child=self.v_box)
@@ -169,15 +169,16 @@ class PokemonGame(arcade.Window):
 
     def on_draw(self):
         """ Render the screen. """
-        # Clear the screen
-        self.clear()
-        # Draw the background texture
-        arcade.draw_lrwh_rectangle_textured(0, 150,
-                                            SCREEN_WIDTH, SCREEN_HEIGHT,
-                                            self.background)
-        # Draw all the sprites.
-        self.manager.draw()
-        self.player_list.draw()
+        if(state == State.Battle):
+            # Clear the screen
+            self.clear()
+            # Draw the background texture
+            arcade.draw_lrwh_rectangle_textured(0, 150,
+                                                SCREEN_WIDTH, SCREEN_HEIGHT,
+                                                self.background)
+            # Draw all the sprites.
+            self.manager.draw()
+            self.player_list.draw()
         if(state == State.Moves):
             self.clear()
             # Draw the background texture
@@ -186,31 +187,70 @@ class PokemonGame(arcade.Window):
                                             self.background2)
             self.manager.draw()
             self.player_list.draw()
+
     
     def add_move_buttons(self):
         self.v_box.clear()
         # Create a vertical BoxGroup to align buttons
         self.v_box = arcade.gui.UIBoxLayout()
+        self.v_box_2 = arcade.gui.UIBoxLayout()
 
         # Create the buttons
-        move_1 = arcade.gui.UIFlatButton(text="Move 1", width=200)
+        move_1 = arcade.gui.UIFlatButton(text="Move 1", width=175)
         self.v_box.add(move_1.with_space_around(bottom=20))
-
-       
 
         # assign self.on_click_start as callback
         move_1.on_click = self.move_1_go
 
+        move_2 = arcade.gui.UIFlatButton(text="Move 2", width=175)
+        self.v_box.add(move_2.with_space_around(bottom=20))
+
+        # assign self.on_click_start as callback
+        move_2.on_click = self.move_2_go
+
+        move_3 = arcade.gui.UIFlatButton(text="Move 3", width=175)
+        self.v_box_2.add(move_3.with_space_around(bottom=20))
+
+        # assign self.on_click_start as callback
+        move_3.on_click = self.move_3_go
+
+        move_4 = arcade.gui.UIFlatButton(text="Move 4", width=175)
+        self.v_box_2.add(move_4.with_space_around(bottom=20))
+
+        # assign self.on_click_start as callback
+        move_4.on_click = self.move_4_go
+
         # Create a widget to hold the v_box widget, that will center the buttons
         self.manager.add(
-            arcade.gui.UIAnchorWidget(
+            arcade.gui.UIAnchorWidget(align_x=100, align_y= -200,
                 anchor_x="center_x",
                 anchor_y="center_y",
                 child=self.v_box)
         )
+        # Create a widget to hold the v_box_2 widget, that will center the buttons
+        self.manager.add(
+            arcade.gui.UIAnchorWidget(align_x=300, align_y= -200,
+                anchor_x="center_x",
+                anchor_y="center_y",
+                child=self.v_box_2)
+        )
 
 
-    def move_1_go(self):
+
+    def move_1_go(self, event):
+        print("accessing first move")
+        self.update_background()
+
+    def move_2_go(self, event):
+        print("accessing second move")
+        self.update_background()
+
+    def move_3_go(self, event):
+        print("accessing third move")
+        self.update_background()
+
+    def move_4_go(self, event):
+        print("accessing fourth move")
         self.update_background()
 
     def update_player_speed(self):
@@ -229,7 +269,7 @@ class PokemonGame(arcade.Window):
             self.player_sprite.change_x = MOVEMENT_SPEED
     
     def update_background(self):
-        self.background = arcade.load_texture("../cs3050_pokemon/images/green.png")
+        self.background2 = arcade.load_texture("../cs3050_pokemon/images/green.png")
         # Draw the background texture
         arcade.draw_lrwh_rectangle_textured(0, 150,
                                             SCREEN_WIDTH, SCREEN_HEIGHT,

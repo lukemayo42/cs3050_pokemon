@@ -5,6 +5,7 @@ from arcade.gui import UIManager
 from arcade.gui.widgets import UITextArea, UIInputText, UITexturePane
 import os
 from enum import Enum
+from battle import battle
 
 
 
@@ -240,18 +241,22 @@ class PokemonGame(arcade.Window):
     def move_1_go(self, event):
         print("accessing first move")
         self.update_background()
+        battle(self.player, self.enemy, self.player.get_curr_pkm().get_moves()[0])
 
     def move_2_go(self, event):
         print("accessing second move")
         self.update_background()
+        battle(self.player, self.enemy, self.player.get_curr_pkm().get_moves()[1])
 
     def move_3_go(self, event):
         print("accessing third move")
         self.update_background()
+        battle(self.player, self.enemy, self.player.get_curr_pkm().get_moves()[2])
 
     def move_4_go(self, event):
         print("accessing fourth move")
         self.update_background()
+        battle(self.player, self.enemy, self.player.get_curr_pkm().get_moves()[3])
 
     def update_player_speed(self):
 

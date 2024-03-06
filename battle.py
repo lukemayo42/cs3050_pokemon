@@ -114,9 +114,9 @@ def calc_dmg(atk_pkm, def_pkm, move):
     #may want to add STAB - same type attack bonus - 1.5 if move type  matches pokemon type
     #write chk_effective later
     #STAB * TYPE 1 EFFECTIVE * TYPE 2 EFFECTIVE at end of equation
-    #random
-    random = random.randint(217/255) / 255
-    dmg = (((((2 * level * roll_crit())/5) + 2)* move.get_power() * (atk_pkm.get_curr_atk()/def_pkm.get_curr_def())/50) + 2 ) * random
+    #random variable in damage equation
+    random_variable = random.randint(217, 255) / 255
+    dmg = (((((2 * level * roll_crit())/5) + 2)* move.get_power() * (atk_pkm.get_curr_atk()/def_pkm.get_curr_def())/50) + 2 ) * random_variable
     return dmg
 
 #rerturns 1 if user spedd is greater then enemy otherwise 0

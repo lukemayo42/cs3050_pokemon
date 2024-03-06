@@ -1,3 +1,4 @@
+import arcade
 class Character:
     """
     Constructor for character class

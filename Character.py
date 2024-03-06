@@ -98,3 +98,11 @@ class Character:
         self.money -= amount
         if self.money < 0:
             self.money = 0
+
+    # Function checks the list of pokemon the character has to make sure they still have a pokemon with health
+    def chk_party(self):
+        valid = False
+        for pkm in self.pokemon_list:
+            if not pkm.get_is_fainted():
+                valid = True
+        return valid

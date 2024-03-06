@@ -37,6 +37,10 @@ class Character:
     def get_speech_bubble_text(self):
         return self.speech_bubble_text
 
+    # Function gets the current first pokemon in the pokemon list
+    def get_curr_pkm(self):
+        return self.pokemon_list[0]
+
     # Setters
     def set_name(self, value):
         self.name = value

@@ -53,6 +53,9 @@ class pokemon:
     def get_curr_atk(self):
         return self.curr_atk
     
+    def get_curr_def(self):
+        return self.curr_def
+    
     def get_base_def(self):
         return self.base_def
     

@@ -88,7 +88,7 @@ def battle(player, enemy, btn_info):
             # force player to switch pokemon
             pass
         else:
-            player_action = player_turn(player, enemy)
+            player_action = player_turn(player, enemy, btn_info)
             if player_action:
                 # Update Gui
                 print("the move hit")
@@ -123,7 +123,7 @@ def player_turn(player, enemy, btn_info):
         if roll_accuracy(move_used):
             #send gui sometyhing saying it hit 
             dmg = calc_dmg(player.get_curr_pkm(), enemy.get_curr_pkm(), move_used)
-            enemy.remove_health(dmg)
+            enemy.get_curr_pkm().remove_health(dmg)
         else:
             #send gui something saying it missed
             action = False
@@ -149,9 +149,9 @@ def enemy_turn(enemy, player):
     move_used = enemy.get_curr_pkm().get_moves()[move_index]
     if action_str == "move":
         if roll_accuracy(move_used):
-            #send gui sometyhing saying it hit 
+            #send gui sometyhing sayinssg it hit 
             dmg = calc_dmg(enemy.get_curr_pkm(), player.get_curr_pkm(), move_used)
-            player.remove_health(dmg)
+            player.get_curr_pkm().remove_health(dmg)
         else:
             #send gui something saying it missed
             action_flag = False

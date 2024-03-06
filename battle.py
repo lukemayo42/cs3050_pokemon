@@ -151,5 +151,17 @@ def roll_accuracy(move):
 
 
 def main():
-    pass
+    charizard_moves = [move("Flamethrower", "Fire", 90), move("Dragon Claw", "Dragon", 80),
+                       move("Air Slash", "Flying", 75), move("Earthquake", "Ground", 100)]
+    charizard = pokemon("Charizard", ["Fire", "Flying"], charizard_moves, 78, 84, 78, 100)
 
+    snorlax_moves = [move("Body Slam", "Normal", 85), move("Earthquake", "Ground", 100), move("Rest", "Psychic", 0),
+                     move("Sleep Talk", "Normal", 0)]
+    snorlax = pokemon("Snorlax", ["Normal"], snorlax_moves, 160, 110, 65, 30)
+
+    pokemon_bag = [charizard, snorlax]
+
+    trainer1 = Character("Ash", pokemon_bag, [], 1000,
+                              "I'm on a journey to become a Pokemon Master!")
+
+    trainer2 = Character("Misty", pokemon_bag, [], 800, "Water types are the best!")

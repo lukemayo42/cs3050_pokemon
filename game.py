@@ -1,5 +1,6 @@
 import arcade
 from arcade import load_texture
+import arcade.gui
 from arcade.gui import UIManager
 from arcade.gui.widgets import UITextArea, UIInputText, UITexturePane
 import os
@@ -12,6 +13,7 @@ class State(Enum):
     Start = 1
     World = 2
     Battle = 3
+    Moves = 4
 
 state = State.Start
 
@@ -55,6 +57,8 @@ class PokemonGame(arcade.Window):
         # Background image will be stored in this variable
         self.background = None
 
+        self.background2 = None
+
         # Variables that will hold sprite lists
         self.player_list = None
 
@@ -69,10 +73,12 @@ class PokemonGame(arcade.Window):
 
         # Set the background color
 
+        
+        
         ############ TEXT BOX EXAMPLE
         self.manager = UIManager()
         self.manager.enable()
-        arcade.set_background_color(arcade.color.LIGHT_SEA_GREEN)
+        # arcade.set_background_color(arcade.color.LIGHT_SEA_GREEN)
 
         bg_tex = load_texture(":resources:gui_basic_assets/window/grey_panel.png")
         text_area = UITextArea(x=0,
@@ -106,7 +112,26 @@ class PokemonGame(arcade.Window):
             )
         )
 
+        ###### BUTTONS #########
+        # Create a vertical BoxGroup to align buttons
+        self.v_box = arcade.gui.UIBoxLayout()
 
+        # Create the buttons
+        fight = arcade.gui.UIFlatButton(text="Fight", width=200)
+        self.v_box.add(fight.with_space_around(bottom=20))
+
+       
+
+        # assign self.on_click_start as callback
+        fight.on_click = self.fight_action
+
+        # Create a widget to hold the v_box widget, that will center the buttons
+        self.manager.add(
+            arcade.gui.UIAnchorWidget(align_x=200, align_y= -200,
+                anchor_x="center_x",
+                anchor_y="center_y",
+                child=self.v_box)
+        )
         # self.manager.add(
         #     UITexturePane(
         #         UIInputText(x=340, y=200, width=200, height=50, text="Hello"),
@@ -117,7 +142,11 @@ class PokemonGame(arcade.Window):
         #     UIInputText(x=340, y=110, width=200, height=50, text="Hello"),
         # )
 
-        
+    def fight_action(self, event):
+        state = State.Moves
+        self.add_move_buttons()
+        self.on_draw()
+
     def setup(self):
         """ Set up the game and initialize the variables. """
 
@@ -140,20 +169,50 @@ class PokemonGame(arcade.Window):
 
     def on_draw(self):
         """ Render the screen. """
-
         # Clear the screen
         self.clear()
-
-        # Draw all the sprites.
-        self.manager.draw()
-
         # Draw the background texture
         arcade.draw_lrwh_rectangle_textured(0, 150,
                                             SCREEN_WIDTH, SCREEN_HEIGHT,
                                             self.background)
-
+        # Draw all the sprites.
+        self.manager.draw()
         self.player_list.draw()
+        if(state == State.Moves):
+            self.clear()
+            # Draw the background texture
+            arcade.draw_lrwh_rectangle_textured(0, 150,
+                                            SCREEN_WIDTH, SCREEN_HEIGHT,
+                                            self.background2)
+            self.manager.draw()
+            self.player_list.draw()
     
+    def add_move_buttons(self):
+        self.v_box.clear()
+        # Create a vertical BoxGroup to align buttons
+        self.v_box = arcade.gui.UIBoxLayout()
+
+        # Create the buttons
+        move_1 = arcade.gui.UIFlatButton(text="Move 1", width=200)
+        self.v_box.add(move_1.with_space_around(bottom=20))
+
+       
+
+        # assign self.on_click_start as callback
+        move_1.on_click = self.move_1_go
+
+        # Create a widget to hold the v_box widget, that will center the buttons
+        self.manager.add(
+            arcade.gui.UIAnchorWidget(
+                anchor_x="center_x",
+                anchor_y="center_y",
+                child=self.v_box)
+        )
+
+
+    def move_1_go(self):
+        self.update_background()
+
     def update_player_speed(self):
 
         # Calculate speed based on the keys pressed
@@ -168,6 +227,13 @@ class PokemonGame(arcade.Window):
             self.player_sprite.change_x = -MOVEMENT_SPEED
         elif self.right_pressed and not self.left_pressed:
             self.player_sprite.change_x = MOVEMENT_SPEED
+    
+    def update_background(self):
+        self.background = arcade.load_texture("../cs3050_pokemon/images/green.png")
+        # Draw the background texture
+        arcade.draw_lrwh_rectangle_textured(0, 150,
+                                            SCREEN_WIDTH, SCREEN_HEIGHT,
+                                            self.background2)
 
     def on_update(self, delta_time):
         """ Movement and game logic """

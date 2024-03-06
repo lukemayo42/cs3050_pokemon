@@ -6,7 +6,9 @@ from arcade.gui.widgets import UITextArea, UIInputText, UITexturePane
 import os
 from enum import Enum
 from battle import battle
-
+import Character
+from pokemon import pokemon
+from move import move
 
 
 
@@ -27,7 +29,11 @@ SCREEN_HEIGHT = 600
 W_SCREEN_TITLE = "Pokemon World"
 B_SCREEN_TITLE = "Battle"
 
-class Player(arcade.Sprite):
+
+# Create subclass for the user
+# Subclass for pokemon
+# Subclass for enemy
+class Sprite(arcade.Sprite):
 
     def update(self):
         """ Move the player """
@@ -49,12 +55,13 @@ class Player(arcade.Sprite):
 
 class PokemonGame(arcade.Window):
 
-    def __init__(self, width, height, title):
+    def __init__(self, width, height, title, player, enemy):
 
         state = State.Battle
         # Call the parent class initializer
         super().__init__(width, height, title)
-
+        self.player = player
+        self.enemy = enemy
         # Background image will be stored in this variable
         self.background = None
 
@@ -157,8 +164,8 @@ class PokemonGame(arcade.Window):
         # print("test")
         # print(os.getcwd())
         # Set up the player
-        self.player_sprite = Player("../cs3050_pokemon/sprites/bulbasaur-back.png", SPRITE_SCALING)
-        self.player_sprite2 = Player("../cs3050_pokemon/sprites/charizard-front.png", OPPONENT_SPRITE_SCALING)
+        self.player_sprite = Sprite("../cs3050_pokemon/sprites/bulbasaur-back.png", SPRITE_SCALING)
+        self.player_sprite2 = Sprite("../cs3050_pokemon/sprites/charizard-front.png", OPPONENT_SPRITE_SCALING)
         self.player_sprite.center_x = 200
         self.player_sprite.center_y = 235
         self.player_sprite2.center_x = 600
@@ -241,7 +248,7 @@ class PokemonGame(arcade.Window):
     def move_1_go(self, event):
         print("accessing first move")
         self.update_background()
-        battle(self.player, self.enemy, self.player.get_curr_pkm().get_moves()[0])
+        battle(self.player, self.player, self.player.get_curr_pkm().get_moves()[0])
 
     def move_2_go(self, event):
         print("accessing second move")
@@ -324,7 +331,10 @@ class PokemonGame(arcade.Window):
 
 def main():
     """ Main function """
-    window = PokemonGame(SCREEN_WIDTH, SCREEN_HEIGHT, B_SCREEN_TITLE)
+    
+    
+
+    window = PokemonGame(SCREEN_WIDTH, SCREEN_HEIGHT, B_SCREEN_TITLE, trainer1, trainer2)
     window.setup()
     arcade.run()
 

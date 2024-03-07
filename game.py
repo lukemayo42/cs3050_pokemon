@@ -298,7 +298,7 @@ class PokemonGame(arcade.Window):
         if(self.enemy.get_curr_pkm().get_is_fainted()):
             self.state = State.Win
             # print("curr health " + str(self.enemy.get_curr_pkm().get_curr_hlth()))
-            print('changed to win')
+            print("Changed to Win")
         if(self.state == State.Moves):
             self.clear()
             # Draw the background texture
@@ -382,7 +382,8 @@ class PokemonGame(arcade.Window):
         self.move_1_animate()
 
         btn_info = ["move", self.player.get_curr_pkm().get_moves()[0]]
-        battle(self.player, self.enemy, btn_info)
+        action1, action2 = battle(self.player, self.enemy, btn_info)
+        #self.text_area.text("f{action1} \n {action2}")
 
         # Reflects changes in the sprite of the healthbar
         self.enemy_health_bar.health_bar_update(self.bar_sprite_list)

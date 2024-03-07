@@ -40,13 +40,14 @@ import pokemon_objects
 #                 # send to gui
 
 # Battle function without while loop
+#returns 2 strings, what move player did and what move the enemy did
 def battle(player, enemy, btn_info):
     player_pkm = player.get_curr_pkm()
     enemy_pkm = enemy.get_curr_pkm()
     
     #if player pokemon faster than enemy pokemon
     if chk_spd(player_pkm, enemy_pkm):
-        player_action = player_turn(player, enemy, btn_info)
+        player_action, action1 = player_turn(player, enemy, btn_info)
         # If the player took a fight action and the move hit:
         if player_action:
             # Update Gui
@@ -61,7 +62,7 @@ def battle(player, enemy, btn_info):
             # force enemy to switch pokemon
             pass
         else:
-            enemy_action = enemy_turn(enemy, player)
+            enemy_action, action2 = enemy_turn(enemy, player)
             if enemy_action:
                 # Update Gui
                 print("the move hit")
@@ -76,7 +77,7 @@ def battle(player, enemy, btn_info):
                 pass
             # send to gui
     else:
-        enemy_action = enemy_turn(enemy, player)
+        enemy_action, action1 = enemy_turn(enemy, player)
         if enemy_action:
             # Update Gui
             pass
@@ -90,7 +91,7 @@ def battle(player, enemy, btn_info):
             # force player to switch pokemon
             pass
         else:
-            player_action = player_turn(player, enemy, btn_info)
+            player_action, action2 = player_turn(player, enemy, btn_info)
             if player_action:
                 # Update Gui
                 pass
@@ -105,7 +106,7 @@ def battle(player, enemy, btn_info):
                 pass
             # send to gui
 
-
+    return action1, action2
     #check speed to see which pokemon goes first
     #get back choice from gui/controller
     #take player or enemy turns based on speed
@@ -126,9 +127,11 @@ def player_turn(player, enemy, btn_info):
             #send gui sometyhing saying it hit 
             dmg = calc_dmg(player.get_curr_pkm(), enemy.get_curr_pkm(), move_used)
             enemy.get_curr_pkm().remove_health(dmg)
-            print(player.get_curr_pkm().move_to_string(move_used, True))
+            action_str = player.get_curr_pkm().move_to_string(move_used, True)
+            player.get_curr_pkm().move_to_string(move_used, True)
         else:
             #send gui something saying it missed
+            action_str = player.get_curr_pkm().move_to_string(move_used, False)
             print(player.get_curr_pkm().move_to_string(move_used, False))
             action = False
         
@@ -142,7 +145,7 @@ def player_turn(player, enemy, btn_info):
 
     #if move calc damage using index 0 of both player and enemy
     #update curr health of enemy
-    return action
+    return action, action_str
 
 #single turn of an enemy character, takes in character and player 
 def enemy_turn(enemy, player):
@@ -156,9 +159,11 @@ def enemy_turn(enemy, player):
             #send gui sometyhing sayinssg it hit 
             dmg = calc_dmg(enemy.get_curr_pkm(), player.get_curr_pkm(), move_used)
             player.get_curr_pkm().remove_health(dmg)
+            action = enemy.get_curr_pkm().move_to_string(move_used, True)
             print(enemy.get_curr_pkm().move_to_string(move_used, True))
         else:
             #send gui something saying it missed
+            action = enemy.get_curr_pkm().move_to_string(move_used, False)
             print(enemy.get_curr_pkm().move_to_string(move_used, False))
             action_flag = False
         
@@ -173,7 +178,7 @@ def enemy_turn(enemy, player):
     
     #calc damg
     #update curr health of player
-    return action_flag
+    return action_flag, action
 
 def switch():
     pass

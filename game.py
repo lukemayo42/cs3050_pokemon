@@ -19,6 +19,7 @@ class State(Enum):
     World = 2
     Battle = 3
     Moves = 4
+    Win = 5
 
 state = State.Battle
 
@@ -91,11 +92,13 @@ class HealthBar(arcade.Sprite):
         self.name_text.center_y = 515
         sprite_list.append(self.name_text)
     
-    def take_damage(self, damage, sprite_list):
+    def health_bar_update(self, sprite_list):
 
         # TODO: Replace with damage function from back end and then just kill the text and reload it
-        self.health = self.health - damage
+        # self.health = self.health - damage
 
+        # This replaces the previous text box displaying health with the updated health
+        self.health = self.pokemon.get_curr_hlth()
         self.health_text.kill()
         self.health_text = arcade.create_text_sprite (
             start_x=350,
@@ -133,16 +136,18 @@ class PokemonGame(arcade.Window):
 
     def __init__(self, width, height, title, player, enemy):
 
-        state = State.Battle
+        self.state = State.Battle
         # Call the parent class initializer
         super().__init__(width, height, title)
         self.player = player
         self.enemy = enemy
+        #TODO:  FOR TESTING PURPOSES
+        self.player.get_curr_pkm().set_curr_hlth(1000)
 
         # Health bar
         self.bar_sprite_list = arcade.SpriteList()
         # self.health_bar = HealthBar(self.player.get_curr_pkm().get_curr_hlth(), self.player.get_curr_pkm().get_max_hlth(), self.bar_sprite_list)
-        self.health_bar = HealthBar(self.player.get_curr_pkm(), self.bar_sprite_list)
+        self.health_bar = HealthBar(self.enemy.get_curr_pkm(), self.bar_sprite_list)
         # self.health_bar2 = HealthBar(10,15, self.bar_sprite_list)
 
 
@@ -241,7 +246,7 @@ class PokemonGame(arcade.Window):
         # )
 
     def fight_action(self, event):
-        state = State.Moves
+        self.state = State.Moves
         self.add_move_buttons()
         self.on_draw()
 
@@ -270,7 +275,8 @@ class PokemonGame(arcade.Window):
 
     def on_draw(self):
         """ Render the screen. """
-        if(state == State.Battle):
+        # print("curr health " + str(self.enemy.get_curr_pkm().get_curr_hlth()))
+        if(self.state == State.Battle):
             # Clear the screen
             self.clear()
             # Draw the background texture
@@ -281,15 +287,37 @@ class PokemonGame(arcade.Window):
             self.manager.draw()
             self.player_list.draw()
             self.bar_sprite_list.draw()
-        if(state == State.Moves):
+            #TODO: Move the logic for checking if they won to the other programs, then main will just change state when 
+            # this occurs
+        if(self.state == State.Moves and self.enemy.get_curr_pkm().get_curr_hlth() <= 0):
+            self.state = State.Win
+            # print("curr health " + str(self.enemy.get_curr_pkm().get_curr_hlth()))
+            print('changed to win')
+        if(self.state == State.Moves):
             self.clear()
             # Draw the background texture
             arcade.draw_lrwh_rectangle_textured(0, 150,
                                             SCREEN_WIDTH, SCREEN_HEIGHT,
-                                            self.background2)
+                                            self.background)
             self.manager.draw()
             self.player_list.draw()
             self.bar_sprite_list.draw()
+        if(self.state == State.Win):
+            self.clear()
+            self.bar_sprite_list.clear()
+            arcade.set_background_color(arcade.color.RED)
+            self.health_text = arcade.create_text_sprite (
+                start_x=350,
+                start_y=500,
+                color=arcade.color.BLACK,
+                text = "WIN"
+            )
+            self.health_text.center_x = 350
+            self.health_text.center_y = 500
+            self.bar_sprite_list.append(self.health_text)
+            self.bar_sprite_list.draw()
+
+
 
 
     
@@ -343,43 +371,45 @@ class PokemonGame(arcade.Window):
 
     def move_1_go(self, event):
         print("accessing first move")
-        self.health_bar.take_damage(10, self.bar_sprite_list)
-        print(self.health_bar.health)
 
         # TODO: Add some sort of movement for sprite when move is performed
         self.move_1_animate()
 
-
-
-        self.update_background()
         btn_info = ["move", self.player.get_curr_pkm().get_moves()[0]]
         battle(self.player, self.enemy, btn_info)
 
+        # Reflects changes in the sprite of the healthbar
+        self.health_bar.health_bar_update(self.bar_sprite_list)
+
+
+
+
+
     def move_2_go(self, event):
         print("accessing second move")
-        self.update_background()
         btn_info = ["move", self.player.get_curr_pkm().get_moves()[1]]
         battle(self.player, self.enemy, btn_info)
+        self.health_bar.health_bar_update(self.bar_sprite_list)
+
 
     def move_3_go(self, event):
         print("accessing third move")
-        self.update_background()
         btn_info = ["move", self.player.get_curr_pkm().get_moves()[2]]
         battle(self.player, self.enemy, btn_info)
+        self.health_bar.health_bar_update(self.bar_sprite_list)
 
     def move_4_go(self, event):
         print("accessing fourth move")
-        self.update_background()
         btn_info = ["move", self.player.get_curr_pkm().get_moves()[3]]
         battle(self.player, self.enemy, btn_info)
+        self.health_bar.health_bar_update(self.bar_sprite_list)
+
 
     def move_1_animate(self):
+        # TODO: Not sure what to do with this.. somehow make the sprite move with the update function?
         self.move_up = True
         self.animate = True
         
-        
-        
-
 
     def update_player_speed(self):
 
@@ -418,7 +448,7 @@ class PokemonGame(arcade.Window):
     def on_key_press(self, key, modifiers):
         """Listen for a key press from user """
 
-        if(state == State.World):
+        if(self.state == State.World):
             if key == arcade.key.UP:
                 self.up_pressed = True
                 self.update_player_speed()
@@ -435,7 +465,7 @@ class PokemonGame(arcade.Window):
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
 
-        if(state == State.World):
+        if(self.state == State.World):
             if key == arcade.key.UP:
                 self.up_pressed = False
                 self.update_player_speed()
@@ -469,8 +499,8 @@ def main():
     pokemon_bag = [pokemon_objects.bulbasaur, pokemon_objects.charazard]
     trainer1 = Character("Ash", pokemon_bag, [], 1000,
                               "I'm on a journey to become a Pokemon Master!")
-
-    trainer2 = Character("Misty", pokemon_bag, [], 800, "Water types are the best!")
+    pokemon_bag_trainer2 = [pokemon_objects.charazard]
+    trainer2 = Character("Misty", pokemon_bag_trainer2, [], 800, "Water types are the best!")
 
     window = PokemonGame(SCREEN_WIDTH, SCREEN_HEIGHT, B_SCREEN_TITLE, trainer1, trainer2)
     window.setup()

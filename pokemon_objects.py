@@ -29,6 +29,6 @@ charmeleon = pokemon("Charmeleon", type5, moves, 58, 64, 58, 80)
 
 # Create Charizard
 type6 = ["Fire", "Flying"]
-charazard_moves = [move("Flamethrower", "Fire", 90, 100, "Fire", True), move("Dragon Claw", "Dragon Claw", 80, 100, "Dragon", True),
+charizard_moves = [move("Flamethrower", "Fire", 90, 100, "Fire", True), move("Dragon Claw", "Dragon Claw", 80, 100, "Dragon", True),
                        move("Air Slash", "Flying", 75, 95, "Flying", True), move("Inferno", "Fire", 100, 50, "Fire", True)]
-charazard = pokemon("Charazard", type6, charazard_moves, 78, 84, 78, 100)
+charizard = pokemon("Charizard", type6, charizard_moves, 78, 84, 78, 100)

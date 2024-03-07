@@ -44,7 +44,7 @@ B_SCREEN_TITLE = "Battle"
 # Subclass for enemy
 class HealthBar(arcade.Sprite):
     #TODO: Get rid of magic numbers in here
-    def __init__(self, pokemon, sprite_list):
+    def __init__(self, pokemon, sprite_list, pos_x, pos_y, name_pos):
         super().__init__()
         self.pokemon = pokemon
         self.health = pokemon.get_curr_hlth()
@@ -52,6 +52,9 @@ class HealthBar(arcade.Sprite):
         self.name = pokemon.get_name()
         self.width = 50
         self.height = 50
+        self.pos_x = pos_x
+        self.pos_y = pos_y
+        self.name_pos = name_pos
         # border_size = 4
         background_color = arcade.color.BLACK
         foreground_color = arcade.color.ASH_GREY
@@ -62,16 +65,16 @@ class HealthBar(arcade.Sprite):
             HEALTH_BAR_SCALAR + 2 * HEALTH_BAR_BORDER,
             background_color
         )
-        self.background_box.center_x = 350
-        self.background_box.center_y = 500
+        self.background_box.center_x = pos_x
+        self.background_box.center_y = pos_y
         sprite_list.append(self.background_box)
         self.foreground_box = arcade.SpriteSolidColor(
             HEALTH_BAR_SCALAR * 2 - 2 * HEALTH_BAR_BORDER,
             HEALTH_BAR_SCALAR,
             foreground_color
         )
-        self.foreground_box.center_x = 350
-        self.foreground_box.center_y = 500
+        self.foreground_box.center_x = pos_x
+        self.foreground_box.center_y = pos_y
         sprite_list.append(self.foreground_box)
         self.health_text = arcade.create_text_sprite (
             start_x=350,
@@ -79,8 +82,8 @@ class HealthBar(arcade.Sprite):
             color=arcade.color.BLACK,
             text = str(self.health) + " / " + str(self.max_health)
         )
-        self.health_text.center_x = 350
-        self.health_text.center_y = 500
+        self.health_text.center_x = pos_x
+        self.health_text.center_y = pos_y
         sprite_list.append(self.health_text)
         self.name_text = arcade.create_text_sprite(
             start_x=350,
@@ -88,8 +91,8 @@ class HealthBar(arcade.Sprite):
             color=arcade.color.BLACK,
             text=str(self.pokemon.get_name())
         )
-        self.name_text.center_x = 350
-        self.name_text.center_y = 515
+        self.name_text.center_x = pos_x
+        self.name_text.center_y = name_pos
         sprite_list.append(self.name_text)
     
     def health_bar_update(self, sprite_list):
@@ -106,8 +109,8 @@ class HealthBar(arcade.Sprite):
             color=arcade.color.BLACK,
             text = str(self.health) + " / " + str(self.max_health)
         )
-        self.health_text.center_x = 350
-        self.health_text.center_y = 500
+        self.health_text.center_x = self.pos_x
+        self.health_text.center_y = self.pos_y
         sprite_list.append(self.health_text)
 
 
@@ -147,7 +150,9 @@ class PokemonGame(arcade.Window):
         # Health bar
         self.bar_sprite_list = arcade.SpriteList()
         # self.health_bar = HealthBar(self.player.get_curr_pkm().get_curr_hlth(), self.player.get_curr_pkm().get_max_hlth(), self.bar_sprite_list)
-        self.health_bar = HealthBar(self.enemy.get_curr_pkm(), self.bar_sprite_list)
+        self.enemy_health_bar = HealthBar(self.enemy.get_curr_pkm(), self.bar_sprite_list, 350, 500, 515)
+        self.player_health_bar = HealthBar(self.player.get_curr_pkm(), self.bar_sprite_list, 550, 250, 265)
+
         # self.health_bar2 = HealthBar(10,15, self.bar_sprite_list)
 
 
@@ -189,7 +194,7 @@ class PokemonGame(arcade.Window):
                                y=0,
                                width=400,
                                height=150,
-                               text="What will Bulbasaur do?",
+                               text="What will " + self.player.get_curr_pkm().get_name() + " do?",
                                font_size=20,
                                text_color=(0, 0, 0, 255))
         self.manager.add(
@@ -259,8 +264,9 @@ class PokemonGame(arcade.Window):
         # print("test")
         # print(os.getcwd())
         # Set up the player
-        self.player_sprite = Sprite("../cs3050_pokemon/sprites/bulbasaur-back.png", SPRITE_SCALING)
-        self.player_sprite2 = Sprite("../cs3050_pokemon/sprites/charizard-front.png", OPPONENT_SPRITE_SCALING)
+        print(self.player.get_curr_pkm().get_name())
+        self.player_sprite = Sprite("../cs3050_pokemon/sprites/" + self.player.get_curr_pkm().get_name().lower() + "-back.png", SPRITE_SCALING)
+        self.player_sprite2 = Sprite("../cs3050_pokemon/sprites/" + self.enemy.get_curr_pkm().get_name().lower() + "-front.png", OPPONENT_SPRITE_SCALING)
         self.player_sprite.center_x = 200
         self.player_sprite.center_y = 235
         self.player_sprite2.center_x = 600
@@ -289,7 +295,7 @@ class PokemonGame(arcade.Window):
             self.bar_sprite_list.draw()
             #TODO: Move the logic for checking if they won to the other programs, then main will just change state when 
             # this occurs
-        if(self.state == State.Moves and self.enemy.get_curr_pkm().get_curr_hlth() <= 0):
+        if(self.enemy.get_curr_pkm().get_is_fainted()):
             self.state = State.Win
             # print("curr health " + str(self.enemy.get_curr_pkm().get_curr_hlth()))
             print('changed to win')
@@ -379,7 +385,9 @@ class PokemonGame(arcade.Window):
         battle(self.player, self.enemy, btn_info)
 
         # Reflects changes in the sprite of the healthbar
-        self.health_bar.health_bar_update(self.bar_sprite_list)
+        self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
+        self.player_health_bar.health_bar_update(self.bar_sprite_list)
+
 
 
 
@@ -389,20 +397,24 @@ class PokemonGame(arcade.Window):
         print("accessing second move")
         btn_info = ["move", self.player.get_curr_pkm().get_moves()[1]]
         battle(self.player, self.enemy, btn_info)
-        self.health_bar.health_bar_update(self.bar_sprite_list)
+        self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
+        self.player_health_bar.health_bar_update(self.bar_sprite_list)
+
 
 
     def move_3_go(self, event):
         print("accessing third move")
         btn_info = ["move", self.player.get_curr_pkm().get_moves()[2]]
         battle(self.player, self.enemy, btn_info)
-        self.health_bar.health_bar_update(self.bar_sprite_list)
+        self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
+        self.player_health_bar.health_bar_update(self.bar_sprite_list)
 
     def move_4_go(self, event):
         print("accessing fourth move")
         btn_info = ["move", self.player.get_curr_pkm().get_moves()[3]]
         battle(self.player, self.enemy, btn_info)
-        self.health_bar.health_bar_update(self.bar_sprite_list)
+        self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
+        self.player_health_bar.health_bar_update(self.bar_sprite_list)
 
 
     def move_1_animate(self):
@@ -496,10 +508,10 @@ def main():
 
     # pokemon_bag = [charazard, bulbasaur
     #                ]
-    pokemon_bag = [pokemon_objects.bulbasaur, pokemon_objects.charazard]
+    pokemon_bag = [pokemon_objects.bulbasaur, pokemon_objects.charizard]
     trainer1 = Character("Ash", pokemon_bag, [], 1000,
                               "I'm on a journey to become a Pokemon Master!")
-    pokemon_bag_trainer2 = [pokemon_objects.charazard]
+    pokemon_bag_trainer2 = [pokemon_objects.charizard]
     trainer2 = Character("Misty", pokemon_bag_trainer2, [], 800, "Water types are the best!")
 
     window = PokemonGame(SCREEN_WIDTH, SCREEN_HEIGHT, B_SCREEN_TITLE, trainer1, trainer2)

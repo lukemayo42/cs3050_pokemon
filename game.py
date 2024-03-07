@@ -28,10 +28,7 @@ MOVEMENT_SPEED = 5
 ANIMATION_SPEED = 15
 
 # HEALTH BARS
-BACKGROUND_WIDTH = 250
-BACKGROUND_HEIGHT = 150
-FOREGROUND_WIDTH = 225
-FOREGROUND_HEIGHT = 125
+
 HEALTH_BAR_SCALAR = 125
 HEALTH_BAR_BORDER = 12
 
@@ -45,6 +42,7 @@ B_SCREEN_TITLE = "Battle"
 # Subclass for pokemon
 # Subclass for enemy
 class HealthBar(arcade.Sprite):
+    #TODO: Get rid of magic numbers in here
     def __init__(self, pokemon, sprite_list):
         super().__init__()
         self.pokemon = pokemon
@@ -94,6 +92,8 @@ class HealthBar(arcade.Sprite):
         sprite_list.append(self.name_text)
     
     def take_damage(self, damage, sprite_list):
+
+        # TODO: Replace with damage function from back end and then just kill the text and reload it
         self.health = self.health - damage
 
         self.health_text.kill()
@@ -346,7 +346,7 @@ class PokemonGame(arcade.Window):
         self.health_bar.take_damage(10, self.bar_sprite_list)
         print(self.health_bar.health)
 
-        # move animation
+        # TODO: Add some sort of movement for sprite when move is performed
         self.move_1_animate()
 
 

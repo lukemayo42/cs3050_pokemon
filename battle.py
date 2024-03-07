@@ -43,15 +43,17 @@ import pokemon_objects
 def battle(player, enemy, btn_info):
     player_pkm = player.get_curr_pkm()
     enemy_pkm = enemy.get_curr_pkm()
+    
+    #if player pokemon faster than enemy pokemon
     if chk_spd(player_pkm, enemy_pkm):
         player_action = player_turn(player, enemy, btn_info)
         # If the player took a fight action and the move hit:
         if player_action:
             # Update Gui
-            print("the move hit")
+            print(player_pkm.move_to_string(btn_info[1]), True)
         else:
             # Update Gui
-            print("The move didn't hit")
+            print(player_pkm.move_to_string(btn_info[1]), False)
         if not enemy.chk_party():
             # tell gui player wins
             pass
@@ -77,7 +79,7 @@ def battle(player, enemy, btn_info):
         enemy_action = enemy_turn(enemy, player)
         if enemy_action:
             # Update Gui
-            print("the move hit")
+            print(enemy_pkm.move_to_string(btn_info[1], True))
         else:
             # Update Gui
             print("The move didn't hit")
@@ -124,8 +126,10 @@ def player_turn(player, enemy, btn_info):
             #send gui sometyhing saying it hit 
             dmg = calc_dmg(player.get_curr_pkm(), enemy.get_curr_pkm(), move_used)
             enemy.get_curr_pkm().remove_health(dmg)
+            print(player.get_curr_pkm().move_to_string(btn_info[1]), True)
         else:
             #send gui something saying it missed
+            print(player.get_curr_pkm().move_to_string(move_used), False)
             action = False
         
     #item
@@ -140,7 +144,7 @@ def player_turn(player, enemy, btn_info):
     #update curr health of enemy
     return action
 
-#enemy is a character object
+#single turn of an enemy character, takes in character and player 
 def enemy_turn(enemy, player):
     action_str = "move"
     action_flag = True
@@ -152,8 +156,10 @@ def enemy_turn(enemy, player):
             #send gui sometyhing sayinssg it hit 
             dmg = calc_dmg(enemy.get_curr_pkm(), player.get_curr_pkm(), move_used)
             player.get_curr_pkm().remove_health(dmg)
+            print(enemy.get_curr_pkm().move_to_string(move_used), True)
         else:
             #send gui something saying it missed
+            print(enemy.get_curr_pkm().move_to_string(move_used), False)
             action_flag = False
         
     #item
@@ -172,6 +178,8 @@ def enemy_turn(enemy, player):
 def switch():
     pass
 
+
+#calcualtes damage for a move, given atk for the pokemon using the move, def of the pokemon getting hit, and the move being used
 def calc_dmg(atk_pkm, def_pkm, move):
     level = 50
     #may want to add STAB - same type attack bonus - 1.5 if move type  matches pokemon type
@@ -202,7 +210,7 @@ def roll_crit():
 def chk_effective():
     pass
 
-#returns 1 if move hits, 0 of move misses
+#returns 1 if move hits, 0 if move misses
 def roll_accuracy(move):
     if move.get_accuracy() == 100:
         return True

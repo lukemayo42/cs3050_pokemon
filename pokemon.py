@@ -68,6 +68,9 @@ class pokemon:
     def get_is_fainted(self):
         return self.is_fainted
     
+    def get_curr_pkm(self):
+        return self.pokemon[0]
+    
     #setters
     def set_curr_hlth(self, new_hlth):
         self.curr_hlth = new_hlth
@@ -93,12 +96,33 @@ class pokemon:
             self.curr_hlth = 0
             self.is_fainted = True
 
+    #returns true if there is a non fainted pokemon left in the party otherwise false
+    def chk_party(self):
+        valid = False
+        for pkm in self.pokemon:
+            if not pkm.get_is_fainted():
+                valid = True
+        return valid
+
     #print functions!!!! - need to know how gui wants text info
-            
+
+    def move_to_string(self, move_used, hit):
+        if hit:
+            return f"{self.name} used {move_used.get_name()}"
+        else:
+            return f"{self.name}'s move missed"
+        return move_str
+    
+    '''
+    def get_move_names(self):
+        move_str_list = []
+        for move in self.moves:
+            move_str_list = []
+         '''  
 
     #after wrting move class - write method to get names of moves in list instead of just returning list
     
-
+    
     #attack takes in another pokemon and the pokemons move, and does damage to the pokemon, 
     #take in pokemon as reference to orignal object and do damage to that pokemon
     #might not work becuase you may have to specify the move

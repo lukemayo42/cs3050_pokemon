@@ -50,10 +50,10 @@ def battle(player, enemy, btn_info):
         # If the player took a fight action and the move hit:
         if player_action:
             # Update Gui
-            print(player_pkm.move_to_string(btn_info[1]), True)
+            pass
         else:
             # Update Gui
-            print(player_pkm.move_to_string(btn_info[1]), False)
+            pass
         if not enemy.chk_party():
             # tell gui player wins
             pass
@@ -79,10 +79,10 @@ def battle(player, enemy, btn_info):
         enemy_action = enemy_turn(enemy, player)
         if enemy_action:
             # Update Gui
-            print(enemy_pkm.move_to_string(btn_info[1], True))
+            pass
         else:
             # Update Gui
-            print("The move didn't hit")
+            pass
         if not player.chk_party():
             # tell gui enemy wins
             pass
@@ -93,10 +93,10 @@ def battle(player, enemy, btn_info):
             player_action = player_turn(player, enemy, btn_info)
             if player_action:
                 # Update Gui
-                print("the move hit")
+                pass
             else:
                 # Update Gui
-                print("The move didn't hit")
+                pass
             if not enemy.chk_party():
                 # tell gui player wins
                 pass
@@ -126,10 +126,10 @@ def player_turn(player, enemy, btn_info):
             #send gui sometyhing saying it hit 
             dmg = calc_dmg(player.get_curr_pkm(), enemy.get_curr_pkm(), move_used)
             enemy.get_curr_pkm().remove_health(dmg)
-            print(player.get_curr_pkm().move_to_string(btn_info[1]), True)
+            print(player.get_curr_pkm().move_to_string(move_used, True))
         else:
             #send gui something saying it missed
-            print(player.get_curr_pkm().move_to_string(move_used), False)
+            print(player.get_curr_pkm().move_to_string(move_used, False))
             action = False
         
     #item
@@ -156,10 +156,10 @@ def enemy_turn(enemy, player):
             #send gui sometyhing sayinssg it hit 
             dmg = calc_dmg(enemy.get_curr_pkm(), player.get_curr_pkm(), move_used)
             player.get_curr_pkm().remove_health(dmg)
-            print(enemy.get_curr_pkm().move_to_string(move_used), True)
+            print(enemy.get_curr_pkm().move_to_string(move_used, True))
         else:
             #send gui something saying it missed
-            print(enemy.get_curr_pkm().move_to_string(move_used), False)
+            print(enemy.get_curr_pkm().move_to_string(move_used, False))
             action_flag = False
         
     #item

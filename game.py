@@ -10,6 +10,7 @@ from Character import Character
 from pokemon import pokemon
 from move import move
 import pokemon_objects
+import time
 
 
 
@@ -24,6 +25,12 @@ state = State.Battle
 SPRITE_SCALING = 3.5
 OPPONENT_SPRITE_SCALING = 3
 MOVEMENT_SPEED = 5
+ANIMATION_SPEED = 15
+
+# HEALTH BARS
+
+HEALTH_BAR_SCALAR = 125
+HEALTH_BAR_BORDER = 12
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
@@ -34,6 +41,74 @@ B_SCREEN_TITLE = "Battle"
 # Create subclass for the user
 # Subclass for pokemon
 # Subclass for enemy
+class HealthBar(arcade.Sprite):
+    #TODO: Get rid of magic numbers in here
+    def __init__(self, pokemon, sprite_list):
+        super().__init__()
+        self.pokemon = pokemon
+        self.health = pokemon.get_curr_hlth()
+        self.max_health = pokemon.get_max_hlth()
+        self.name = pokemon.get_name()
+        self.width = 50
+        self.height = 50
+        # border_size = 4
+        background_color = arcade.color.BLACK
+        foreground_color = arcade.color.ASH_GREY
+
+        # Create the boxes needed to represent the indicator bar
+        self.background_box = arcade.SpriteSolidColor(
+            HEALTH_BAR_SCALAR * 2,
+            HEALTH_BAR_SCALAR + 2 * HEALTH_BAR_BORDER,
+            background_color
+        )
+        self.background_box.center_x = 350
+        self.background_box.center_y = 500
+        sprite_list.append(self.background_box)
+        self.foreground_box = arcade.SpriteSolidColor(
+            HEALTH_BAR_SCALAR * 2 - 2 * HEALTH_BAR_BORDER,
+            HEALTH_BAR_SCALAR,
+            foreground_color
+        )
+        self.foreground_box.center_x = 350
+        self.foreground_box.center_y = 500
+        sprite_list.append(self.foreground_box)
+        self.health_text = arcade.create_text_sprite (
+            start_x=350,
+            start_y=500,
+            color=arcade.color.BLACK,
+            text = str(self.health) + " / " + str(self.max_health)
+        )
+        self.health_text.center_x = 350
+        self.health_text.center_y = 500
+        sprite_list.append(self.health_text)
+        self.name_text = arcade.create_text_sprite(
+            start_x=350,
+            start_y=515,
+            color=arcade.color.BLACK,
+            text=str(self.pokemon.get_name())
+        )
+        self.name_text.center_x = 350
+        self.name_text.center_y = 515
+        sprite_list.append(self.name_text)
+    
+    def take_damage(self, damage, sprite_list):
+
+        # TODO: Replace with damage function from back end and then just kill the text and reload it
+        self.health = self.health - damage
+
+        self.health_text.kill()
+        self.health_text = arcade.create_text_sprite (
+            start_x=350,
+            start_y=500,
+            color=arcade.color.BLACK,
+            text = str(self.health) + " / " + str(self.max_health)
+        )
+        self.health_text.center_x = 350
+        self.health_text.center_y = 500
+        sprite_list.append(self.health_text)
+
+
+
 class Sprite(arcade.Sprite):
 
     def update(self):
@@ -63,8 +138,23 @@ class PokemonGame(arcade.Window):
         super().__init__(width, height, title)
         self.player = player
         self.enemy = enemy
+
+        # Health bar
+        self.bar_sprite_list = arcade.SpriteList()
+        # self.health_bar = HealthBar(self.player.get_curr_pkm().get_curr_hlth(), self.player.get_curr_pkm().get_max_hlth(), self.bar_sprite_list)
+        self.health_bar = HealthBar(self.player.get_curr_pkm(), self.bar_sprite_list)
+        # self.health_bar2 = HealthBar(10,15, self.bar_sprite_list)
+
+
+
+
+        
         # Background image will be stored in this variable
         self.background = None
+
+        # ANIMATIONS
+        self.move_up = False
+        self.animate = False
 
         self.background2 = None
 
@@ -110,7 +200,6 @@ class PokemonGame(arcade.Window):
                                y=0,
                                width=400,
                                height=150,
-                               text="FIGHT BAG\nPOKeMON RUN",
                                font_size=50,
                                text_color=(0, 0, 0, 255))
         self.manager.add(
@@ -173,6 +262,9 @@ class PokemonGame(arcade.Window):
         self.player_sprite2.center_y = 725
         self.player_list.append(self.player_sprite)
         self.player_list.append(self.player_sprite2)
+    
+
+
 
         self.background = arcade.load_texture("../cs3050_pokemon/images/fight-background.png")
 
@@ -188,6 +280,7 @@ class PokemonGame(arcade.Window):
             # Draw all the sprites.
             self.manager.draw()
             self.player_list.draw()
+            self.bar_sprite_list.draw()
         if(state == State.Moves):
             self.clear()
             # Draw the background texture
@@ -196,6 +289,8 @@ class PokemonGame(arcade.Window):
                                             self.background2)
             self.manager.draw()
             self.player_list.draw()
+            self.bar_sprite_list.draw()
+
 
     
     def add_move_buttons(self):
@@ -205,25 +300,25 @@ class PokemonGame(arcade.Window):
         self.v_box_2 = arcade.gui.UIBoxLayout()
 
         # Create the buttons
-        move_1 = arcade.gui.UIFlatButton(text="Move 1", width=175)
+        move_1 = arcade.gui.UIFlatButton(text=self.player.get_curr_pkm().moves[0].name, width=175)
         self.v_box.add(move_1.with_space_around(bottom=20))
 
         # assign self.on_click_start as callback
         move_1.on_click = self.move_1_go
 
-        move_2 = arcade.gui.UIFlatButton(text="Move 2", width=175)
+        move_2 = arcade.gui.UIFlatButton(text=self.player.get_curr_pkm().moves[1].name, width=175)
         self.v_box.add(move_2.with_space_around(bottom=20))
 
         # assign self.on_click_start as callback
         move_2.on_click = self.move_2_go
 
-        move_3 = arcade.gui.UIFlatButton(text="Move 3", width=175)
+        move_3 = arcade.gui.UIFlatButton(text=self.player.get_curr_pkm().moves[2].name, width=175)
         self.v_box_2.add(move_3.with_space_around(bottom=20))
 
         # assign self.on_click_start as callback
         move_3.on_click = self.move_3_go
 
-        move_4 = arcade.gui.UIFlatButton(text="Move 4", width=175)
+        move_4 = arcade.gui.UIFlatButton(text=self.player.get_curr_pkm().moves[3].name, width=175)
         self.v_box_2.add(move_4.with_space_around(bottom=20))
 
         # assign self.on_click_start as callback
@@ -231,14 +326,14 @@ class PokemonGame(arcade.Window):
 
         # Create a widget to hold the v_box widget, that will center the buttons
         self.manager.add(
-            arcade.gui.UIAnchorWidget(align_x=100, align_y= -200,
+            arcade.gui.UIAnchorWidget(align_x=100, align_y= -225,
                 anchor_x="center_x",
                 anchor_y="center_y",
                 child=self.v_box)
         )
         # Create a widget to hold the v_box_2 widget, that will center the buttons
         self.manager.add(
-            arcade.gui.UIAnchorWidget(align_x=300, align_y= -200,
+            arcade.gui.UIAnchorWidget(align_x=300, align_y= -225,
                 anchor_x="center_x",
                 anchor_y="center_y",
                 child=self.v_box_2)
@@ -248,6 +343,14 @@ class PokemonGame(arcade.Window):
 
     def move_1_go(self, event):
         print("accessing first move")
+        self.health_bar.take_damage(10, self.bar_sprite_list)
+        print(self.health_bar.health)
+
+        # TODO: Add some sort of movement for sprite when move is performed
+        self.move_1_animate()
+
+
+
         self.update_background()
         btn_info = ["move", self.player.get_curr_pkm().get_moves()[0]]
         battle(self.player, self.enemy, btn_info)
@@ -269,6 +372,14 @@ class PokemonGame(arcade.Window):
         self.update_background()
         btn_info = ["move", self.player.get_curr_pkm().get_moves()[3]]
         battle(self.player, self.enemy, btn_info)
+
+    def move_1_animate(self):
+        self.move_up = True
+        self.animate = True
+        
+        
+        
+
 
     def update_player_speed(self):
 
@@ -294,9 +405,15 @@ class PokemonGame(arcade.Window):
 
     def on_update(self, delta_time):
         """ Movement and game logic """
-
         # Call update to move the sprite
-        self.player_list.update()
+        self.player_list.update()  
+        self.bar_sprite_list.update()
+
+                
+
+
+
+
 
     def on_key_press(self, key, modifiers):
         """Listen for a key press from user """

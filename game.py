@@ -194,7 +194,7 @@ class PokemonGame(arcade.Window):
                                y=0,
                                width=400,
                                height=150,
-                               text="What will Bulbasaur do?",
+                               text="What will " + self.player.get_curr_pkm().get_name() + " do?",
                                font_size=20,
                                text_color=(0, 0, 0, 255))
         self.manager.add(
@@ -264,8 +264,9 @@ class PokemonGame(arcade.Window):
         # print("test")
         # print(os.getcwd())
         # Set up the player
-        self.player_sprite = Sprite("../cs3050_pokemon/sprites/bulbasaur-back.png", SPRITE_SCALING)
-        self.player_sprite2 = Sprite("../cs3050_pokemon/sprites/charizard-front.png", OPPONENT_SPRITE_SCALING)
+        print(self.player.get_curr_pkm().get_name())
+        self.player_sprite = Sprite("../cs3050_pokemon/sprites/" + self.player.get_curr_pkm().get_name().lower() + "-back.png", SPRITE_SCALING)
+        self.player_sprite2 = Sprite("../cs3050_pokemon/sprites/" + self.enemy.get_curr_pkm().get_name().lower() + "-front.png", OPPONENT_SPRITE_SCALING)
         self.player_sprite.center_x = 200
         self.player_sprite.center_y = 235
         self.player_sprite2.center_x = 600
@@ -507,10 +508,10 @@ def main():
 
     # pokemon_bag = [charazard, bulbasaur
     #                ]
-    pokemon_bag = [pokemon_objects.bulbasaur, pokemon_objects.charazard]
+    pokemon_bag = [pokemon_objects.bulbasaur, pokemon_objects.charizard]
     trainer1 = Character("Ash", pokemon_bag, [], 1000,
                               "I'm on a journey to become a Pokemon Master!")
-    pokemon_bag_trainer2 = [pokemon_objects.charazard]
+    pokemon_bag_trainer2 = [pokemon_objects.charizard]
     trainer2 = Character("Misty", pokemon_bag_trainer2, [], 800, "Water types are the best!")
 
     window = PokemonGame(SCREEN_WIDTH, SCREEN_HEIGHT, B_SCREEN_TITLE, trainer1, trainer2)

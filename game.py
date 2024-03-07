@@ -295,7 +295,7 @@ class PokemonGame(arcade.Window):
             self.bar_sprite_list.draw()
             #TODO: Move the logic for checking if they won to the other programs, then main will just change state when 
             # this occurs
-        if(self.state == State.Moves and self.enemy.get_curr_pkm().get_curr_hlth() <= 0):
+        if(self.enemy.get_curr_pkm().get_is_fainted()):
             self.state = State.Win
             # print("curr health " + str(self.enemy.get_curr_pkm().get_curr_hlth()))
             print('changed to win')

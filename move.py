@@ -40,6 +40,7 @@ class move:
     def get_is_atk(self):
         return self.is_atk
 
+    
 
 
 

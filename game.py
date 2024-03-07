@@ -264,7 +264,6 @@ class PokemonGame(arcade.Window):
         # print("test")
         # print(os.getcwd())
         # Set up the player
-        print(self.player.get_curr_pkm().get_name())
         self.player_sprite = Sprite("../cs3050_pokemon/sprites/" + self.player.get_curr_pkm().get_name().lower() + "-back.png", SPRITE_SCALING)
         self.player_sprite2 = Sprite("../cs3050_pokemon/sprites/" + self.enemy.get_curr_pkm().get_name().lower() + "-front.png", OPPONENT_SPRITE_SCALING)
         self.player_sprite.center_x = 200

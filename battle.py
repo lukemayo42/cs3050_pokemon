@@ -8,37 +8,6 @@ import pokemon_objects
 #we are assuming that we are receiving the type of button that is pressed (pokemon, move, item) and the specific move/pokemon/item that is used/switched
 #please write a method in the button class which we can call that will give us a list containing the type of button that 
 
-# def battle(player, enemy, btn_info):
-#     #while loop to check if both players have pokemon left
-#     if (player.chk_party() and enemy.chk_party()):
-#         player_pkm = player.get_curr_pkm()
-#         enemy_pkm = enemy.get_curr_pkm()
-#     #loop to check if pokemon are fainted, throw out first pokemon
-#         #spd_flag = chk_spd(player_pkm, enemy_pkm)
-#         if chk_spd(player_pkm, enemy_pkm):
-#             player_action = player_turn(player, enemy, btn_info)
-#             if not enemy.chk_party():
-#                 # tell gui player wins
-#                 break
-#             elif enemy.get_curr_pkm().get_is_fainted():
-#                 # force enemy to switch pokemon
-#                 pass
-#             else:
-#                 enemy_action = enemy_turn(enemy, player)
-#                 # send to gui
-#         else:
-#             enemy_action = enemy_turn(enemy, player)
-#             if not player.chk_party():
-#                 # tell gui enemy wins
-#                 break
-#             elif player.get_curr_pkm().get_is_fainted():
-#                 # force player to switch pokemon
-#                 pass
-#             else:
-#                 # btn_info = get_btn_info()
-#                 player_action = player_turn(enemy, player)
-#                 # send to gui
-
 # Battle function without while loop
 #returns 2 strings, what move player did and what move the enemy did
 def battle(player, enemy, btn_info):

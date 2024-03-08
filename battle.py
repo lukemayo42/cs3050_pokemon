@@ -76,36 +76,47 @@ def battle(player, enemy, btn_info):
                 # force player to switch pokemon
                 pass
             # send to gui
+    # if enemy pokemon faster than player pokemon
     else:
+        # Take enemy action
         enemy_action, action1 = enemy_turn(enemy, player)
+        # If the enemy action resulted in a hit
         if enemy_action:
             # Update Gui
             pass
+        # The enemy action resulted in a miss
         else:
             # Update Gui
             pass
+        # If the player party is fully fainted
         if not player.chk_party():
             # tell gui enemy wins
             pass
+        # If the current pokemon in the players party is fainted, make them switch pokemon
         elif player.get_curr_pkm().get_is_fainted():
             # force player to switch pokemon
             pass
+        # The enemy turn didn't result in anything needing the player to do anything
         else:
             player_action, action2 = player_turn(player, enemy, btn_info)
+            # If the players action resulted in a hit
             if player_action:
                 # Update Gui
                 pass
+            # Player action resulted in a miss
             else:
                 # Update Gui
                 pass
+            # If the player turn results in the enemy's party being all fainted
             if not enemy.chk_party():
                 # tell gui player wins
                 pass
+            # If the enemy's current pokemon is fainted, make them switch
             elif enemy.get_curr_pkm().get_is_fainted():
                 # force enemy to switch pokemon
                 pass
             # send to gui
-
+    # Return the player and the enemy's action result
     return action1, action2
     #check speed to see which pokemon goes first
     #get back choice from gui/controller

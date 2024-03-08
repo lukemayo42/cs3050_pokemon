@@ -116,7 +116,7 @@ def battle(player, enemy, btn_info):
                 # force enemy to switch pokemon
                 pass
             # send to gui
-    # Return the player and the enemy's action result
+    # Return the first action that was done and the second action that was done
     return action1, action2
     #check speed to see which pokemon goes first
     #get back choice from gui/controller

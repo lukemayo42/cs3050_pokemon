@@ -96,13 +96,6 @@ class pokemon:
             self.curr_hlth = 0
             self.is_fainted = True
 
-    #returns true if there is a non fainted pokemon left in the party otherwise false
-    def chk_party(self):
-        valid = False
-        for pkm in self.pokemon:
-            if not pkm.get_is_fainted():
-                valid = True
-        return valid
 
     #print functions!!!! - need to know how gui wants text info
 

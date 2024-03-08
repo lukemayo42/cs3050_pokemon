@@ -10,7 +10,6 @@ from Character import Character
 from pokemon import pokemon
 from move import move
 import pokemon_objects
-import time
 
 # Enum to hold the current state of the game, used to update the screen rendering
 class State(Enum):

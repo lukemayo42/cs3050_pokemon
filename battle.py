@@ -139,7 +139,7 @@ def player_turn(player, enemy, btn_info):
             dmg = calc_dmg(player.get_curr_pkm(), enemy.get_curr_pkm(), move_used)
             enemy.get_curr_pkm().remove_health(dmg)
             action_str = player.get_curr_pkm().move_to_string(move_used, True)
-            player.get_curr_pkm().move_to_string(move_used, True)
+            print(player.get_curr_pkm().move_to_string(move_used, True))
         else:
             #send gui something saying it missed
             action_str = player.get_curr_pkm().move_to_string(move_used, False)

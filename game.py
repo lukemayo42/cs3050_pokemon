@@ -79,7 +79,7 @@ class HealthBar(arcade.Sprite):
             start_x=pos_x,
             start_y=pos_y,
             color=background_color,
-            text = str(round(self.health, 2)) + " / " + str(self.max_health)
+            text = str(int(self.health)) + " / " + str(self.max_health)
         )
         self.health_text.center_x = pos_x
         self.health_text.center_y = pos_y
@@ -102,7 +102,7 @@ class HealthBar(arcade.Sprite):
             start_x=self.pos_x,
             start_y=self.pos_y,
             color=arcade.color.BLACK,
-            text = str(round(self.health, 2)) + " / " + str(self.max_health)
+            text = str(int(self.health)) + " / " + str(self.max_health)
         )
         self.health_text.center_x = self.pos_x
         self.health_text.center_y = self.pos_y

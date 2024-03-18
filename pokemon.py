@@ -104,7 +104,6 @@ class pokemon:
             return f"{self.name} used {move_used.get_name()}"
         else:
             return f"{self.name}'s move missed"
-        return move_str
     
     '''
     def get_move_names(self):

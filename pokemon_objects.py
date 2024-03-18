@@ -5,6 +5,12 @@ from pokemon import pokemon
 
 moves = []
 
+#create moves
+tackle = move("Tackle", "Normal", 40, 100, "Normal", True)
+vine_whip = move("Vine Whip", "Vine Whip", 40, 100, "Grass", True)
+
+
+
 # Create Bulbasaur
 type = ["Grass", "Poison"]
 bulbasaur_moves = [move("Tackle", "Normal", 40, 100, "Normal", True), move("Vine Whip", "Vine Whip", 40, 100, "Grass", True),

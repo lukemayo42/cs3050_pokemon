@@ -132,7 +132,7 @@ class Sprite(arcade.Sprite):
 
 # This PokemonGame class is created with two trainers passed in, the player and the enemy trainer
 # the pokemon bags of each trainer are represented on the screen with Sprites and health_bar sprites.
-class PokemonGame(arcade.Window):
+class PokemonGame(arcade.View):
     """
     constructor for PokemonGame class 
     attributes of class
@@ -142,8 +142,8 @@ class PokemonGame(arcade.Window):
     player - Character object representing the player - Character
     enemy - Character object representing the enemy trainer - Character
     """
-    def __init__(self, width, height, title, player, enemy):
-        super().__init__(width, height, title)
+    def __init__(self, player, enemy):
+        super().__init__()
         # Start in the battle state for deliverable 1
         self.state = State.Battle
         self.player = player
@@ -575,8 +575,12 @@ def main():
     pokemon_bag_trainer2 = [pokemon_objects.charizard]
     trainer2 = Character("Misty", pokemon_bag_trainer2, [], 800, "Water types are the best!")
 
-    window = PokemonGame(SCREEN_WIDTH, SCREEN_HEIGHT, B_SCREEN_TITLE, trainer1, trainer2)
-    window.setup()
+    # window = PokemonGame(SCREEN_WIDTH, SCREEN_HEIGHT, B_SCREEN_TITLE, trainer1, trainer2)
+    
+    window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, B_SCREEN_TITLE)
+    battle_view = PokemonGame(trainer1, trainer2)
+    window.show_view(battle_view)
+    battle_view.setup()
     arcade.run()
 
 if __name__ == "__main__":

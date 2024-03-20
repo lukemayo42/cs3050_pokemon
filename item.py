@@ -45,3 +45,14 @@ class item:
 
     def set_is_revive(self, is_revive):
         self.is_revive = is_revive
+
+    # use_item function takes in the current pokemon and uses the item on the pokemon.
+    def use_item(self, pokemon):
+        if self.is_revive:
+            pokemon.add_health(self.health_recovered)
+            pokemon.set_is_fainted(False)
+        else:
+            if (pokemon.get_current_health() + self.health_recovered) > pokemon.get_max_hlth():
+                pokemon.set_health(pokemon.get_max_hlth())
+            else:
+                pokemon.add_health(self.health_recovered)

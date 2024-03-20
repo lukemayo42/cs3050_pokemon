@@ -192,8 +192,66 @@ def roll_crit():
     return random.choice(rand_list)
 
 
-def chk_effective():
-    pass
+def chk_effective(move_used, pkm):
+    effectiveness = 1
+    move_type = move_used.get_type()
+    pkm_types = pkm.get_types()
+    pkm_type1 = pkm_types[0]
+    pkm_type2 = "none"
+    if pkm_types.length() > 1:
+        pkm_type2 = pkm_types[1]
+    #defense pokemon water
+    if pkm_type1 == "water" or pkm_type2 == "water":
+        #not very effective moves
+        if move_type == "fire" or move_type == "water" or move_type == "ice" or move_type == "steel":
+            effectiveness/=2
+        #super effective moves
+        elif move_type == "electric" or move_type == "grass":
+            effectiveness*=2
+    #defending pokemon type fire
+    if pkm_type1 == "fire" or pkm_type2 == "fire":
+        #not very effective move types
+        if move_type == "fire" or move_type == "grass" or move_type == "ice" or move_type == "bug" or move_type == "steel":
+            effectiveness/=2
+        #super effective moves
+        elif move_type == "water" or move_type == "ground" or move_type == "rock":
+            effectiveness*=2
+    #defending pokemon type 
+    if pkm_type1 == "normal" or pkm_type2 == "normal":
+        #no effect
+        if move_type == "ghost":
+            effectiveness *=0
+        #super character
+        elif move_type == "fighting":
+            effectiveness *=2
+    #defending pkm type electric
+    if pkm_type1 == "electric" or pkm_type2 == "electric":
+        #not very effective
+        if move_type == "electric" or move_type == "flying" or move_type == "steel":
+            effectiveness/=2
+        #super effective
+        elif move_type == "ground":
+            effectiveness*=2
+    #defending pokemon grass
+    if pkm_type1 == "grass" or pkm_type2 == "grass":
+        #not very effective moves
+        if move_type == "water" or move_type == "electric" or move_type == "grass" or move_type == "ground":
+            effectiveness/=2
+        #
+        elif move_type == "fire" or move_type == "ice" or move_type == "poison" or move_type == "flying" or move_type == "bug":
+            effectiveness*=2
+    #defending pokemon ice
+    if pkm_type1 == "ice" or pkm_type2:
+        #not very effective moves
+        if move_type == "ice":
+            effectiveness/=2
+        #super effective moves
+        elif move_type == "fire" or move_type == "fighting" or move_type == "rock" or move_type == "steel":
+            effectiveness*=2
+    #TODO:fighting, poison, ground flying, psychic, bug, rock, ghost, dragon, dark, steel
+
+
+    return effectiveness
 
 #returns 1 if move hits, 0 if move misses
 def roll_accuracy(move):

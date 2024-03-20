@@ -81,6 +81,9 @@ class pokemon:
     def set_curr_spd(self, new_spd):
         self.curr_spd = new_spd
 
+    def set_is_fainted(self, new_is_fainted):
+        self.is_fainted = new_is_fainted
+
     #add health and remove health functions
     def add_health(self, hlth):
         self.curr_hlth += hlth

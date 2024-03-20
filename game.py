@@ -40,6 +40,14 @@ FONT_SIZE = 20
 
 BUTTON_WIDTH = 175
 
+# Rules page formatting
+RULES = '''Welcome to our Pokemon Game. When you are ready, return to the start menu and click start to enter the world of Pokemon.
+            You will select a Pokemon party of 3 Pokemon that will fight for you. Each have different attack moves and health so choose wisely.
+            When you feel ready to fight, enter the gym and challenge an opponent. You can choose between 'Fight' which gives you 4 move options,
+            'Pokemon' to switch between the Pokemon in your party, and 'Items' which allows you to use special items like health potions.'''
+RULES_WIDTH = 400
+RULES_HEIGHT = 350
+
 # Possible TODOs
 # Create subclass for the user
 # Subclass for pokemon
@@ -174,8 +182,6 @@ class PokemonStart(arcade.View):
                 child=self.v_box)
         )
 
-        
-
     def setup(self):
         self.background = arcade.load_texture("../cs3050_pokemon/images/start.png")
 
@@ -189,6 +195,9 @@ class PokemonStart(arcade.View):
     def rules_button_action(self, event):
         # TODO: Render a list of rules/how to play
         print("Here is how to play the game")
+        rules_view = PokemonRules(self.player, self.enemy)
+        rules_view.setup()
+        self.window.show_view(rules_view)
 
     def on_draw(self):
             # Clear the screen
@@ -200,7 +209,79 @@ class PokemonStart(arcade.View):
             # Draw all the sprites.
             self.manager.draw()
 
+# This PokemonRules view class displays a scrollable textbox with the information on how to play the game.
+# It has a button to return to the start screen that renders the PokemonStart view.
+class PokemonRules(arcade.View):
+    def __init__(self, player, enemy):
+        super().__init__()
+        self.player = player
+        self.enemy = enemy
 
+        # Background image will be stored in this variable
+        self.background = None
+        arcade.set_background_color(arcade.color.WHITE)
+
+        # Button styling
+        button_style = {
+            "bg_color":(50,75,125),
+            "bg_color_pressed":(20, 65, 115)
+        }
+
+        # Create "go back" button
+        self.v_box = arcade.gui.UIBoxLayout()
+        back_button = arcade.gui.UIFlatButton(text="Go Back", width=BUTTON_WIDTH * 2, style=button_style)
+        self.v_box.add(back_button.with_space_around(bottom=20))
+
+        # Assign self.items_button as a callback to render item bag
+        back_button.on_click = self.back_button_action
+
+        self.manager = UIManager()
+        self.manager.enable()
+        # Create a widget to hold the v_box widget, that will center the buttons
+        self.manager.add(
+            arcade.gui.UIAnchorWidget(align_x=0, align_y= -SCREEN_HEIGHT / 3,
+                anchor_x="center_x",
+                anchor_y="center_y",
+                child=self.v_box)
+        )        
+        # Rules text scrollable textbox
+        bg_tex = load_texture(":resources:gui_basic_assets/window/grey_panel.png")
+        rules_area = UITextArea(x= SCREEN_WIDTH / 4,
+                               y=SCREEN_HEIGHT / 3,
+                               width=RULES_WIDTH,
+                               height=RULES_HEIGHT,
+                               text=RULES,
+                               text_color=(0, 0, 0, 255))
+        self.manager.add(
+            UITexturePane(
+                rules_area.with_space_around(right=20),
+                tex=bg_tex,
+                padding=(10, 10, 10, 10)
+            )
+        )
+        
+
+    def setup(self):
+        # TODO: create any sprites needed for rules page
+        print("setting up rules")
+
+    def back_button_action(self, event):
+        #TODO: switch screen to starting screen
+        print("returning to start screen")
+        start_view = PokemonStart(self.player, self.enemy)
+        start_view.setup()
+        self.window.show_view(start_view)
+
+
+    def on_draw(self):
+            # Clear the screen
+            self.clear()
+            # Draw the background texture
+            # arcade.draw_lrwh_rectangle_textured(0, 150,
+            #                                     SCREEN_WIDTH, SCREEN_HEIGHT,
+            #                                     self.background)
+            # Draw all the sprites.
+            self.manager.draw()
 
 # This PokemonGame class is created with two trainers passed in, the player and the enemy trainer
 # the pokemon bags of each trainer are represented on the screen with Sprites and health_bar sprites.

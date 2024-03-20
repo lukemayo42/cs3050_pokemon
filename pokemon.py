@@ -68,9 +68,6 @@ class pokemon:
     def get_is_fainted(self):
         return self.is_fainted
     
-    def get_curr_pkm(self):
-        return self.pokemon[0]
-    
     #setters
     def set_curr_hlth(self, new_hlth):
         self.curr_hlth = new_hlth
@@ -83,6 +80,9 @@ class pokemon:
 
     def set_curr_spd(self, new_spd):
         self.curr_spd = new_spd
+
+    def set_is_fainted(self, new_is_fainted):
+        self.is_fainted = new_is_fainted
 
     #add health and remove health functions
     def add_health(self, hlth):

@@ -41,10 +41,9 @@ FONT_SIZE = 20
 BUTTON_WIDTH = 175
 
 # Rules page formatting
-RULES = '''Welcome to our Pokemon Game. When you are ready, return to the start menu and click start to enter the world of Pokemon.
-            You will select a Pokemon party of 3 Pokemon that will fight for you. Each have different attack moves and health so choose wisely.
-            When you feel ready to fight, enter the gym and challenge an opponent. You can choose between 'Fight' which gives you 4 move options,
-            'Pokemon' to switch between the Pokemon in your party, and 'Items' which allows you to use special items like health potions.'''
+RULES = '''Welcome to our Pokemon Game. 
+        When you are ready, return to the start menu and click start to enter the world of Pokemon. You will select a Pokemon party of 3 Pokemon that will fight for you. Each have different attack moves and health so choose wisely. 
+        When you feel ready to fight, enter the gym and challenge an opponent. You can choose between 'Fight' which gives you 4 move options, 'Pokemon' to switch between the Pokemon in your party, and 'Items' which allows you to use special items like health potions.'''
 RULES_WIDTH = 400
 RULES_HEIGHT = 350
 

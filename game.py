@@ -129,6 +129,21 @@ class Sprite(arcade.Sprite):
             self.bottom = 0
         elif self.top > SCREEN_HEIGHT - 1:
             self.top = SCREEN_HEIGHT - 1
+# This PokemonStart class is a view screen that opens up when the program is started. It gives the user
+# a chance to review the rules and how to play, and then a button to start.
+class PokemonStart(arcade.view):
+    """
+    constrctor for PokemonStart class
+    """
+    def __init__(self):
+        super().__init__()
+
+        # Background image will be stored in this variable
+        self.background = None
+    def setup(self):
+        self.background = arcade.load_texture("../cs3050_pokemon/images/fight-background.png")
+
+
 
 # This PokemonGame class is created with two trainers passed in, the player and the enemy trainer
 # the pokemon bags of each trainer are represented on the screen with Sprites and health_bar sprites.
@@ -576,7 +591,7 @@ def main():
     trainer2 = Character("Misty", pokemon_bag_trainer2, [], 800, "Water types are the best!")
 
     # window = PokemonGame(SCREEN_WIDTH, SCREEN_HEIGHT, B_SCREEN_TITLE, trainer1, trainer2)
-    
+
     window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, B_SCREEN_TITLE)
     battle_view = PokemonGame(trainer1, trainer2)
     window.show_view(battle_view)

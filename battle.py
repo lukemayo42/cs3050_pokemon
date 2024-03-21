@@ -181,7 +181,6 @@ def chk_spd(user_pkm, enemy_pkm):
         return True
     else:
         return False
-    pass
 
 def use_item():
     pass
@@ -241,13 +240,114 @@ def chk_effective(move_used, pkm):
         elif move_type == "fire" or move_type == "ice" or move_type == "poison" or move_type == "flying" or move_type == "bug":
             effectiveness*=2
     #defending pokemon ice
-    if pkm_type1 == "ice" or pkm_type2:
+    if pkm_type1 == "ice" or pkm_type2 == "ice":
         #not very effective moves
         if move_type == "ice":
             effectiveness/=2
         #super effective moves
         elif move_type == "fire" or move_type == "fighting" or move_type == "rock" or move_type == "steel":
             effectiveness*=2
+    #defending pokemon fighting
+    if pkm_type1 == "fighting" or pkm_type2 == "fighting":
+        #not very effectiv moves
+        if move_type == "bug" or move_type == "rock" or move_type == "dark":
+            effectiveness/=2
+        #super effectvie move types
+        elif move_type == "flying" or move_type == "psychic":
+            effectiveness*=2
+    #defending pokemon type poison
+    if pkm_type1 ==  "poison" or pkm_type2 == "poison":
+        #not very effective moves
+        if move_type == "grass" or move_type == "fighting" or move_type == "poison" or move_type == "bug":
+            effectiveness/=2
+        elif move_type == "ground" or move_type == "psychic":
+            effectiveness*=2
+    #defending pokmeon ground
+    if pkm_type1 == "ground" or pkm_type2 == "ground":
+        #no effect moves
+        if move_type == "electric":
+            effectiveness*=0
+        #not very effective types
+        elif move_type == "poision" or move_type == "rock":
+            effectiveness/=2
+        #super effective types
+        elif move_type == "water" or move_type == "grass" or move_type == "ice":
+            effectiveness*=2
+    #defending pokemon flying
+    if pkm_type1 == "flying" or pkm_type2 == "flying":
+        #no effect types
+        if move_type == "ground":
+            effectiveness*=0
+        #not very effective types
+        elif move_type == "grass" or move_type == "fighting" or move_type == "bug":
+            effectiveness/=2
+        #super effective types
+        elif move_type == "electric" or move_type == "ice" or move_type == "rock":
+            effectiveness*=2
+    #defending pokmeon psychic
+    if pkm_type1 == "psychic" or pkm_type2 == "psychic":
+        if move_type == "fighting" or move_type == "psychic":
+            effectiveness/=2
+        elif move_type == "bug" or move_type == "ghost" or move_type == "dark":
+            effectiveness*=2
+    #defending pokemon bug
+    if pkm_type1 == "bug" or pkm_type2 == "bug":
+        if move_type == "grass" or move_type == "fighting" or move_type == "ground":
+            effectiveness/=2
+        elif move_type == "fire" or move_type == "flying" or move_type == "rock":
+            effectiveness*=2
+    #defending pokemon rock
+    if pkm_type1 == "rock" or pkm_type2 == "rock":
+        #move type not very effective
+        if move_type == "normal" or move_type == "fire" or move_type == "poison" or move_type == "flying":
+            effectiveness/=2
+        #move type super effective 
+        elif move_type == "water" or move_type == "grass" or move_type == "fighting" or move_type == "ground" or move_type == "steel":
+            effectiveness*=2
+    #defending pokemon ghost
+    if pkm_type1 == "ghost" or pkm_type2 == "ghost":
+        #no effect 
+        if move_type == "normal" or move_type == "fighting":
+            effectiveness*=0
+        #nit very effective
+        elif move_type == "poison" or move_type == "bug":
+            effectiveness/=2
+        #super effective move types
+        elif move_type == "ghost" or move_type == "dark":
+            effectiveness*=2
+    #defending pokemon dragon
+    if pkm_type1 == "dragon" or pkm_type2 == "dragon":
+        #not very effective move types
+        if move_type == "fire" or move_type == "water" or move_type == "grass":
+            effectiveness/=2
+        #super effective move types
+        elif move_type == "ice" or move_type == "dragon":
+            effectiveness*=2
+    #defending pokemon dark
+    if pkm_type1 == "dark" or pkm_type2 == "dark":
+        #no effect
+        if move_type == "psychic":
+            effectiveness*=0
+        #not very effective move types
+        elif move_type == "ghost" or move_type == "dark":
+            effectiveness/=2
+        #super effective move types
+        elif move_type == "fighting" or move_type == "bug":
+            effectiveness*=2
+    if pkm_type1 == "steel" or pkm_type2 == "steel":
+        #no effect move types
+        if move_type == "poison":
+            effectiveness*=0
+        #not very effective move types
+        elif move_type == "normal" or move_type == "grass" or move_type == "ice" or move_type == "flying" or move_type == "psychic" or move_type == "bug" or move_type == "rock" or move_type == "dragon" or move_type == "steel":
+            effectiveness/=2
+        #super effective move types
+        elif move_type == "fire" or move_type == "fighting" or move_type == "ground":
+            effectiveness*=2
+    
+
+ 
+        
     #TODO:fighting, poison, ground flying, psychic, bug, rock, ghost, dragon, dark, steel
 
 

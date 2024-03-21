@@ -8,6 +8,10 @@ import pokemon_objects
 #we are assuming that we are receiving the type of button that is pressed (pokemon, move, item) and the specific move/pokemon/item that is used/switched
 #please write a method in the button class which we can call that will give us a list containing the type of button that 
 
+#TODO: calc_dmg now returns 2 values, dmg and effectiveness 0, 1/2, 1/4, 1, 2, 4 
+#change battle/turn function and move_to_string method in pokemon class to handle two returns 
+#change message to now display if move was super effective or not
+
 # Battle function without while loop
 #returns 2 strings, what move player did and what move the enemy did
 def battle(player, enemy, btn_info):
@@ -171,9 +175,11 @@ def calc_dmg(atk_pkm, def_pkm, move):
     #write chk_effective later
     #STAB * TYPE 1 EFFECTIVE * TYPE 2 EFFECTIVE at end of equation
     #random variable in damage equation
+    effectiveness = chk_effective(move, def_pkm)
+
     random_variable = random.randint(217, 255) / 255
-    dmg = (((((2 * level * roll_crit())/5) + 2)* move.get_power() * (atk_pkm.get_curr_atk()/def_pkm.get_curr_def())/50) + 2 ) * random_variable
-    return dmg
+    dmg = (((((2 * level * roll_crit())/5) + 2)* move.get_power() * (atk_pkm.get_curr_atk()/def_pkm.get_curr_def())/50) + 2 ) * random_variable * effectiveness
+    return dmg, effectiveness
 
 #rerturns 1 if user spedd is greater then enemy otherwise 0
 def chk_spd(user_pkm, enemy_pkm):
@@ -190,7 +196,10 @@ def roll_crit():
     rand_list = [1, 1, 1, 1, 1, 1, 1, 1, 2]
     return random.choice(rand_list)
 
-
+#takes in move used and the defending pokemon
+#calculates effectivenss vbased on defending pokemon types and move type
+#returns effectivenss in number form 1/2 if not very effective 2 or 4 if super effective
+#used in damage calculation
 def chk_effective(move_used, pkm):
     effectiveness = 1
     move_type = move_used.get_type()

@@ -38,7 +38,12 @@ W_SCREEN_TITLE = "Pokemon World"
 B_SCREEN_TITLE = "Battle"
 FONT_SIZE = 20
 
+# Button formatting
 BUTTON_WIDTH = 175
+V_BOX_X = 100
+V_BOX_Y = -225
+V_BOX_2_X = 300
+V_BOX_2_Y = -190
 
 # Rules page formatting
 RULES = '''Welcome to our Pokemon Game. 
@@ -390,7 +395,7 @@ class PokemonGame(arcade.View):
 
         # Create a widget to hold the v_box widget, that will center the buttons
         self.manager.add(
-            arcade.gui.UIAnchorWidget(align_x=100, align_y= -225,
+            arcade.gui.UIAnchorWidget(align_x=V_BOX_X, align_y= V_BOX_Y,
                 anchor_x="center_x",
                 anchor_y="center_y",
                 child=self.v_box)
@@ -398,7 +403,7 @@ class PokemonGame(arcade.View):
 
         # Create a widget to hold the v_box_2 widget, that will center the buttons
         self.manager.add(
-            arcade.gui.UIAnchorWidget(align_x=300, align_y= -225,
+            arcade.gui.UIAnchorWidget(align_x=V_BOX_2_X, align_y= V_BOX_2_Y,
                 anchor_x="center_x",
                 anchor_y="center_y",
                 child=self.v_box_2)
@@ -535,13 +540,13 @@ class PokemonGame(arcade.View):
 
         # Create widgets to hold the v_box and v_box_2 widgets, that will center the buttons
         self.manager.add(
-            arcade.gui.UIAnchorWidget(align_x=100, align_y= -225,
+            arcade.gui.UIAnchorWidget(align_x=V_BOX_X, align_y= V_BOX_Y,
                 anchor_x="center_x",
                 anchor_y="center_y",
                 child=self.v_box)
         )
         self.manager.add(
-            arcade.gui.UIAnchorWidget(align_x=300, align_y= -225,
+            arcade.gui.UIAnchorWidget(align_x=V_BOX_2_X, align_y= V_BOX_Y,
                 anchor_x="center_x",
                 anchor_y="center_y",
                 child=self.v_box_2)
@@ -574,13 +579,13 @@ class PokemonGame(arcade.View):
 
         # Create widgets to hold the v_box and v_box_2 widgets, that will center the buttons
         self.manager.add(
-            arcade.gui.UIAnchorWidget(align_x=100, align_y= -225,
+            arcade.gui.UIAnchorWidget(align_x=V_BOX_X, align_y= V_BOX_Y,
                 anchor_x="center_x",
                 anchor_y="center_y",
                 child=self.v_box)
         )
         self.manager.add(
-            arcade.gui.UIAnchorWidget(align_x=300, align_y= -225,
+            arcade.gui.UIAnchorWidget(align_x=V_BOX_2_X, align_y= V_BOX_2_Y,
                 anchor_x="center_x",
                 anchor_y="center_y",
                 child=self.v_box_2)

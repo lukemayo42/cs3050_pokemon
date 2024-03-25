@@ -144,7 +144,7 @@ def player_turn(player, enemy, btn_info):
 def enemy_turn(enemy, player):
     enemy_pkm = enemy.get_curr_pkm()
     player_pkm = player.get_curr_pkm()
-    action_print = ""
+
     # Randomly pick a number to determine the probability an action is taken.
     probability_action = random.randint(0, 20)
     # If the enemy's current pokemon is at 10% health or less, there is an 85% chance to use an item, a 5% chance to
@@ -198,12 +198,12 @@ def enemy_turn(enemy, player):
             #send gui sometyhing sayinssg it hit 
             dmg = calc_dmg(enemy_pkm, player_pkm, move_used)
             player_pkm.remove_health(dmg)
-            action_print = enemy_pkm.move_to_string(move_used, True)
-            print(action_print)
+            action = enemy_pkm.move_to_string(move_used, True)
+            print(enemy_pkm.move_to_string(move_used, True))
         else:
             #send gui something saying it missed
-            action_print = enemy.get_curr_pkm().move_to_string(move_used, False)
-            print(action_print)
+            action = enemy.get_curr_pkm().move_to_string(move_used, False)
+            print(enemy_pkm.move_to_string(move_used, False))
             action_flag = False
         
     #item
@@ -223,7 +223,7 @@ def enemy_turn(enemy, player):
     
     #calc damg
     #update curr health of player
-    return action_flag, action_print
+    return action_flag, action
 
 def switch():
     pass

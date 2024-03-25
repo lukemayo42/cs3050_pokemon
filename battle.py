@@ -161,7 +161,7 @@ def enemy_turn(enemy, player):
             action = enemy_pkm.move_to_string(move_used, False)
             print(enemy_pkm.move_to_string(move_used, False))
             action_flag = False
-        
+
     #item
     elif action_str == "item":
         # action = ITEM_USED.item_to_string(ITEM_USED, enemy)

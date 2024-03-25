@@ -213,6 +213,111 @@ class PokemonStart(arcade.View):
             # Draw all the sprites.
             self.manager.draw()
 
+# This PokemonSwap view class gives the fighter a chace to switch between all of the pokemon in their party during the fight.
+class PokemonSwap(arcade.View):
+    def __init__(self, player, enemy):
+        super().__init__()
+        self.player = player
+        self.enemy = enemy
+        self.pokemon = player.get_curr_pkm()
+
+        # Background image will be stored in this variable
+        self.background = None
+        arcade.set_background_color(arcade.color.WHITE)
+
+        self.player_list = None
+
+
+        # Button styling
+        button_style = {
+            "bg_color":(50,75,125),
+            "bg_color_pressed":(20, 65, 115)
+        }
+
+        # Create "go back" button
+        self.v_box = arcade.gui.UIBoxLayout()
+        back_button = arcade.gui.UIFlatButton(text="Go Back", width=BUTTON_WIDTH * .75, style=button_style)
+        self.v_box.add(back_button.with_space_around(bottom=20))
+
+        # Assign self.items_button as a callback to render item bag
+        back_button.on_click = self.back_button_action
+
+        self.manager = UIManager()
+        self.manager.enable()
+        # Create a widget to hold the v_box widget, that will center the buttons
+        self.manager.add(
+            arcade.gui.UIAnchorWidget(align_x=-SCREEN_WIDTH / 3, align_y= -SCREEN_HEIGHT / 2.5,
+                anchor_x="center_x",
+                anchor_y="center_y",
+                child=self.v_box)
+        )        
+        # Add name/stats for pokemon
+        self.name_text = arcade.create_text_sprite (
+            start_x=SCREEN_WIDTH / 4,
+            start_y=SCREEN_HEIGHT / 2,
+            color=arcade.color.BLACK,
+            text = str(self.pokemon.get_name())
+        )
+        
+        
+
+    def setup(self):
+        # TODO: create any sprites needed for rules page
+        self.player_list = arcade.SpriteList()
+        self.player_sprite = Sprite("../cs3050_pokemon/sprites/" + self.player.get_curr_pkm().get_name().lower() + "-front.png", 1.5 * SPRITE_SCALING)
+        self.player_sprite.center_x = SCREEN_WIDTH / 4
+        self.player_sprite.center_y = SCREEN_HEIGHT / 2
+
+        self.player_list.append(self.player_sprite)
+        self.name_text.center_x = SCREEN_WIDTH / 4
+        self.name_text.center_y = SCREEN_HEIGHT / 3
+        self.player_list.append(self.name_text)
+        self.pokemon_list = self.player.get_pokemon_list()
+        # Iterate through pokemon party and display other sprites on the side
+        for pokemon in self.pokemon_list:
+            print(pokemon.get_name())
+        for i in range(len(self.pokemon_list)):
+            if i != 0:
+                    # Add the sprite image to the list of sprites to render
+                    sprite = Sprite("../cs3050_pokemon/sprites/" + self.pokemon_list[i].get_name().lower() + "-front.png", 0.75 * SPRITE_SCALING)
+                    sprite.center_x = SCREEN_HEIGHT
+                    sprite.center_y = i * SCREEN_WIDTH / 3.2
+                    self.player_list.append(sprite)
+
+                    # Add the pokemon name to the list of sprites to render
+                    name = arcade.create_text_sprite (
+                        start_x=SCREEN_HEIGHT,
+                        start_y=i * SCREEN_WIDTH / 3.2,
+                        color=arcade.color.BLACK,
+                        text = str(self.pokemon_list[i].get_name())
+                    )
+                    name.center_x = SCREEN_HEIGHT 
+                    name.center_y = sprite.bottom - SCREEN_HEIGHT / 30
+                    
+                    self.player_list.append(name)
+
+
+        print("here is your pokemon party")
+
+    def back_button_action(self, event):
+        #TODO: switch screen to starting screen
+        print("returning to fight screen")
+        fight_view = PokemonGame(self.player, self.enemy)
+        fight_view.setup()
+        self.window.show_view(fight_view)
+
+
+    def on_draw(self):
+            # Clear the screen
+            self.clear()
+            # Draw the background texture
+            # arcade.draw_lrwh_rectangle_textured(0, 150,
+            #                                     SCREEN_WIDTH, SCREEN_HEIGHT,
+            #                                     self.background)
+            # Draw all the sprites.
+            self.manager.draw()
+            self.player_list.draw()
+
 # This PokemonRules view class displays a scrollable textbox with the information on how to play the game.
 # It has a button to return to the start screen that renders the PokemonStart view.
 class PokemonRules(arcade.View):
@@ -418,7 +523,9 @@ class PokemonGame(arcade.View):
     def pokemon_button_action(self, event):
         self.state = State.PokemonSwap
         # TODO: Call method to render sprites to swap with
-        self.on_draw()
+        start_view = PokemonSwap(self.player, self.enemy)
+        start_view.setup()
+        self.window.show_view(start_view)
     
     def items_button_action(self, event):
         self.state = State.Bag
@@ -726,7 +833,7 @@ class PokemonGame(arcade.View):
 # to the PokemonGame object and renders the window to run the game.
 def main():
     """ Main function """
-    pokemon_bag = [pokemon_objects.bulbasaur, pokemon_objects.charizard]
+    pokemon_bag = [pokemon_objects.bulbasaur, pokemon_objects.charizard, pokemon_objects.ivysaur]
     trainer1 = Character("Ash", pokemon_bag, [], 1000,
                               "I'm on a journey to become a Pokemon Master!")
     pokemon_bag_trainer2 = [pokemon_objects.charizard, pokemon_objects.charizard, pokemon_objects.charizard]

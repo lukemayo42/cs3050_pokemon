@@ -56,3 +56,6 @@ class item:
                 pokemon.set_health(pokemon.get_max_hlth())
             else:
                 pokemon.add_health(self.health_recovered)
+
+    def item_to_string(self, item_used, player):
+        return f"{player.get_name()} used {item_used.get_name()} on {player.get_curr_pkm().get_name()}"

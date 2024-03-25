@@ -729,7 +729,7 @@ def main():
     pokemon_bag = [pokemon_objects.bulbasaur, pokemon_objects.charizard]
     trainer1 = Character("Ash", pokemon_bag, [], 1000,
                               "I'm on a journey to become a Pokemon Master!")
-    pokemon_bag_trainer2 = [pokemon_objects.charizard]
+    pokemon_bag_trainer2 = [pokemon_objects.charizard, pokemon_objects.charizard, pokemon_objects.charizard]
     trainer2 = Character("Misty", pokemon_bag_trainer2, [], 800, "Water types are the best!")
 
     # window = PokemonGame(SCREEN_WIDTH, SCREEN_HEIGHT, B_SCREEN_TITLE, trainer1, trainer2)

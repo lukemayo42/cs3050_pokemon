@@ -239,7 +239,7 @@ def calc_dmg(atk_pkm, def_pkm, move):
 
     random_variable = random.randint(217, 255) / 255
     dmg = (((((2 * level * roll_crit())/5) + 2)* move.get_power() * (atk_pkm.get_curr_atk()/def_pkm.get_curr_def())/50) + 2 ) * random_variable * effectiveness
-    return dmg, effectiveness
+    return dmg #, effectiveness
 
 #rerturns 1 if user spedd is greater then enemy otherwise 0
 def chk_spd(user_pkm, enemy_pkm):
@@ -266,7 +266,7 @@ def chk_effective(move_used, pkm):
     pkm_types = pkm.get_types()
     pkm_type1 = pkm_types[0]
     pkm_type2 = "none"
-    if pkm_types.length() > 1:
+    if len(pkm_types) > 1:
         pkm_type2 = pkm_types[1]
     #defense pokemon water
     if pkm_type1 == "water" or pkm_type2 == "water":

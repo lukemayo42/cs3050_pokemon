@@ -121,11 +121,20 @@ def player_turn(player, enemy, btn_info):
         
     #item
     elif btn_info[0] == "item":
-        pass
+        # Assume that the button info's index 1 will contain the key of the item that is being used.
+        for item in  player.get_item_bag():
+            if btn_info[1] == item:
+                if player.get_item_bag()[item] > 0:
+                    item.use_item(player.get_curr_pkm())
+                    player.get_item_bag()[item] -= 1
+                else:
+                    # The player does not have the item
+                    pass
     #switch
     else:
-        #call switch pokemon function
-        pass
+        # Call swap pokemon function. The current pokemon is always at index 0, the button info's index 1 will contain
+        # the index of the pokemon that is to be swapped in.
+        player.swap_pokemon(0, btn_info[1])
 
     #if move calc damage using index 0 of both player and enemy
     #update curr health of enemy
@@ -156,8 +165,14 @@ def enemy_turn(enemy, player):
         pass
     #switch
     else:
-        #call switch pokemon function
-        pass
+        #call swap pokemon function. Make sure to swap with a pokemon that is not fainted.
+        if enemy.get_pokemon_list()[1].get_is_fainted():
+            enemy.swap_pokemon(0, 2)
+        elif enemy.get_pokemon_list()[2].get_is_fainted():
+            enemy.swap_pokemon(0, 1)
+        else:
+            swap_index = random.randint(1,2)
+            enemy.swap_pokemon(0, swap_index)
     #maybe later add intelligence
     
     #calc damg

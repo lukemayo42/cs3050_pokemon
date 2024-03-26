@@ -8,9 +8,6 @@ import pokemon_objects
 #we are assuming that we are receiving the type of button that is pressed (pokemon, move, item) and the specific move/pokemon/item that is used/switched
 #please write a method in the button class which we can call that will give us a list containing the type of button that 
 
-#TODO: calc_dmg now returns 2 values, dmg and effectiveness 0, 1/2, 1/4, 1, 2, 4 
-#change battle/turn function and move_to_string method in pokemon class to handle two returns 
-#change message to now display if move was super effective or not
 
 # Battle function without while loop
 #returns 2 strings, what move player did and what move the enemy did
@@ -109,14 +106,14 @@ def player_turn(player, enemy, btn_info):
         move_used = btn_info[1]
         if roll_accuracy(move_used):
             #send gui sometyhing saying it hit 
-            dmg = calc_dmg(player.get_curr_pkm(), enemy.get_curr_pkm(), move_used)
+            dmg, effectiveness = calc_dmg(player.get_curr_pkm(), enemy.get_curr_pkm(), move_used)
             enemy.get_curr_pkm().remove_health(dmg)
-            action_str = player.get_curr_pkm().move_to_string(move_used, True)
-            print(player.get_curr_pkm().move_to_string(move_used, True))
+            action_str = player.get_curr_pkm().move_to_string(move_used, True, effectiveness)
+            print(action_str)
         else:
             #send gui something saying it missed
-            action_str = player.get_curr_pkm().move_to_string(move_used, False)
-            print(player.get_curr_pkm().move_to_string(move_used, False))
+            action_str = player.get_curr_pkm().move_to_string(move_used, False, 10)
+            print(action_str)
             action = False
         
     #item
@@ -152,14 +149,14 @@ def enemy_turn(enemy, player):
     if action_str == "move":
         if roll_accuracy(move_used):
             #send gui sometyhing sayinssg it hit 
-            dmg = calc_dmg(enemy_pkm, player_pkm, move_used)
+            dmg, effectiveness = calc_dmg(enemy_pkm, player_pkm, move_used)
             player_pkm.remove_health(dmg)
-            action = enemy_pkm.move_to_string(move_used, True)
-            print(enemy_pkm.move_to_string(move_used, True))
+            action = enemy_pkm.move_to_string(move_used, True, effectiveness)
+            print(action)
         else:
             #send gui something saying it missed
-            action = enemy_pkm.move_to_string(move_used, False)
-            print(enemy_pkm.move_to_string(move_used, False))
+            action = enemy_pkm.move_to_string(move_used, False, 10)
+            print(action)
             action_flag = False
 
     #item
@@ -245,7 +242,7 @@ def calc_dmg(atk_pkm, def_pkm, move):
 
     random_variable = random.randint(217, 255) / 255
     dmg = (((((2 * level * roll_crit())/5) + 2)* move.get_power() * (atk_pkm.get_curr_atk()/def_pkm.get_curr_def())/50) + 2 ) * random_variable * effectiveness
-    return dmg #, effectiveness
+    return dmg , effectiveness
 
 #rerturns 1 if user spedd is greater then enemy otherwise 0
 def chk_spd(user_pkm, enemy_pkm):
@@ -419,12 +416,6 @@ def chk_effective(move_used, pkm):
         #super effective move types
         elif move_type == "fire" or move_type == "fighting" or move_type == "ground":
             effectiveness*=2
-    
-
- 
-        
-    #TODO:fighting, poison, ground flying, psychic, bug, rock, ghost, dragon, dark, steel
-
 
     return effectiveness
 

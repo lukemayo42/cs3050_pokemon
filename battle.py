@@ -8,9 +8,6 @@ import pokemon_objects
 #we are assuming that we are receiving the type of button that is pressed (pokemon, move, item) and the specific move/pokemon/item that is used/switched
 #please write a method in the button class which we can call that will give us a list containing the type of button that 
 
-#TODO: calc_dmg now returns 2 values, dmg and effectiveness 0, 1/2, 1/4, 1, 2, 4 
-#change battle/turn function and move_to_string method in pokemon class to handle two returns 
-#change message to now display if move was super effective or not
 
 # Battle function without while loop
 #returns 2 strings, what move player did and what move the enemy did
@@ -165,7 +162,16 @@ def enemy_turn(enemy, player):
     #item
     elif action_str == "item":
         # action = ITEM_USED.item_to_string(ITEM_USED, enemy)
-        pass
+        print()
+        print()
+        print()
+        print()
+        print("Item should be used here")
+        print()
+        print()
+        print()
+        print()
+        action = "PLACEHOLDER"
     #switch
     else:
         #call swap pokemon function. Make sure to swap with a pokemon that is not fainted.
@@ -189,30 +195,30 @@ def get_action(enemy):
     #TODO: Figure out how to to the probabilities and ranges efficiently
     enemy_pkm = enemy.get_curr_pkm()
     # Randomly pick a number to determine the probability an action is taken.
-    probability_range = 20
-    probability_action = random.randint(0, probability_range)
+    probability_range_full = 20
+    probability_action = random.randint(0, probability_range_full)
     # If the enemy's current pokemon is at 10% health or less, there is an 85% chance to use an item, a 5% chance to
     # swap pokemon, and a 10% chance to use a move.
     if enemy_pkm.get_curr_hlth() <= (enemy_pkm.get_max_hlth() / 10):
-        range = probability_range - 1
-        action_str = get_action_based_on_probability(probability_action, enemy,range)
+        probability_range_partial = probability_range_full - 1
+        action_str = get_action_based_on_probability(probability_action, enemy, probability_range_partial)
     # If the enemy's current pokemon is at 25% health or less, there is an 47.5% chance to use an item, a 5% chance to
     # swap pokemon, and a 47.5% chance to use a move.
     elif enemy_pkm.get_curr_hlth() <= (enemy_pkm.get_max_hlth() / 4):
-        range = probability_range/2 + 1
-        action_str = get_action_based_on_probability(probability_action, enemy, range)
+        probability_range_partial = int(probability_range_full/2) + 1
+        action_str = get_action_based_on_probability(probability_action, enemy, probability_range_partial)
     # If the enemy's current pokemon is at 50% health or less, there is an 19% chance to use an item, a 5% chance to
     # swap pokemon, and a 76% chance to use a move.
     elif enemy_pkm.get_curr_hlth() <= (enemy_pkm.get_max_hlth() / 2):
-        range = probability_range/4 + 1
-        action_str = get_action_based_on_probability(probability_action, enemy,range)
+        probability_range_partial = int(probability_range_full/4) + 1
+        action_str = get_action_based_on_probability(probability_action, enemy, probability_range_partial)
     else:
         action_str = "move"
 
     return action_str
 
-def get_action_based_on_probability(probability_action, enemy, range):
-    if probability_action in range(1, range):
+def get_action_based_on_probability(probability_action, enemy, probability_range):
+    if probability_action in range(1, probability_range):
         action_str = "item"
     elif probability_action == 0:
         # Make sure that the enemy player has a pokemon to swap to. If not, change action string to move.

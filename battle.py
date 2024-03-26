@@ -178,13 +178,16 @@ def enemy_turn(enemy, player):
         if enemy.get_pokemon_list()[1].get_is_fainted():
             enemy.swap_pokemon(0, 2)
             action = f"{enemy.get_name()} swapped out {enemy.get_pokemon_list()[2].get_name()} with {player.get_curr_pkm().get_name()}"
+            print(action)
         elif enemy.get_pokemon_list()[2].get_is_fainted():
             enemy.swap_pokemon(0, 1)
             action = f"{enemy.get_name()} swapped out {enemy.get_pokemon_list()[2].get_name()} with {player.get_curr_pkm().get_name()}"
+            print(action)
         else:
             swap_index = random.randint(1,2)
             enemy.swap_pokemon(0, swap_index)
             action = f"{enemy.get_name()} swapped out {enemy.get_pokemon_list()[swap_index].get_name()} with {player.get_curr_pkm().get_name()}"
+            print(action)
     #maybe later add intelligence
     
     #calc damg
@@ -218,6 +221,7 @@ def get_action(enemy):
     return action_str
 
 def get_action_based_on_probability(probability_action, enemy, probability_range):
+    # probability_action = 0
     if probability_action in range(1, probability_range):
         action_str = "item"
     elif probability_action == 0:

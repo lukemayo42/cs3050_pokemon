@@ -112,12 +112,20 @@ class HealthBar(arcade.Sprite):
     def health_bar_update(self, sprite_list):
         self.health = self.pokemon.get_curr_hlth()
         self.health_text.kill()
-        self.health_text = arcade.create_text_sprite (
-            start_x=self.pos_x,
-            start_y=self.pos_y,
-            color=arcade.color.BLACK,
-            text = str(int(self.health)) + " / " + str(self.max_health)
-        )
+        if(int(self.health) == 0 and self.health > 0):
+            self.health_text = arcade.create_text_sprite (
+                start_x=self.pos_x,
+                start_y=self.pos_y,
+                color=arcade.color.BLACK,
+                text = str(int(self.health) + 1) + " / " + str(self.max_health)
+            )
+        else:
+            self.health_text = arcade.create_text_sprite (
+                start_x=self.pos_x,
+                start_y=self.pos_y,
+                color=arcade.color.BLACK,
+                text = str(int(self.health)) + " / " + str(self.max_health)
+            )
         self.health_text.center_x = self.pos_x
         self.health_text.center_y = self.pos_y
         sprite_list.append(self.health_text)

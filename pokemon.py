@@ -99,9 +99,14 @@ class pokemon:
 
     #print functions!!!! - need to know how gui wants text info
 
-    def move_to_string(self, move_used, hit):
+    def move_to_string(self, move_used, hit, effectiveness):
         if hit:
-            return f"{self.name} used {move_used.get_name()}"
+            if effectiveness == 1:
+                return f"{self.name} used {move_used.get_name()}"
+            elif effectiveness == .5 or effectiveness == .25:
+                return f"{self.name} used {move_used.get_name()}. It's not very effective."
+            elif effectiveness == 2 or 4:
+                return f"{self.name} used {move_used.get_name()}. It's Super Effective!"
         else:
             return f"{self.name}'s move missed"
     

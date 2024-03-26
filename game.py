@@ -447,7 +447,7 @@ class PokemonGame(arcade.View):
     def on_draw(self):
         """ Render the screen. """
         if(self.state == State.Battle):
-            print("battle")
+            #print("battle")
             # Clear the screen
             self.clear()
             # Draw the background texture

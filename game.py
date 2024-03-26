@@ -221,6 +221,9 @@ class PokemonSwap(arcade.View):
         self.enemy = enemy
         self.pokemon = player.get_curr_pkm()
 
+        # This variable keeps track of what pokemon you are looking at
+        self.index = 0
+
         # Background image will be stored in this variable
         self.background = None
         arcade.set_background_color(arcade.color.WHITE)
@@ -279,7 +282,7 @@ class PokemonSwap(arcade.View):
         for i in range(len(self.pokemon_list)):
             if i != 0:
                     # Add the sprite image to the list of sprites to render
-                    sprite = Sprite("../cs3050_pokemon/sprites/" + self.pokemon_list[i].get_name().lower() + "-front.png", 0.75 * SPRITE_SCALING)
+                    sprite = Sprite("../cs3050_pokemon/sprites/" + self.pokemon_list[i].get_name().lower() + "-front.png", 0.65 * SPRITE_SCALING)
                     sprite.center_x = SCREEN_HEIGHT
                     sprite.center_y = i * SCREEN_WIDTH / 3.2
                     self.player_list.append(sprite)
@@ -295,6 +298,7 @@ class PokemonSwap(arcade.View):
                     name.center_y = sprite.bottom - SCREEN_HEIGHT / 30
                     
                     self.player_list.append(name)
+                    self.create_pokemon_buttons(SCREEN_HEIGHT, sprite.bottom - SCREEN_HEIGHT/ 30, i == 1)
 
 
         print("here is your pokemon party")
@@ -305,6 +309,60 @@ class PokemonSwap(arcade.View):
         fight_view = PokemonGame(self.player, self.enemy)
         fight_view.setup()
         self.window.show_view(fight_view)
+
+    def create_pokemon_buttons(self, pos_x, pos_y, top):
+        if(top):
+            self.button_box_1 = arcade.gui.UIBoxLayout(vertical=False)
+
+            stats_button = arcade.gui.UIFlatButton(text="Stats", width=BUTTON_WIDTH / 2)
+            self.button_box_1.add(stats_button.with_space_around(left=20))
+            stats_button.on_click = self.generate_stats_view_1
+
+            swap_button = arcade.gui.UIFlatButton(text="Swap", width=BUTTON_WIDTH / 2)
+            self.button_box_1.add(swap_button.with_space_around(left=20))
+            swap_button.on_click = self.swap_action_1
+            # Create widgets to hold the button_box_1 widgets, that will center the buttons
+            self.manager.add(
+                arcade.gui.UIAnchorWidget(align_x=pos_x / 3, align_y=V_BOX_Y,
+                    anchor_x="center_x",
+                    anchor_y="center_y",
+                    child=self.button_box_1)
+            )
+
+        else:
+            self.button_box_2 = arcade.gui.UIBoxLayout(vertical=False)
+            stats_button = arcade.gui.UIFlatButton(text="Stats", width=BUTTON_WIDTH / 2)
+            self.button_box_2.add(stats_button.with_space_around(left=20))
+            stats_button.on_click = self.generate_stats_view_2
+
+            swap_button = arcade.gui.UIFlatButton(text="Swap", width=BUTTON_WIDTH / 2)
+            self.button_box_2.add(swap_button.with_space_around(left=20))
+            swap_button.on_click = self.swap_action_2
+
+            # Create widgets to hold the button_box_2 widgets, that will center the buttons
+            self.manager.add(
+                arcade.gui.UIAnchorWidget(align_x=pos_x / 3, align_y= SCREEN_HEIGHT / 7,
+                    anchor_x="center_x",
+                    anchor_y="center_y",
+                    child=self.button_box_2)
+            )
+    def generate_stats_view_1(self, event):
+        self.index = 1
+        self.generate_stats()
+
+    def swap_action_1(self, event):
+        print("swapping")
+
+    def generate_stats_view_2(self, event):
+        self.index = 1
+        self.generate_stats()
+
+    def swap_action_2(self, event):
+        print("swapping")
+
+    def generate_stats(self):
+        pokemon_list = self.pokemon.get_pokemon_list()
+        
 
 
     def on_draw(self):

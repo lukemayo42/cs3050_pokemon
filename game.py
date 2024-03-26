@@ -275,9 +275,9 @@ class PokemonSwap(arcade.View):
     def setup(self):
         # TODO: create any sprites needed for rules page
         self.player_list = arcade.SpriteList()
-        self.player_sprite = Sprite("../cs3050_pokemon/sprites/" + self.player.get_curr_pkm().get_name().lower() + "-front.png", 1.5 * SPRITE_SCALING)
+        self.player_sprite = Sprite("../cs3050_pokemon/sprites/" + self.player.get_curr_pkm().get_name().lower() + "-front.png", 1.25 * SPRITE_SCALING)
         self.player_sprite.center_x = SCREEN_WIDTH / 4
-        self.player_sprite.center_y = SCREEN_HEIGHT / 2
+        self.player_sprite.center_y = 2*SCREEN_HEIGHT /3
 
         self.player_list.append(self.player_sprite)
         self.name_text.center_x = SCREEN_WIDTH / 4
@@ -290,7 +290,10 @@ class PokemonSwap(arcade.View):
         for i in range(len(self.pokemon_list)):
             if i != 0:
                     # Add the sprite image to the list of sprites to render
-                    sprite = Sprite("../cs3050_pokemon/sprites/" + self.pokemon_list[i].get_name().lower() + "-front.png", 0.65 * SPRITE_SCALING)
+                    # sprite = Sprite("../cs3050_pokemon/sprites/" + self.pokemon_list[i].get_name().lower() + "-front.png", 0.65 * SPRITE_SCALING)
+                    sprite = Sprite("../cs3050_pokemon/sprites/" + self.pokemon_list[i].get_name().lower() + "-front.png")
+                    sprite.scale = SCREEN_HEIGHT / (self.player_sprite.height * 1.2)
+
                     sprite.center_x = SCREEN_HEIGHT
                     sprite.center_y = i * SCREEN_WIDTH / 3.2
                     self.player_list.append(sprite)
@@ -349,7 +352,7 @@ class PokemonSwap(arcade.View):
 
             # Create widgets to hold the button_box_2 widgets, that will center the buttons
             self.manager.add(
-                arcade.gui.UIAnchorWidget(align_x=pos_x / 3, align_y= SCREEN_HEIGHT / 7,
+                arcade.gui.UIAnchorWidget(align_x=pos_x / 3, align_y= SCREEN_HEIGHT / 9,
                     anchor_x="center_x",
                     anchor_y="center_y",
                     child=self.button_box_2)
@@ -359,14 +362,16 @@ class PokemonSwap(arcade.View):
         self.generate_stats()
 
     def swap_action_1(self, event):
-        print("swapping")
+        self.index = 1
+        self.swap_pokemon()
 
     def generate_stats_view_2(self, event):
         self.index = 2
         self.generate_stats()
 
     def swap_action_2(self, event):
-        print("swapping")
+        self.index = 2
+        self.swap_pokemon()
 
     def generate_stats(self):
         # Get the selected pokemon and pass it to the stats view
@@ -376,9 +381,15 @@ class PokemonSwap(arcade.View):
         stats_view.setup()
         self.window.show_view(stats_view)
 
-        
-        
+    def swap_pokemon(self):
+        # Call backend method to swap the pokemon order so that the first pokemon is back in front
+        # Return to the battle screen
+        self.player.swap_pokemon(0, self.index)
+        print("returning to battle screen")
 
+        fight_view = PokemonGame(self.player, self.enemy)
+        fight_view.setup()
+        self.window.show_view(fight_view)
 
     def on_draw(self):
             # Clear the screen
@@ -441,7 +452,10 @@ class PokemonStats(arcade.View):
     def setup(self):
         # Create the sprite for the pokemon to be displayed
         self.player_list = arcade.SpriteList()
-        self.player_sprite = Sprite("../cs3050_pokemon/sprites/" + self.pokemon.get_name().lower() + "-front.png", 1.25 * SPRITE_SCALING)
+        self.player_sprite = Sprite("../cs3050_pokemon/sprites/" + self.pokemon.get_name().lower() + "-front.png")
+        self.player_sprite.scale = SCREEN_HEIGHT  / (self.player_sprite.height * 2)
+
+
         self.player_sprite.center_x = SCREEN_WIDTH / 4
         self.player_sprite.center_y = 2*SCREEN_HEIGHT /3
 
@@ -630,7 +644,7 @@ class PokemonGame(arcade.View):
         self.manager = UIManager()
         self.manager.enable()
         bg_tex = load_texture(":resources:gui_basic_assets/window/grey_panel.png")
-        text_area = UITextArea(x=0,
+        self.text_area = UITextArea(x=0,
                                y=0,
                                width=SCREEN_WIDTH / 2,
                                height=SCREEN_HEIGHT / 4,
@@ -639,7 +653,7 @@ class PokemonGame(arcade.View):
                                text_color=arcade.color.BLACK)
         self.manager.add(
             UITexturePane(
-                text_area.with_space_around(right=20),
+                self.text_area.with_space_around(right=20),
                 tex=bg_tex,
                 padding=(10, 10, 10, 10)
             )
@@ -726,11 +740,17 @@ class PokemonGame(arcade.View):
         self.player_list = arcade.SpriteList()
     
         # Set up the player and enemy sprites
-        self.player_sprite = Sprite("../cs3050_pokemon/sprites/" + self.player.get_curr_pkm().get_name().lower() + "-back.png", SPRITE_SCALING)
+        # self.player_sprite = Sprite("../cs3050_pokemon/sprites/" + self.player.get_curr_pkm().get_name().lower() + "-back.png", SPRITE_SCALING)
+        
+        # New scaling so it is relative to size of image
+        self.player_sprite = Sprite("../cs3050_pokemon/sprites/" + self.player.get_curr_pkm().get_name().lower() + "-back.png")
+        self.player_sprite.scale = 300 / (self.player_sprite.height * 1.2)
+
         self.player_sprite2 = Sprite("../cs3050_pokemon/sprites/" + self.enemy.get_curr_pkm().get_name().lower() + "-front.png", OPPONENT_SPRITE_SCALING)
         # TODO: change these to constant variables
-        self.player_sprite.center_x = 200
-        self.player_sprite.center_y = 235
+        self.player_sprite.center_x = 200 
+        # self.player_sprite.bottom = 500
+        self.player_sprite.bottom = self.text_area.height + 10
         self.player_sprite2.center_x = 600
         self.player_sprite2.center_y = 725
         self.player_list.append(self.player_sprite)

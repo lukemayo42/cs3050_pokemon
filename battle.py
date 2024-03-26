@@ -8,9 +8,6 @@ import pokemon_objects
 #we are assuming that we are receiving the type of button that is pressed (pokemon, move, item) and the specific move/pokemon/item that is used/switched
 #please write a method in the button class which we can call that will give us a list containing the type of button that 
 
-#TODO: calc_dmg now returns 2 values, dmg and effectiveness 0, 1/2, 1/4, 1, 2, 4 
-#change battle/turn function and move_to_string method in pokemon class to handle two returns 
-#change message to now display if move was super effective or not
 
 # Battle function without while loop
 #returns 2 strings, what move player did and what move the enemy did

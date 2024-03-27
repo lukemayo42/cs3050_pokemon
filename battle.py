@@ -141,12 +141,14 @@ def player_turn(player, enemy, btn_info):
 def enemy_turn(enemy, player):
     enemy_pkm = enemy.get_curr_pkm()
     player_pkm = player.get_curr_pkm()
-    action_str = get_action(enemy)
+    action_str = get_enemy_action(enemy)
     action_flag = True
-    #randomly choose move
-    move_index = random.randint(0,3)
-    move_used = enemy_pkm.get_moves()[move_index]
+
     if action_str == "move":
+        # randomly choose move
+        move_index = random.randint(0, 3)
+        move_used = enemy_pkm.get_moves()[move_index]
+        # If the move hits, do damage
         if roll_accuracy(move_used):
             #send gui sometyhing sayinssg it hit 
             dmg, effectiveness = calc_dmg(enemy_pkm, player_pkm, move_used)
@@ -194,8 +196,10 @@ def enemy_turn(enemy, player):
     #update curr health of player
     return action_flag, action
 
-def get_action(enemy):
-    #TODO: Figure out how to to the probabilities and ranges efficiently
+# Function is enemy's "intelligence"
+# Function determines the action the enemy will take based upon the amount of health their current pokemon has.
+def get_enemy_action(enemy):
+    #TODO: Figure out how to do to the probabilities and ranges efficiently
     enemy_pkm = enemy.get_curr_pkm()
     # Randomly pick a number to determine the probability an action is taken.
     probability_range_full = 20
@@ -220,6 +224,9 @@ def get_action(enemy):
 
     return action_str
 
+# Function is a helper function for get_enemy_action(enemy)
+# Function takes in probability_action, enemy, and probability_range. Based on the probability_action and the given
+# probability_range, the function will determine the action the enemy will take.
 def get_action_based_on_probability(probability_action, enemy, probability_range):
     # probability_action = 0
     if probability_action in range(1, probability_range):

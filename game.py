@@ -277,7 +277,7 @@ class PokemonSwap(arcade.View):
         self.player_list = arcade.SpriteList()
         self.player_sprite = Sprite("../cs3050_pokemon/sprites/" + self.player.get_curr_pkm().get_name().lower() + "-front.png", 1.25 * SPRITE_SCALING)
         self.player_sprite.center_x = SCREEN_WIDTH / 4
-        self.player_sprite.center_y = 2*SCREEN_HEIGHT /3
+        self.player_sprite.center_y = 2 * SCREEN_HEIGHT / 3
 
         self.player_list.append(self.player_sprite)
         self.name_text.center_x = SCREEN_WIDTH / 4
@@ -287,29 +287,28 @@ class PokemonSwap(arcade.View):
         # Iterate through pokemon party and display other sprites on the side
         for pokemon in self.pokemon_list:
             print(pokemon.get_name())
-        for i in range(len(self.pokemon_list)):
-            if i != 0:
-                    # Add the sprite image to the list of sprites to render
-                    # sprite = Sprite("../cs3050_pokemon/sprites/" + self.pokemon_list[i].get_name().lower() + "-front.png", 0.65 * SPRITE_SCALING)
-                    sprite = Sprite("../cs3050_pokemon/sprites/" + self.pokemon_list[i].get_name().lower() + "-front.png")
-                    sprite.scale = SCREEN_HEIGHT / (self.player_sprite.height * 1.2)
+        for i in range(1, len(self.pokemon_list)):
+                # Add the sprite image to the list of sprites to render
+                # sprite = Sprite("../cs3050_pokemon/sprites/" + self.pokemon_list[i].get_name().lower() + "-front.png", 0.65 * SPRITE_SCALING)
+                sprite = Sprite("../cs3050_pokemon/sprites/" + self.pokemon_list[i].get_name().lower() + "-front.png")
+                sprite.scale = SCREEN_HEIGHT / (self.player_sprite.height * 1.2)
 
-                    sprite.center_x = SCREEN_HEIGHT
-                    sprite.center_y = i * SCREEN_WIDTH / 3.2
-                    self.player_list.append(sprite)
+                sprite.center_x = SCREEN_HEIGHT
+                sprite.center_y = i * SCREEN_WIDTH / 3.2
+                self.player_list.append(sprite)
 
-                    # Add the pokemon name to the list of sprites to render
-                    name = arcade.create_text_sprite (
-                        start_x=SCREEN_HEIGHT,
-                        start_y=i * SCREEN_WIDTH / 3.2,
-                        color=arcade.color.BLACK,
-                        text = str(self.pokemon_list[i].get_name())
-                    )
-                    name.center_x = SCREEN_HEIGHT 
-                    name.center_y = sprite.bottom - SCREEN_HEIGHT / 30
-                    
-                    self.player_list.append(name)
-                    self.create_pokemon_buttons(SCREEN_HEIGHT, sprite.bottom - SCREEN_HEIGHT/ 30, i == 1)
+                # Add the pokemon name to the list of sprites to render
+                name = arcade.create_text_sprite (
+                    start_x=SCREEN_HEIGHT,
+                    start_y=i * SCREEN_WIDTH / 3.2,
+                    color=arcade.color.BLACK,
+                    text = str(self.pokemon_list[i].get_name())
+                )
+                name.center_x = SCREEN_HEIGHT 
+                name.center_y = sprite.bottom - SCREEN_HEIGHT / 30
+                
+                self.player_list.append(name)
+                self.create_pokemon_buttons(SCREEN_HEIGHT, sprite.bottom - SCREEN_HEIGHT/ 30, i == 1)
 
 
         print("here is your pokemon party")
@@ -471,32 +470,19 @@ class PokemonStats(arcade.View):
             start_y=SCREEN_HEIGHT / 2,
             color=arcade.color.BLACK,
             text = "Health: " + str(int(self.pokemon.get_curr_hlth()))
+                                    + "\nAttack: " + str(int(self.pokemon.get_curr_atk()))
+                                    + "\nDefense: " + str(int(self.pokemon.get_curr_def()))
+                                    + "\nSpeed: " + str(int(self.pokemon.get_curr_spd()))
+                                    + "\n\nMoves:\n"
+                                    + "(1) " + str(self.pokemon.moves[0].name) + " (Power: " + str(int(self.pokemon.moves[0].get_power())) + " and Accuracy: " + str(int(self.pokemon.moves[0].get_accuracy())) + ")"
+                                    + "\n(2) " + str(self.pokemon.moves[1].name) + " (Power: " + str(int(self.pokemon.moves[1].get_power())) + " and Accuracy: " + str(int(self.pokemon.moves[1].get_accuracy())) + ")"
+                                    + "\n(3) " + str(self.pokemon.moves[2].name) + " (Power: " + str(int(self.pokemon.moves[2].get_power())) + " and Accuracy: " + str(int(self.pokemon.moves[2].get_accuracy())) + ")"
+                                    + "\n(4) " + str(self.pokemon.moves[3].name) + " (Power: " + str(int(self.pokemon.moves[3].get_power())) + " and Accuracy: " + str(int(self.pokemon.moves[3].get_accuracy())) + ")"
         )    
         self.health_text.center_x = SCREEN_HEIGHT
         self.health_text.center_y = 3*SCREEN_HEIGHT / 4
         self.player_list.append(self.health_text)
 
-        # ATTACK
-        self.attack_text = arcade.create_text_sprite (
-            start_x=SCREEN_WIDTH / 4,
-            start_y=SCREEN_HEIGHT / 2,
-            color=arcade.color.BLACK,
-            text = "Attack: " + str(int(self.pokemon.get_curr_atk()))
-        )    
-        self.attack_text.center_x = SCREEN_HEIGHT
-        self.attack_text.center_y = SCREEN_HEIGHT / 2
-        self.player_list.append(self.attack_text)
-
-        # DEFENSE
-        self.defense_text = arcade.create_text_sprite (
-            start_x=SCREEN_WIDTH / 4,
-            start_y=SCREEN_HEIGHT / 2,
-            color=arcade.color.BLACK,
-            text = "Defense: " + str(int(self.pokemon.get_curr_def()))
-        )    
-        self.defense_text.center_x = SCREEN_HEIGHT
-        self.defense_text.center_y = SCREEN_HEIGHT / 4
-        self.player_list.append(self.defense_text)
 
 
 

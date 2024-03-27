@@ -124,18 +124,22 @@ def player_turn(player, enemy, btn_info):
                 if player.get_item_bag()[item] > 0:
                     item.use_item(player.get_curr_pkm())
                     player.get_item_bag()[item] -= 1
+                    action_str = item.item_to_string(item, player)
                 else:
                     # The player does not have the item
-                    pass
+                    action_str = item.item_to_string(item, player)
     #switch
     else:
         # Call swap pokemon function. The current pokemon is always at index 0, the button info's index 1 will contain
         # the index of the pokemon that is to be swapped in.
         player.swap_pokemon(0, btn_info[1])
+        action_str = f"{player.get_name()} swapped out {player.get_pokemon_list()[btn_info[1]].get_name()} with {player.get_curr_pkm().get_name()}"
+        print(action)
 
     #if move calc damage using index 0 of both player and enemy
     #update curr health of enemy
     return action, action_str
+
 
 #single turn of an enemy character, takes in character and player 
 def enemy_turn(enemy, player):
@@ -190,10 +194,7 @@ def enemy_turn(enemy, player):
             enemy.swap_pokemon(0, swap_index)
             action = f"{enemy.get_name()} swapped out {enemy.get_pokemon_list()[swap_index].get_name()} with {player.get_curr_pkm().get_name()}"
             print(action)
-    #maybe later add intelligence
-    
-    #calc damg
-    #update curr health of player
+
     return action_flag, action
 
 # Function is enemy's "intelligence"

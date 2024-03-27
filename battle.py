@@ -121,32 +121,34 @@ def player_turn(player, enemy, btn_info):
         # Assume that the button info's index 1 will contain the key of the item that is being used.
         for item in  player.get_item_bag():
             if btn_info[1] == item:
-                if player.get_item_bag()[item] > 0:
-                    item.use_item(player.get_curr_pkm())
-                    player.get_item_bag()[item] -= 1
-                else:
-                    # The player does not have the item
-                    pass
+                item.use_item(player.get_curr_pkm())
+                player.get_item_bag()[item] -= 1
+                action_str = item.item_to_string(item, player)
     #switch
     else:
         # Call swap pokemon function. The current pokemon is always at index 0, the button info's index 1 will contain
         # the index of the pokemon that is to be swapped in.
         player.swap_pokemon(0, btn_info[1])
+        action_str = f"{player.get_name()} swapped out {player.get_pokemon_list()[btn_info[1]].get_name()} with {player.get_curr_pkm().get_name()}"
+        print(action)
 
     #if move calc damage using index 0 of both player and enemy
     #update curr health of enemy
     return action, action_str
 
+
 #single turn of an enemy character, takes in character and player 
 def enemy_turn(enemy, player):
     enemy_pkm = enemy.get_curr_pkm()
     player_pkm = player.get_curr_pkm()
-    action_str = get_action(enemy)
+    action_str = get_enemy_action(enemy)
     action_flag = True
-    #randomly choose move
-    move_index = random.randint(0,3)
-    move_used = enemy_pkm.get_moves()[move_index]
+
     if action_str == "move":
+        # randomly choose move
+        move_index = random.randint(0, 3)
+        move_used = enemy_pkm.get_moves()[move_index]
+        # If the move hits, do damage
         if roll_accuracy(move_used):
             #send gui sometyhing sayinssg it hit 
             dmg, effectiveness = calc_dmg(enemy_pkm, player_pkm, move_used)
@@ -178,21 +180,23 @@ def enemy_turn(enemy, player):
         if enemy.get_pokemon_list()[1].get_is_fainted():
             enemy.swap_pokemon(0, 2)
             action = f"{enemy.get_name()} swapped out {enemy.get_pokemon_list()[2].get_name()} with {player.get_curr_pkm().get_name()}"
+            print(action)
         elif enemy.get_pokemon_list()[2].get_is_fainted():
             enemy.swap_pokemon(0, 1)
             action = f"{enemy.get_name()} swapped out {enemy.get_pokemon_list()[2].get_name()} with {player.get_curr_pkm().get_name()}"
+            print(action)
         else:
             swap_index = random.randint(1,2)
             enemy.swap_pokemon(0, swap_index)
             action = f"{enemy.get_name()} swapped out {enemy.get_pokemon_list()[swap_index].get_name()} with {player.get_curr_pkm().get_name()}"
-    #maybe later add intelligence
-    
-    #calc damg
-    #update curr health of player
+            print(action)
+
     return action_flag, action
 
-def get_action(enemy):
-    #TODO: Figure out how to to the probabilities and ranges efficiently
+# Function is enemy's "intelligence"
+# Function determines the action the enemy will take based upon the amount of health their current pokemon has.
+def get_enemy_action(enemy):
+    #TODO: Figure out how to do to the probabilities and ranges efficiently
     enemy_pkm = enemy.get_curr_pkm()
     # Randomly pick a number to determine the probability an action is taken.
     probability_range_full = 20
@@ -217,7 +221,11 @@ def get_action(enemy):
 
     return action_str
 
+# Function is a helper function for get_enemy_action(enemy)
+# Function takes in probability_action, enemy, and probability_range. Based on the probability_action and the given
+# probability_range, the function will determine the action the enemy will take.
 def get_action_based_on_probability(probability_action, enemy, probability_range):
+    # probability_action = 0
     if probability_action in range(1, probability_range):
         action_str = "item"
     elif probability_action == 0:
@@ -265,12 +273,12 @@ def roll_crit():
 #used in damage calculation
 def chk_effective(move_used, pkm):
     effectiveness = 1
-    move_type = move_used.get_type()
+    move_type = move_used.get_type().lower()
     pkm_types = pkm.get_types()
-    pkm_type1 = pkm_types[0]
+    pkm_type1 = pkm_types[0].lower()
     pkm_type2 = "none"
     if len(pkm_types) > 1:
-        pkm_type2 = pkm_types[1]
+        pkm_type2 = pkm_types[1].lower()
     #defense pokemon water
     if pkm_type1 == "water" or pkm_type2 == "water":
         #not very effective moves

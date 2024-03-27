@@ -30,6 +30,23 @@ class pokemon:
         self.base_spd = base_spd
         self.curr_spd = base_spd
         self.is_fainted = False
+    
+    #copy contructor
+    '''
+    def __init__(self, pkm):
+        self.name = pkm.get_name()
+        self.types = pkm.get_types()
+        self.moves = pkm.get_moves()
+        self.max_hlth = pkm.get_max_hlth()
+        self.curr_hlth = pkm.get_max_hlth()
+        self.base_atk = pkm.get_base_atk()
+        self.curr_atk = pkm.get_base_atk()
+        self.base_def = pkm.get_base_def()
+        self.curr_def = pkm.get_base_def()
+        self.base_spd = pkm.get_base_spd()
+        self.curr_spd = pkm.get_base_spd()
+        self.is_fainted = False
+'''
 
     #getters
     def get_name(self):
@@ -83,6 +100,12 @@ class pokemon:
 
     def set_is_fainted(self, new_is_fainted):
         self.is_fainted = new_is_fainted
+
+
+    def set_moves(self, moves):
+        self.moves = moves
+
+    
 
     #add health and remove health functions
     def add_health(self, hlth):

@@ -12,7 +12,7 @@ import pokemon_objects
 # Battle function without while loop
 #returns 2 strings, what move player did and what move the enemy did
 def battle(player, enemy, btn_info, text_bubble):
-
+    #TODO: fix battle logic 
     player_pkm = player.get_curr_pkm()
     enemy_pkm = enemy.get_curr_pkm()
     force_swap = False
@@ -23,16 +23,11 @@ def battle(player, enemy, btn_info, text_bubble):
         if not enemy.chk_party():
             #TODO: update text bubble to "The enemy is out of pokemon! You Win!"
             pass
-        #force enemy to switch pokemon
+        #force enemy to switch pokemon if current pokemon is fainted - takes up enemy's turn
         elif enemy.get_curr_pkm().get_is_fainted():
             force_swap = True
             action2 = enemy_turn(enemy, player, force_swap)
-            if not player.chk_party():
-                #TODO: update check bubble to say player lost
-                pass
-            elif player.get_curr_pkm().get_is_fainted():
-                # force player to switch pokemon
-                pass
+            
         #enemy pokemon has not fainted
         else:
             action2 = enemy_turn(enemy, player, force_swap)
@@ -41,15 +36,16 @@ def battle(player, enemy, btn_info, text_bubble):
                 pass
             elif player.get_curr_pkm().get_is_fainted():
                 # force player to switch pokemon
+                #TODO: updat text bubble saying that that the current pokemon ais died and prompt user to switch
                 pass
             # send to gui
     # if enemy pokemon faster than player pokemon
     else:
         # Take enemy action
-        action1 = enemy_turn(enemy, player)
+        action1 = enemy_turn(enemy, player, force_swap)
         # If the player party is fully fainted
         if not player.chk_party():
-            # tell gui enemy wins
+            # update text bubble saying that the player has lost
             pass
         # If the current pokemon in the players party is fainted, make them switch pokemon
         elif player.get_curr_pkm().get_is_fainted():

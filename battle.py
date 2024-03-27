@@ -121,13 +121,9 @@ def player_turn(player, enemy, btn_info):
         # Assume that the button info's index 1 will contain the key of the item that is being used.
         for item in  player.get_item_bag():
             if btn_info[1] == item:
-                if player.get_item_bag()[item] > 0:
-                    item.use_item(player.get_curr_pkm())
-                    player.get_item_bag()[item] -= 1
-                    action_str = item.item_to_string(item, player)
-                else:
-                    # The player does not have the item
-                    action_str = item.item_to_string(item, player)
+                item.use_item(player.get_curr_pkm())
+                player.get_item_bag()[item] -= 1
+                action_str = item.item_to_string(item, player)
     #switch
     else:
         # Call swap pokemon function. The current pokemon is always at index 0, the button info's index 1 will contain

@@ -265,12 +265,12 @@ def roll_crit():
 #used in damage calculation
 def chk_effective(move_used, pkm):
     effectiveness = 1
-    move_type = move_used.get_type()
+    move_type = move_used.get_type().lower()
     pkm_types = pkm.get_types()
-    pkm_type1 = pkm_types[0]
+    pkm_type1 = pkm_types[0].lower()
     pkm_type2 = "none"
     if len(pkm_types) > 1:
-        pkm_type2 = pkm_types[1]
+        pkm_type2 = pkm_types[1].lower()
     #defense pokemon water
     if pkm_type1 == "water" or pkm_type2 == "water":
         #not very effective moves

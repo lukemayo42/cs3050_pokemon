@@ -1026,7 +1026,7 @@ class PokemonGame(arcade.View):
 # to the PokemonGame object and renders the window to run the game.
 def main():
     """ Main function """
-    pokemon_bag = [pokemon_objects.bulbasaur, pokemon_objects.charizard, pokemon_objects.ivysaur]
+    pokemon_bag = [pokemon_objects.bulbasaur, pokemon_objects.charizard, pokemon_objects.gengar]
     trainer1 = Character("Ash", pokemon_bag, [], 1000,
                               "I'm on a journey to become a Pokemon Master!")
     pokemon_bag_trainer2 = [pokemon_objects.charizard, pokemon_objects.charizard, pokemon_objects.charizard]

@@ -7,7 +7,6 @@ class item:
     health_recovered - the amount of health recovered when the item is used - integer
     is_revive - a boolean stating whether the item is a revive potion or not
     """
-
     def __init__(self, name, description, cost, health_recovered, is_revive):
         self.name = name
         self.description = description
@@ -48,8 +47,8 @@ class item:
 
     # use_item function takes in the current pokemon and uses the item on the pokemon.
     def use_item(self, pokemon):
-        if self.is_revive:
-            pokemon.add_health(self.health_recovered)
+        if self.is_revive and pokemon.get_is_fainted():
+            pokemon.add_health(pokemon.get_max_hlth()/2)
             pokemon.set_is_fainted(False)
         else:
             if (pokemon.get_current_health() + self.health_recovered) > pokemon.get_max_hlth():

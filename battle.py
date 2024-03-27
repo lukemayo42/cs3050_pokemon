@@ -141,12 +141,14 @@ def player_turn(player, enemy, btn_info):
 def enemy_turn(enemy, player):
     enemy_pkm = enemy.get_curr_pkm()
     player_pkm = player.get_curr_pkm()
-    action_str = get_action(enemy)
+    action_str = get_enemy_action(enemy)
     action_flag = True
-    #randomly choose move
-    move_index = random.randint(0,3)
-    move_used = enemy_pkm.get_moves()[move_index]
+
     if action_str == "move":
+        # randomly choose move
+        move_index = random.randint(0, 3)
+        move_used = enemy_pkm.get_moves()[move_index]
+        # If the move hits, do damage
         if roll_accuracy(move_used):
             #send gui sometyhing sayinssg it hit 
             dmg, effectiveness = calc_dmg(enemy_pkm, player_pkm, move_used)
@@ -178,21 +180,26 @@ def enemy_turn(enemy, player):
         if enemy.get_pokemon_list()[1].get_is_fainted():
             enemy.swap_pokemon(0, 2)
             action = f"{enemy.get_name()} swapped out {enemy.get_pokemon_list()[2].get_name()} with {player.get_curr_pkm().get_name()}"
+            print(action)
         elif enemy.get_pokemon_list()[2].get_is_fainted():
             enemy.swap_pokemon(0, 1)
             action = f"{enemy.get_name()} swapped out {enemy.get_pokemon_list()[2].get_name()} with {player.get_curr_pkm().get_name()}"
+            print(action)
         else:
             swap_index = random.randint(1,2)
             enemy.swap_pokemon(0, swap_index)
             action = f"{enemy.get_name()} swapped out {enemy.get_pokemon_list()[swap_index].get_name()} with {player.get_curr_pkm().get_name()}"
+            print(action)
     #maybe later add intelligence
     
     #calc damg
     #update curr health of player
     return action_flag, action
 
-def get_action(enemy):
-    #TODO: Figure out how to to the probabilities and ranges efficiently
+# Function is enemy's "intelligence"
+# Function determines the action the enemy will take based upon the amount of health their current pokemon has.
+def get_enemy_action(enemy):
+    #TODO: Figure out how to do to the probabilities and ranges efficiently
     enemy_pkm = enemy.get_curr_pkm()
     # Randomly pick a number to determine the probability an action is taken.
     probability_range_full = 20
@@ -217,7 +224,11 @@ def get_action(enemy):
 
     return action_str
 
+# Function is a helper function for get_enemy_action(enemy)
+# Function takes in probability_action, enemy, and probability_range. Based on the probability_action and the given
+# probability_range, the function will determine the action the enemy will take.
 def get_action_based_on_probability(probability_action, enemy, probability_range):
+    # probability_action = 0
     if probability_action in range(1, probability_range):
         action_str = "item"
     elif probability_action == 0:

@@ -112,6 +112,7 @@ def player_turn(player, enemy, btn_info):
         # Call swap pokemon function. The current pokemon is always at index 0, the button info's index 1 will contain
         # the index of the pokemon that is to be swapped in.
         player.swap_pokemon(0, btn_info[1])
+        action_str = f"{player.get_name()} swapped out {player.get_pokemon_list()[btn_info[1]].get_name()} with {player.get_curr_pkm().get_name()}"
 
     #if move calc damage using index 0 of both player and enemy
     #update curr health of enemy

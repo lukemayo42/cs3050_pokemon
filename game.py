@@ -10,6 +10,7 @@ from Character import Character
 from pokemon import pokemon
 from move import move
 import pokemon_objects
+import math
 
 # Enum to hold the current state of the game, used to update the screen rendering
 class State(Enum):
@@ -93,7 +94,7 @@ class HealthBar(arcade.Sprite):
             start_x=pos_x,
             start_y=pos_y,
             color=background_color,
-            text = str(int(self.health)) + " / " + str(self.max_health)
+            text = str(math.trunc(self.health)) + " / " + str(self.max_health)
         )
         self.health_text.center_x = pos_x
         self.health_text.center_y = pos_y
@@ -112,19 +113,19 @@ class HealthBar(arcade.Sprite):
     def health_bar_update(self, sprite_list):
         self.health = self.pokemon.get_curr_hlth()
         self.health_text.kill()
-        if(int(self.health) == 0 and self.health > 0):
+        if(math.trunc(self.health) == 0 and self.health > 0):
             self.health_text = arcade.create_text_sprite (
                 start_x=self.pos_x,
                 start_y=self.pos_y,
                 color=arcade.color.BLACK,
-                text = str(int(self.health) + 1) + " / " + str(self.max_health)
+                text = str(math.trunc(self.health) + 1) + " / " + str(self.max_health)
             )
         else:
             self.health_text = arcade.create_text_sprite (
                 start_x=self.pos_x,
                 start_y=self.pos_y,
                 color=arcade.color.BLACK,
-                text = str(int(self.health)) + " / " + str(self.max_health)
+                text = str(math.trunc(self.health)) + " / " + str(self.max_health)
             )
         self.health_text.center_x = self.pos_x
         self.health_text.center_y = self.pos_y
@@ -267,7 +268,16 @@ class PokemonSwap(arcade.View):
             start_x=SCREEN_WIDTH / 4,
             start_y=SCREEN_HEIGHT / 2,
             color=arcade.color.BLACK,
-            text = str(self.pokemon.get_name())
+            text = str(self.pokemon.get_name()) +
+                    "\nHealth: " + str(math.trunc(self.player.get_curr_pkm().get_curr_hlth()))
+                                    + "\nAttack: " + str(int(self.pokemon.get_curr_atk()))
+                                    + "\nDefense: " + str(int(self.pokemon.get_curr_def()))
+                                    + "\nSpeed: " + str(int(self.pokemon.get_curr_spd()))
+                                    + "\n\nMoves:\n"
+                                    + "(1) " + str(self.player.get_curr_pkm().moves[0].name) + " (Power: " + str(int(self.player.get_curr_pkm().moves[0].get_power())) + " and Accuracy: " + str(int(self.player.get_curr_pkm().moves[0].get_accuracy())) + ")"
+                                    + "\n(2) " + str(self.player.get_curr_pkm().moves[1].name) + " (Power: " + str(int(self.player.get_curr_pkm().moves[1].get_power())) + " and Accuracy: " + str(int(self.player.get_curr_pkm().moves[1].get_accuracy())) + ")"
+                                    + "\n(3) " + str(self.player.get_curr_pkm().moves[2].name) + " (Power: " + str(int(self.player.get_curr_pkm().moves[2].get_power())) + " and Accuracy: " + str(int(self.player.get_curr_pkm().moves[2].get_accuracy())) + ")"
+                                    + "\n(4) " + str(self.player.get_curr_pkm().moves[3].name) + " (Power: " + str(int(self.player.get_curr_pkm().moves[3].get_power())) + " and Accuracy: " + str(int(self.player.get_curr_pkm().moves[3].get_accuracy())) + ")"
         )
         
         
@@ -275,13 +285,13 @@ class PokemonSwap(arcade.View):
     def setup(self):
         # TODO: create any sprites needed for rules page
         self.player_list = arcade.SpriteList()
-        self.player_sprite = Sprite("../cs3050_pokemon/sprites/" + self.player.get_curr_pkm().get_name().lower() + "-front.png", 1.25 * SPRITE_SCALING)
+        self.player_sprite = Sprite("../cs3050_pokemon/sprites/" + self.player.get_curr_pkm().get_name().lower() + "-front.png", SPRITE_SCALING)
         self.player_sprite.center_x = SCREEN_WIDTH / 4
-        self.player_sprite.center_y = 2 * SCREEN_HEIGHT / 3
+        self.player_sprite.center_y = 3 * SCREEN_HEIGHT / 4
 
         self.player_list.append(self.player_sprite)
         self.name_text.center_x = SCREEN_WIDTH / 4
-        self.name_text.center_y = self.player_sprite.bottom - SCREEN_HEIGHT / 30
+        self.name_text.center_y = self.player_sprite.bottom - self.name_text.height / 2
         self.player_list.append(self.name_text)
         self.pokemon_list = self.player.get_pokemon_list()
         # Iterate through pokemon party and display other sprites on the side
@@ -447,6 +457,7 @@ class PokemonStats(arcade.View):
             color=arcade.color.BLACK,
             text = str(self.pokemon.get_name())
         )      
+         
 
     def setup(self):
         # Create the sprite for the pokemon to be displayed
@@ -469,7 +480,7 @@ class PokemonStats(arcade.View):
             start_x=SCREEN_WIDTH / 4,
             start_y=SCREEN_HEIGHT / 2,
             color=arcade.color.BLACK,
-            text = "Health: " + str(int(self.pokemon.get_curr_hlth()))
+            text = "Health: " + str(math.trunc(self.pokemon.get_curr_hlth()))
                                     + "\nAttack: " + str(int(self.pokemon.get_curr_atk()))
                                     + "\nDefense: " + str(int(self.pokemon.get_curr_def()))
                                     + "\nSpeed: " + str(int(self.pokemon.get_curr_spd()))
@@ -1026,7 +1037,7 @@ class PokemonGame(arcade.View):
 # to the PokemonGame object and renders the window to run the game.
 def main():
     """ Main function """
-    pokemon_bag = [pokemon_objects.bulbasaur, pokemon_objects.charizard, pokemon_objects.gengar]
+    pokemon_bag = [pokemon_objects.bulbasaur, pokemon_objects.charizard, pokemon_objects.pikachu]
     trainer1 = Character("Ash", pokemon_bag, [], 1000,
                               "I'm on a journey to become a Pokemon Master!")
     pokemon_bag_trainer2 = [pokemon_objects.charizard, pokemon_objects.charizard, pokemon_objects.charizard]

@@ -1,7 +1,6 @@
 from item import item
 
 # Create all the items that will be in the game
-# (self, name, description, cost, health_recovered, is_revive)
 potion = item("Potion", "A spray-type medicine for treating wounds. It can be used to restore 20 HP to a Pokémon.",
               200, 20, False)
 

@@ -10,6 +10,7 @@ from Character import Character
 from pokemon import pokemon
 from move import move
 import pokemon_objects
+import item_objects
 import math
 
 # Enum to hold the current state of the game, used to update the screen rendering
@@ -108,7 +109,7 @@ class HealthBar(arcade.Sprite):
         self.name_text.center_x = pos_x
         self.name_text.center_y = name_pos
         sprite_list.append(self.name_text)
-    
+
     # This health_bar_update method replaces the previous text box displaying health with the updated health
     def health_bar_update(self, sprite_list):
         self.health = self.pokemon.get_curr_hlth()
@@ -164,7 +165,7 @@ class PokemonStart(arcade.View):
         # Background image will be stored in this variable
         self.background = None
         arcade.set_background_color(arcade.color.WHITE)
-        
+
         # Button styling
         start_style = {
             "bg_color":(50,75,125),
@@ -600,7 +601,7 @@ class PokemonSwap(arcade.View):
                 anchor_x="center_x",
                 anchor_y="center_y",
                 child=self.v_box)
-        )        
+        )
         # Add name/stats for pokemon
         self.name_text = arcade.create_text_sprite (
             start_x=SCREEN_WIDTH / 4,
@@ -617,8 +618,8 @@ class PokemonSwap(arcade.View):
                                     + "\n(3) " + str(self.player.get_curr_pkm().moves[2].name) + " (Power: " + str(int(self.player.get_curr_pkm().moves[2].get_power())) + " and Accuracy: " + str(int(self.player.get_curr_pkm().moves[2].get_accuracy())) + ")"
                                     + "\n(4) " + str(self.player.get_curr_pkm().moves[3].name) + " (Power: " + str(int(self.player.get_curr_pkm().moves[3].get_power())) + " and Accuracy: " + str(int(self.player.get_curr_pkm().moves[3].get_accuracy())) + ")"
         )
-        
-        
+
+
 
     def setup(self):
         # TODO: create any sprites needed for rules page
@@ -652,9 +653,9 @@ class PokemonSwap(arcade.View):
                     color=arcade.color.BLACK,
                     text = str(self.pokemon_list[i].get_name())
                 )
-                name.center_x = SCREEN_HEIGHT 
+                name.center_x = SCREEN_HEIGHT
                 name.center_y = sprite.bottom - SCREEN_HEIGHT / 30
-                
+
                 self.player_list.append(name)
                 self.create_pokemon_buttons(SCREEN_HEIGHT, sprite.bottom - SCREEN_HEIGHT/ 30, i == 1)
 
@@ -787,15 +788,15 @@ class PokemonStats(arcade.View):
                 anchor_x="center_x",
                 anchor_y="center_y",
                 child=self.v_box)
-        )        
+        )
         # Add name/stats for pokemon
         self.name_text = arcade.create_text_sprite (
             start_x=SCREEN_WIDTH / 4,
             start_y=SCREEN_HEIGHT / 2,
             color=arcade.color.BLACK,
             text = str(self.pokemon.get_name())
-        )      
-         
+        )
+
 
     def setup(self):
         # Create the sprite for the pokemon to be displayed
@@ -827,7 +828,7 @@ class PokemonStats(arcade.View):
                                     + "\n(2) " + str(self.pokemon.moves[1].name) + " (Power: " + str(int(self.pokemon.moves[1].get_power())) + " and Accuracy: " + str(int(self.pokemon.moves[1].get_accuracy())) + ")"
                                     + "\n(3) " + str(self.pokemon.moves[2].name) + " (Power: " + str(int(self.pokemon.moves[2].get_power())) + " and Accuracy: " + str(int(self.pokemon.moves[2].get_accuracy())) + ")"
                                     + "\n(4) " + str(self.pokemon.moves[3].name) + " (Power: " + str(int(self.pokemon.moves[3].get_power())) + " and Accuracy: " + str(int(self.pokemon.moves[3].get_accuracy())) + ")"
-        )    
+        )
         self.health_text.center_x = SCREEN_HEIGHT
         self.health_text.center_y = 3*SCREEN_HEIGHT / 4
         self.player_list.append(self.health_text)
@@ -888,7 +889,7 @@ class PokemonRules(arcade.View):
                 anchor_x="center_x",
                 anchor_y="center_y",
                 child=self.v_box)
-        )        
+        )
         # Rules text scrollable textbox
         bg_tex = load_texture(":resources:gui_basic_assets/window/grey_panel.png")
         rules_area = UITextArea(x= SCREEN_WIDTH / 4,
@@ -904,7 +905,7 @@ class PokemonRules(arcade.View):
                 padding=(10, 10, 10, 10)
             )
         )
-        
+
 
     def setup(self):
         # TODO: create any sprites needed for rules page
@@ -1062,7 +1063,7 @@ class PokemonGame(arcade.View):
         start_view = PokemonSwap(self.player, self.enemy)
         start_view.setup()
         self.window.show_view(start_view)
-    
+
     def items_button_action(self, event):
         self.state = State.Bag
         # TODO: Call method to render items bag
@@ -1073,17 +1074,17 @@ class PokemonGame(arcade.View):
         """ Set up the game and initialize the variables. """
         # Sprite lists
         self.player_list = arcade.SpriteList()
-    
+
         # Set up the player and enemy sprites
         # self.player_sprite = Sprite("../cs3050_pokemon/sprites/" + self.player.get_curr_pkm().get_name().lower() + "-back.png", SPRITE_SCALING)
-        
+
         # New scaling so it is relative to size of image
         self.player_sprite = Sprite("../cs3050_pokemon/sprites/" + self.player.get_curr_pkm().get_name().lower() + "-back.png")
         self.player_sprite.scale = 300 / (self.player_sprite.height * 1.2)
 
         self.player_sprite2 = Sprite("../cs3050_pokemon/sprites/" + self.enemy.get_curr_pkm().get_name().lower() + "-front.png", OPPONENT_SPRITE_SCALING)
         # TODO: change these to constant variables
-        self.player_sprite.center_x = 200 
+        self.player_sprite.center_x = 200
         # self.player_sprite.bottom = 500
         self.player_sprite.bottom = self.text_area.height + 10
         self.player_sprite2.center_x = 600
@@ -1091,7 +1092,7 @@ class PokemonGame(arcade.View):
         self.player_list.append(self.player_sprite)
         self.player_list.append(self.player_sprite2)
         self.background = arcade.load_texture("../cs3050_pokemon/images/fight-background.png")
-    
+
     # This on_draw method renders all of the buttons and sprites depending on what the current state is
     def on_draw(self):
         """ Render the screen. """
@@ -1311,7 +1312,7 @@ class PokemonGame(arcade.View):
         # TODO: make the sprite move with the update function
         self.move_up = True
         self.animate = True
-        
+
     # This update_player_speed method checks keybard input and reflects the movement speed of the player.
     # Movement will be implemented in a later deliverable.
     def update_player_speed(self):
@@ -1327,12 +1328,12 @@ class PokemonGame(arcade.View):
             self.player_sprite.change_x = -MOVEMENT_SPEED
         elif self.right_pressed and not self.left_pressed:
             self.player_sprite.change_x = MOVEMENT_SPEED
-    
+
     # This on_update method is called each frame of the game and calls the respective update methods of the sprites
     def on_update(self, delta_time):
         """ Movement and game logic """
         # Call update to move the sprite
-        self.player_list.update()  
+        self.player_list.update()
         self.bar_sprite_list.update()
 
     # This on_key_press method listens for keyboard input
@@ -1376,10 +1377,15 @@ class PokemonGame(arcade.View):
 def main():
     """ Main function """
     pokemon_bag = [pokemon_objects.bulbasaur, pokemon_objects.charizard, pokemon_objects.pikachu]
-    trainer1 = Character("Ash", pokemon_bag, [], 1000,
+    user_item_bag = {item_objects.potion: 1, item_objects.super_potion: 1, item_objects.hyper_potion: 1,
+                        item_objects.max_potion: 1, item_objects.revive: 0}
+    enemy_item_bag = {item_objects.potion: 1, item_objects.super_potion: 1, item_objects.hyper_potion: 1,
+                        item_objects.max_potion: 1, item_objects.revive: 0}
+
+    trainer1 = Character("Ash", pokemon_bag, user_item_bag, 1000,
                               "I'm on a journey to become a Pokemon Master!")
     pokemon_bag_trainer2 = [pokemon_objects.charizard, pokemon_objects.charizard, pokemon_objects.charizard]
-    trainer2 = Character("Misty", pokemon_bag_trainer2, [], 800, "Water types are the best!")
+    trainer2 = Character("Misty", pokemon_bag_trainer2, enemy_item_bag, 800, "Water types are the best!")
 
     # window = PokemonGame(SCREEN_WIDTH, SCREEN_HEIGHT, B_SCREEN_TITLE, trainer1, trainer2)
 

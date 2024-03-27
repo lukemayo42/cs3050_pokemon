@@ -142,17 +142,17 @@ def enemy_turn(enemy, player, force_swap):
 
     #item
     elif action_str == "item":
-        # action = ITEM_USED.item_to_string(ITEM_USED, enemy)
-        print()
-        print()
-        print()
-        print()
-        print("Item should be used here")
-        print()
-        print()
-        print()
-        print()
-        action = "PLACEHOLDER"
+        item_is_used = False
+        while not item_is_used:
+            for item, num_items in enemy.get_item_bag():
+                use_item = random.choice([True, False])
+                if num_items > 0 and use_item:
+                    item.use_item(enemy_pkm)
+                    enemy.get_item_bag()[item] -= 1
+                    action = item.item_to_string(item, enemy)
+                if use_item:
+                    item_is_used = True
+                    break
     #switch
     else:
         #call swap pokemon function. Make sure to swap with a pokemon that is not fainted.
@@ -208,7 +208,13 @@ def get_enemy_action(enemy):
 # probability_range, the function will determine the action the enemy will take.
 def get_action_based_on_probability(probability_action, enemy, probability_range):
     # probability_action = 0
-    if probability_action in range(1, probability_range):
+    has_items = False
+
+    for num_items in enemy.get_item_bag().values:
+        if num_items != 0:
+            has_items = True
+
+    if probability_action in range(1, probability_range) and has_items:
         action_str = "item"
     elif probability_action == 0:
         # Make sure that the enemy player has a pokemon to swap to. If not, change action string to move.

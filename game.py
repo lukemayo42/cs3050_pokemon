@@ -952,7 +952,7 @@ class PokemonGame(arcade.View):
         self.background = None
 
         #TODO: FOR TESTING PURPOSES, this overrides the original health of the pokemon object
-        self.player.get_curr_pkm().set_curr_hlth(1000)
+        #self.player.get_curr_pkm().set_curr_hlth(1000)
 
         # Health bar
         self.bar_sprite_list = arcade.SpriteList()

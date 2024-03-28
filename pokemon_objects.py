@@ -36,6 +36,7 @@ dragon_claw = move("Dragon Claw", "Dragon Claw", 80, 100, "Dragon", True)
 air_slash = move("Air Slash", "Flying", 75, 95, "Flying", True)
 inferno = move("Inferno", "Fire", 100, 50, "Fire", True)
 charizard = create_pokemon("Charizard", df, [flamethrower, dragon_claw, air_slash, inferno])
+enemy_charizard = pokemon(charizard)
 
 #create pikachu
 thunderbolt = move("Thunderbolt", "electric", 90, 100, "Electric", True)

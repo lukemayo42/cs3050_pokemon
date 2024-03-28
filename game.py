@@ -1133,7 +1133,7 @@ class PokemonGame(arcade.View):
 
 
         # When the backend determines the enemy has been defeated, change states
-        if(self.enemy.get_curr_pkm().get_is_fainted()):
+        if not self.enemy.chk_party():
             self.state = State.Win
         if(self.state == State.Moves):
             self.clear()
@@ -1384,7 +1384,7 @@ def main():
 
     trainer1 = Character("Ash", pokemon_bag, user_item_bag, 1000,
                               "I'm on a journey to become a Pokemon Master!")
-    pokemon_bag_trainer2 = [pokemon_objects.charizard, pokemon_objects.charizard, pokemon_objects.charizard]
+    pokemon_bag_trainer2 = [pokemon_objects.enemy_charizard, pokemon_objects.gengar, pokemon_objects.pidgeotto]
     trainer2 = Character("Misty", pokemon_bag_trainer2, enemy_item_bag, 800, "Water types are the best!")
 
     # window = PokemonGame(SCREEN_WIDTH, SCREEN_HEIGHT, B_SCREEN_TITLE, trainer1, trainer2)

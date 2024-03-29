@@ -1286,11 +1286,13 @@ class PokemonGame(arcade.View):
         # Reflects changes in the sprite of the healthbar
         self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
         self.player_health_bar.health_bar_update(self.bar_sprite_list)
-
-        # Return to the battle state
-        self.state = State.Battle
-        self.remove_move_buttons()
-        self.on_draw()
+        if(action1 != "win"):
+            # Return to the battle state
+            self.state = State.Battle
+            self.remove_move_buttons()
+            self.on_draw()
+        else:
+            self.state = State.Win
 
     # This move_2_go method is called when the second move button is clicked, it passes button information
     # to the backend where the battle function is called. The results of the tern are reflected in the 
@@ -1298,14 +1300,17 @@ class PokemonGame(arcade.View):
     def move_2_go(self, event):
         print("accessing second move")
         btn_info = ["move", self.player.get_curr_pkm().get_moves()[1]]
-        battle(self.player, self.enemy, btn_info)
+        action1, action2 = battle(self.player, self.enemy, btn_info)
         self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
         self.player_health_bar.health_bar_update(self.bar_sprite_list)
 
-        # Return to the battle state
-        self.state = State.Battle
-        self.remove_move_buttons()
-        self.on_draw()
+        if(action1 != "win"):
+            # Return to the battle state
+            self.state = State.Battle
+            self.remove_move_buttons()
+            self.on_draw()
+        else:
+            self.state = State.Win
 
     # This move_3_go method is called when the third move button is clicked, it passes button information
     # to the backend where the battle function is called. The results of the tern are reflected in the 
@@ -1313,14 +1318,17 @@ class PokemonGame(arcade.View):
     def move_3_go(self, event):
         print("accessing third move")
         btn_info = ["move", self.player.get_curr_pkm().get_moves()[2]]
-        battle(self.player, self.enemy, btn_info)
+        action1, action2 = battle(self.player, self.enemy, btn_info)
         self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
         self.player_health_bar.health_bar_update(self.bar_sprite_list)
 
-        # Return to battle state
-        self.state = State.Battle
-        self.remove_move_buttons()
-        self.on_draw()
+        if(action1 != "win"):
+            # Return to the battle state
+            self.state = State.Battle
+            self.remove_move_buttons()
+            self.on_draw()
+        else:
+            self.state = State.Win
 
     # This move_4_go method is called when the fourth move button is clicked, it passes button information
     # to the backend where the battle function is called. The results of the tern are reflected in the 
@@ -1328,14 +1336,17 @@ class PokemonGame(arcade.View):
     def move_4_go(self, event):
         print("accessing fourth move")
         btn_info = ["move", self.player.get_curr_pkm().get_moves()[3]]
-        battle(self.player, self.enemy, btn_info)
+        action1, action2 = battle(self.player, self.enemy, btn_info)
         self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
         self.player_health_bar.health_bar_update(self.bar_sprite_list)
 
-        # Return to battle state
-        self.state = State.Battle
-        self.remove_move_buttons()
-        self.on_draw()
+        if(action1 != "win"):
+            # Return to the battle state
+            self.state = State.Battle
+            self.remove_move_buttons()
+            self.on_draw()
+        else:
+            self.state = State.Win
 
     # This move_1_animate method is for future deliverables and will animate the sprite when a turn is processed
     def move_1_animate(self):

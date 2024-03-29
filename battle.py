@@ -8,11 +8,27 @@ import pokemon_objects
 #we are assuming that we are receiving the type of button that is pressed (pokemon, move, item) and the specific move/pokemon/item that is used/switched
 #please write a method in the button class which we can call that will give us a list containing the type of button that 
 
+#TODO: READ!!!!
+#some things that i have noticed/ am concerned about: when you swap in the gui, the pokemon automatically swaps, this is not how the game works, the pokemon
+#that is swapped based on the current pokemon's speed, if the other pokemon has a faster speed, that pokemon attack the current pokemon first, 
+#then the players pokemon is swapped after, the same is true for items, if an item is used and the opponents pokemon is faster that pokemon goes first
+#then the item is used
+#2. if the text bubble is updated in battle, will it be rendered in the gui?, or will it have to wait for battle to be returned for the gui to be updated
+# in this case, it may be better to do the logic, waiting, and updated text bubble in the gui
+#3. if the enemy pokemon attacks first and the and the player pokemon faints, the player then has to swap pokemon, and the pokemon cannot attack, 
+#the user input given in btn_info, has to be thrown out, and more user input has to be taken on which pokemon the user wants to switch to
+# my idea is to have a special case that will be called when this happens, call the force_player_swap from the gui and then open the swap screen
+# the battle logic/ implementation may need to change
+# 4. an exception is thrown when the enemy tries to use an item line 149 "for item, num_items in enemy.get_item_bag():"
+
+#swapping doesnt work for enemy
+
 
 # Battle function without while loop
 #returns 2 strings, what move player did and what move the enemy did
-def battle(player, enemy, btn_info, text_bubble):
-
+#TODO:implement the text bubble from gui and add as parameter
+def battle(player, enemy, btn_info):
+    #TODO: fix battle logic 
     player_pkm = player.get_curr_pkm()
     enemy_pkm = enemy.get_curr_pkm()
     force_swap = False
@@ -23,16 +39,11 @@ def battle(player, enemy, btn_info, text_bubble):
         if not enemy.chk_party():
             #TODO: update text bubble to "The enemy is out of pokemon! You Win!"
             pass
-        #force enemy to switch pokemon
+        #force enemy to switch pokemon if current pokemon is fainted - takes up enemy's turn
         elif enemy.get_curr_pkm().get_is_fainted():
             force_swap = True
             action2 = enemy_turn(enemy, player, force_swap)
-            if not player.chk_party():
-                #TODO: update check bubble to say player lost
-                pass
-            elif player.get_curr_pkm().get_is_fainted():
-                # force player to switch pokemon
-                pass
+            
         #enemy pokemon has not fainted
         else:
             action2 = enemy_turn(enemy, player, force_swap)
@@ -41,31 +52,27 @@ def battle(player, enemy, btn_info, text_bubble):
                 pass
             elif player.get_curr_pkm().get_is_fainted():
                 # force player to switch pokemon
+                #TODO: updat text bubble saying that that the current pokemon ais died and prompt user to switch
                 pass
             # send to gui
     # if enemy pokemon faster than player pokemon
     else:
         # Take enemy action
-        action1 = enemy_turn(enemy, player)
+        action1 = enemy_turn(enemy, player, force_swap)
         # If the player party is fully fainted
         if not player.chk_party():
-            # tell gui enemy wins
+            # update text bubble saying that the player has lost
             pass
         # If the current pokemon in the players party is fainted, make them switch pokemon
         elif player.get_curr_pkm().get_is_fainted():
             # force player to switch pokemon
+            force_swap = True
+            #update player_turn to handle force switch case
+            action2 = "fainted"
             pass
         # The enemy turn didn't result in anything needing the player to do anything
         else:
-            player_action, action2 = player_turn(player, enemy, btn_info)
-            # If the players action resulted in a hit
-            if player_action:
-                # Update Gui
-                pass
-            # Player action resulted in a miss
-            else:
-                # Update Gui
-                pass
+            action2 = player_turn(player, enemy, btn_info)
             # If the player turn results in the enemy's party being all fainted
             if not enemy.chk_party():
                 # tell gui player wins
@@ -77,14 +84,13 @@ def battle(player, enemy, btn_info, text_bubble):
             # send to gui
     # Return the first action that was done and the second action that was done
     return action1, action2
-    #check speed to see which pokemon goes first
     
 
 #player is a character object
 #button info is a alist containing the type of button and the move/item/pokemon switched - gives index of nrew pokemon to be put into 0 index in list
 #returns bool whether action was succesful
 def player_turn(player, enemy, btn_info):
-    #if move, it item, if swtich pokemon
+    #if move, it item, if switch pokemon
     if btn_info[0] == "move":
         move_used = btn_info[1]
         if roll_accuracy(move_used):
@@ -104,17 +110,15 @@ def player_turn(player, enemy, btn_info):
         # Assume that the button info's index 1 will contain the key of the item that is being used.
         for item in player.get_item_bag():
             if btn_info[1] == item:
-                if player.get_item_bag()[item] > 0:
-                    item.use_item(player.get_curr_pkm())
-                    player.get_item_bag()[item] -= 1
-                else:
-                    # The player does not have the item
-                    pass
+                item.use_item(player.get_curr_pkm())
+                player.get_item_bag()[item] -= 1
+                action_str = item.item_to_string(item, player)
     #switch
     else:
         # Call swap pokemon function. The current pokemon is always at index 0, the button info's index 1 will contain
         # the index of the pokemon that is to be swapped in.
         player.swap_pokemon(0, btn_info[1])
+        action_str = f"{player.get_name()} swapped out {player.get_pokemon_list()[btn_info[1]].get_name()} with {player.get_curr_pkm().get_name()}"
 
     #if move calc damage using index 0 of both player and enemy
     #update curr health of enemy
@@ -127,7 +131,11 @@ def enemy_turn(enemy, player, force_swap):
     action_str = "swap"
     if not force_swap:
         action_str = get_enemy_action(enemy)
-
+    '''
+    #remove later
+    if action_str == "item":
+        action_str = "move"
+'''
     if action_str == "move":
         # randomly choose move
         move_index = random.randint(0, 3)
@@ -143,20 +151,21 @@ def enemy_turn(enemy, player, force_swap):
             print(action)
 
     #item
-    elif action_str == "item":
-        # action = ITEM_USED.item_to_string(ITEM_USED, enemy)
-        print()
-        print()
-        print()
-        print()
-        print("Item should be used here")
-        print()
-        print()
-        print()
-        print()
-        action = "PLACEHOLDER"
+    
+    elif action_str == "item":   
+        item_is_used = False
+        while not item_is_used:
+            for item, num_items in enemy.get_item_bag().items():
+                use_item = random.choice([True, False])
+                if num_items > 0 and use_item:
+                    item.use_item(enemy_pkm)
+                    enemy.get_item_bag()[item] -= 1
+                    action = item.item_to_string(item, enemy)
+                if use_item:
+                    item_is_used = True
+                    break
     #switch
-    else:
+    elif action_str == "swap":
         #call swap pokemon function. Make sure to swap with a pokemon that is not fainted.
         if enemy.get_pokemon_list()[1].get_is_fainted():
             enemy.swap_pokemon(0, 2)
@@ -176,6 +185,11 @@ def enemy_turn(enemy, player, force_swap):
     #calc damg
     #update curr health of player
     return action
+
+#this case will only be called if there is pokemon left in the party
+#expects the index of the pokemon in the party the user wants to switch to 
+def force_player_swap(player, index):
+    player.swap_pokemon(0, index)
 
 # Function is enemy's "intelligence"
 # Function determines the action the enemy will take based upon the amount of health their current pokemon has.
@@ -210,7 +224,13 @@ def get_enemy_action(enemy):
 # probability_range, the function will determine the action the enemy will take.
 def get_action_based_on_probability(probability_action, enemy, probability_range):
     # probability_action = 0
-    if probability_action in range(1, probability_range):
+    has_items = False
+
+    for num_items in enemy.get_item_bag().values():
+        if num_items != 0:
+            has_items = True
+
+    if probability_action in range(1, probability_range) and has_items:
         action_str = "item"
     elif probability_action == 0:
         # Make sure that the enemy player has a pokemon to swap to. If not, change action string to move.
@@ -236,9 +256,15 @@ def calc_dmg(atk_pkm, def_pkm, move):
     dmg = (((((2 * level * roll_crit())/5) + 2)* move.get_power() * (atk_pkm.get_curr_atk()/def_pkm.get_curr_def())/50) + 2 ) * random_variable * effectiveness
     return dmg , effectiveness
 
-#rerturns 1 if user spedd is greater then enemy otherwise 0
+#rerturns True if user spedd is greater then enemy otherwise False
 def chk_spd(user_pkm, enemy_pkm):
-    if(user_pkm.get_curr_spd() > enemy_pkm.get_curr_spd()):
+    user_spd = user_pkm.get_curr_spd()
+    enemy_spd = enemy_pkm.get_curr_spd()
+    #if user speed is equal to enemy speed flip coin to see who goes first
+    if user_spd == enemy_spd:
+        rand_list = [True, False]
+        return random.choice(rand_list)
+    elif(user_pkm.get_curr_spd() > enemy_pkm.get_curr_spd()):
         return True
     else:
         return False

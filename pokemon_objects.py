@@ -16,6 +16,9 @@ def create_pokemon(name, df, moves):
     attack = int(df.at[df.index[df["Name"] == name].to_list()[0], "Attack"])
     defense = int(df.at[df.index[df["Name"] == name].to_list()[0], "Defense"])
     speed = int(df.at[df.index[df["Name"] == name].to_list()[0], "Speed"])
+    #check to see if type2 is a string(meaning it has a value) if not do not include type2 in declaration of pokemon object
+    if not isinstance(type2, str):
+        return pokemon(name, [type1], moves, hp, attack, defense, speed)
     return pokemon(name, [type1, type2], moves, hp, attack, defense, speed)
     
     
@@ -36,10 +39,11 @@ dragon_claw = move("Dragon Claw", "Dragon Claw", 80, 100, "Dragon", True)
 air_slash = move("Air Slash", "Flying", 75, 95, "Flying", True)
 inferno = move("Inferno", "Fire", 100, 50, "Fire", True)
 charizard = create_pokemon("Charizard", df, [flamethrower, dragon_claw, air_slash, inferno])
+enemy_charizard = pokemon(charizard)
 
 #create pikachu
 thunderbolt = move("Thunderbolt", "electric", 90, 100, "Electric", True)
-quick_attack = move("Quick Attack", "This move always goes first", 40, 100, "Electric", True)
+quick_attack = move("Quick Attack", "priority", 40, 100, "Electric", True)
 thunder = move("Thunder", "electric", 110, 70, "Electric", True)
 iron_tail = move("Iron Tail", "steel", 100, 75, "Steel", True)
 pikachu = create_pokemon("Pikachu", df, [thunderbolt, quick_attack, thunder, iron_tail])
@@ -59,7 +63,22 @@ gengar = create_pokemon("Gengar", df, [dark_pulse, shadow_ball, venoshock, thund
 
 
 #create butterfree
-#bug_buzz = move("")
+bug_buzz = move("Bug Buzz", "bug", 90, 100, "Bug", True)
+psybeam = move("Psybeam", "psychic", 65, 100, "Psychic", True)
+butterfree = create_pokemon("Butterfree", df, [bug_buzz, psybeam, aerial_ace, venoshock])
+
+#create slowbro
+surf = move("Surf", "water", 90, 100, "Water", True)
+headbutt = move("Headbutt", "normal", 70, 100, "Normal", True)
+bulldoze = move("Bulldoze", "ground", 60, 100, "Ground", True)
+psychic = move("Psychic", 'pshychic', 90, 100, "Psychic", True)
+slowbro = create_pokemon("Slowbro", df, [surf, psychic, headbutt, bulldoze])
+
+
+
+
+
+
 
 
 

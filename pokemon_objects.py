@@ -16,6 +16,9 @@ def create_pokemon(name, df, moves):
     attack = int(df.at[df.index[df["Name"] == name].to_list()[0], "Attack"])
     defense = int(df.at[df.index[df["Name"] == name].to_list()[0], "Defense"])
     speed = int(df.at[df.index[df["Name"] == name].to_list()[0], "Speed"])
+    #check to see if type2 is a string(meaning it has a value) if not do not include type2 in declaration of pokemon object
+    if not isinstance(type2, str):
+        return pokemon(name, [type1], moves, hp, attack, defense, speed)
     return pokemon(name, [type1, type2], moves, hp, attack, defense, speed)
     
     
@@ -40,7 +43,7 @@ enemy_charizard = pokemon(charizard)
 
 #create pikachu
 thunderbolt = move("Thunderbolt", "electric", 90, 100, "Electric", True)
-quick_attack = move("Quick Attack", "This move always goes first", 40, 100, "Electric", True)
+quick_attack = move("Quick Attack", "priority", 40, 100, "Electric", True)
 thunder = move("Thunder", "electric", 110, 70, "Electric", True)
 iron_tail = move("Iron Tail", "steel", 100, 75, "Steel", True)
 pikachu = create_pokemon("Pikachu", df, [thunderbolt, quick_attack, thunder, iron_tail])

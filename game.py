@@ -1376,7 +1376,7 @@ class PokemonGame(arcade.View):
 # to the PokemonGame object and renders the window to run the game.
 def main():
     """ Main function """
-    pokemon_bag = [pokemon_objects.gengar, pokemon_objects.charizard, pokemon_objects.pikachu]
+    pokemon_bag = [pokemon_objects.pikachu, pokemon_objects.charizard, pokemon_objects.pikachu]
     user_item_bag = {item_objects.potion: 1, item_objects.super_potion: 1, item_objects.hyper_potion: 1,
                         item_objects.max_potion: 1, item_objects.revive: 0}
     enemy_item_bag = {item_objects.potion: 1, item_objects.super_potion: 1, item_objects.hyper_potion: 1,

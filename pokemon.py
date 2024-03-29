@@ -15,7 +15,7 @@ class pokemon:
     base_spd - base speed of the pokemon - int
     curr_spd - current spd of the pokemon - int
     is_fainted - flag whether or not  a pokemon is faineted or not - bool
-    """
+    
     def __init__(self, name, types, moves, max_hlth, base_atk, base_def, base_spd):
         #current stats are set to base stats 
         self.name = name
@@ -30,7 +30,7 @@ class pokemon:
         self.base_spd = base_spd
         self.curr_spd = base_spd
         self.is_fainted = False
-    
+    """
     #define multiple contructors
     def __init__(self, *args):
         #copy contructor called if 1 argument is passed to contructor

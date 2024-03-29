@@ -20,9 +20,8 @@ import pokemon_objects
 # my idea is to have a special case that will be called when this happens, call the force_player_swap from the gui and then open the swap screen
 # the battle logic/ implementation may need to change
 # 4. an exception is thrown when the enemy tries to use an item line 149 "for item, num_items in enemy.get_item_bag():"
-#5. exception with pikachu when using moves think its how its declared
 
-#swapping doesnt work enemy
+#swapping doesnt work for enemy
 
 
 # Battle function without while loop

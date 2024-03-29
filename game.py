@@ -554,7 +554,8 @@ class WorldMap(arcade.View):
 
         self.player_list.update_animation()
         self.physics_engine.update()
-        print(self.player.center_x)
+
+        # TEMPORARY SOLUTION TO START FIGHT
         if(self.player.center_x >= 130 and self.player.center_x <= 140):
             fight_view = PokemonGame(self.pkm_player, self.pkm_enemy)
             fight_view.setup()
@@ -1250,7 +1251,7 @@ class PokemonGame(arcade.View):
         self.move_1_animate()
 
         btn_info = ["move", self.player.get_curr_pkm().get_moves()[0]]
-        action1, action2 = battle(self.player, self.enemy, btn_info)
+        action1, action2 = battle(self.player, self.enemy, btn_info, self.text_area)
 
         # Reflects changes in the sprite of the healthbar
         self.enemy_health_bar.health_bar_update(self.bar_sprite_list)

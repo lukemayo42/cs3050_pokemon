@@ -51,7 +51,7 @@ class item:
             pokemon.add_health(pokemon.get_max_hlth()/2)
             pokemon.set_is_fainted(False)
         else:
-            if (pokemon.get_current_health() + self.health_recovered) > pokemon.get_max_hlth():
+            if (pokemon.get_curr_hlth() + self.health_recovered) > pokemon.get_max_hlth():
                 pokemon.set_health(pokemon.get_max_hlth())
             else:
                 pokemon.add_health(self.health_recovered)

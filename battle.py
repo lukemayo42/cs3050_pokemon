@@ -22,6 +22,7 @@ import pokemon_objects
 # 4. an exception is thrown when the enemy tries to use an item line 149 "for item, num_items in enemy.get_item_bag():"
 #5. exception with pikachu when using moves think its how its declared
 
+
 # Battle function without while loop
 #returns 2 strings, what move player did and what move the enemy did
 #TODO:implement the text bubble from gui and add as parameter
@@ -152,7 +153,7 @@ def enemy_turn(enemy, player, force_swap):
     elif action_str == "item":   
         item_is_used = False
         while not item_is_used:
-            for item, num_items in enemy.get_item_bag():
+            for item, num_items in enemy.get_item_bag().items():
                 use_item = random.choice([True, False])
                 if num_items > 0 and use_item:
                     item.use_item(enemy_pkm)

@@ -75,11 +75,12 @@ def battle(player, enemy, btn_info):
             # If the player turn results in the enemy's party being all fainted
             if not enemy.chk_party():
                 # tell gui player wins
-                pass
+                player_action = "win"
             # If the enemy's current pokemon is fainted, make them switch
             elif enemy.get_curr_pkm().get_is_fainted():
                 # force enemy to switch pokemon
-                pass
+                force_swap = True
+                enemy_action = enemy_turn(enemy, player, force_swap)
             # send to gui
     # Return the first action that was done and the second action that was done
     return player_action, enemy_action

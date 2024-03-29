@@ -659,7 +659,11 @@ class PokemonSwap(arcade.View):
                 name.center_y = sprite.bottom - SCREEN_HEIGHT / 30
 
                 self.player_list.append(name)
-                self.create_pokemon_buttons(SCREEN_HEIGHT, sprite.bottom - SCREEN_HEIGHT/ 30, i == 1)
+                if(self.pokemon_list[i].get_is_fainted()):
+                    self.create_pokemon_buttons(SCREEN_HEIGHT, sprite.bottom - SCREEN_HEIGHT/ 30, i == 1, True)
+                else:   
+                    self.create_pokemon_buttons(SCREEN_HEIGHT, sprite.bottom - SCREEN_HEIGHT/ 30, i == 1, False)
+
 
 
         print("here is your pokemon party")
@@ -671,7 +675,7 @@ class PokemonSwap(arcade.View):
         fight_view.setup()
         self.window.show_view(fight_view)
 
-    def create_pokemon_buttons(self, pos_x, pos_y, top):
+    def create_pokemon_buttons(self, pos_x, pos_y, top, fainted):
         if(top):
             self.button_box_1 = arcade.gui.UIBoxLayout(vertical=False)
 
@@ -679,9 +683,10 @@ class PokemonSwap(arcade.View):
             self.button_box_1.add(stats_button.with_space_around(left=20))
             stats_button.on_click = self.generate_stats_view_1
 
-            swap_button = arcade.gui.UIFlatButton(text="Swap", width=BUTTON_WIDTH / 2)
-            self.button_box_1.add(swap_button.with_space_around(left=20))
-            swap_button.on_click = self.swap_action_1
+            if(not fainted):
+                swap_button = arcade.gui.UIFlatButton(text="Swap", width=BUTTON_WIDTH / 2)
+                self.button_box_1.add(swap_button.with_space_around(left=20))
+                swap_button.on_click = self.swap_action_1
             # Create widgets to hold the button_box_1 widgets, that will center the buttons
             self.manager.add(
                 arcade.gui.UIAnchorWidget(align_x=pos_x / 3, align_y=V_BOX_Y,
@@ -696,9 +701,10 @@ class PokemonSwap(arcade.View):
             self.button_box_2.add(stats_button.with_space_around(left=20))
             stats_button.on_click = self.generate_stats_view_2
 
-            swap_button = arcade.gui.UIFlatButton(text="Swap", width=BUTTON_WIDTH / 2)
-            self.button_box_2.add(swap_button.with_space_around(left=20))
-            swap_button.on_click = self.swap_action_2
+            if(not fainted):
+                swap_button = arcade.gui.UIFlatButton(text="Swap", width=BUTTON_WIDTH / 2)
+                self.button_box_2.add(swap_button.with_space_around(left=20))
+                swap_button.on_click = self.swap_action_2
 
             # Create widgets to hold the button_box_2 widgets, that will center the buttons
             self.manager.add(
@@ -744,9 +750,16 @@ class PokemonSwap(arcade.View):
             fight_view.setup()
             self.window.show_view(fight_view)
         else:
-            swap_view = PokemonSwap(self.player, self.enemy)
-            swap_view.setup()
-            self.window.show_view(swap_view)
+            # swap_view = PokemonSwap(self.player, self.enemy)
+            # swap_view.setup()
+            # self.window.show_view(swap_view)
+            self.player.swap_pokemon(0, self.index)
+            # swap_view = PokemonSwap(self.player, self.enemy)
+            # swap_view.setup()
+            # self.window.show_view(swap_view)
+            fight_view = PokemonGame(self.player, self.enemy)
+            fight_view.setup()
+            self.window.show_view(fight_view)
 
     def on_draw(self):
             # Clear the screen

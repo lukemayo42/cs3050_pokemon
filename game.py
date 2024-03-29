@@ -586,13 +586,14 @@ class PokemonSwap(arcade.View):
             "bg_color_pressed":(20, 65, 115)
         }
 
-        # Create "go back" button
+        # Create "go back" button if the pokemon hasn't fainted
         self.v_box = arcade.gui.UIBoxLayout()
-        back_button = arcade.gui.UIFlatButton(text="Go Back", width=BUTTON_WIDTH * .75, style=button_style)
-        self.v_box.add(back_button.with_space_around(bottom=20))
+        if(not self.player.get_curr_pkm().get_is_fainted()):
+            back_button = arcade.gui.UIFlatButton(text="Go Back", width=BUTTON_WIDTH * .75, style=button_style)
+            self.v_box.add(back_button.with_space_around(bottom=20))
 
-        # Assign self.items_button as a callback to render item bag
-        back_button.on_click = self.back_button_action
+            # Assign self.items_button as a callback to render item bag
+            back_button.on_click = self.back_button_action
 
         self.manager = UIManager()
         self.manager.enable()
@@ -733,12 +734,19 @@ class PokemonSwap(arcade.View):
     def swap_pokemon(self):
         # Call backend method to swap the pokemon order so that the first pokemon is back in front
         # Return to the battle screen
-        self.player.swap_pokemon(0, self.index)
-        print("returning to battle screen")
+        # self.player.swap_pokemon(0, self.index)
+        btn_info = ["swap", self.index]
+        player_action, enemy_action = battle(self.player, self.enemy, btn_info)
+        if(player_action != "fainted"):
+            print("returning to battle screen")
 
-        fight_view = PokemonGame(self.player, self.enemy)
-        fight_view.setup()
-        self.window.show_view(fight_view)
+            fight_view = PokemonGame(self.player, self.enemy)
+            fight_view.setup()
+            self.window.show_view(fight_view)
+        else:
+            swap_view = PokemonSwap(self.player, self.enemy)
+            swap_view.setup()
+            self.window.show_view(swap_view)
 
     def on_draw(self):
             # Clear the screen
@@ -1097,6 +1105,7 @@ class PokemonGame(arcade.View):
     # This on_draw method renders all of the buttons and sprites depending on what the current state is
     def on_draw(self):
         """ Render the screen. """
+        print(self.enemy.get_curr_pkm().get_name())
         if(self.state == State.Battle):
             #print("battle")
             # Clear the screen
@@ -1162,6 +1171,13 @@ class PokemonGame(arcade.View):
             self.health_text.center_y = 500
             self.bar_sprite_list.append(self.health_text)
             self.bar_sprite_list.draw()
+        # if(self.player.get_curr_pkm().get_is_fainted()):
+        #     # Render swap screen so they can switch.
+        #     self.state = State.PokemonSwap
+        #     # TODO: Call method to render sprites to swap with
+        #     start_view = PokemonSwap(self.player, self.enemy)
+        #     start_view.setup()
+        #     self.window.show_view(start_view)
 
     # This add_move_buttons methis is called from the fight on_click method and adds the move buttons to
     # the vertical box storing the window's buttons. 
@@ -1252,7 +1268,7 @@ class PokemonGame(arcade.View):
         self.move_1_animate()
 
         btn_info = ["move", self.player.get_curr_pkm().get_moves()[0]]
-        action1, action2 = battle(self.player, self.enemy, btn_info, self.text_area)
+        action1, action2 = battle(self.player, self.enemy, btn_info)
 
         # Reflects changes in the sprite of the healthbar
         self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
@@ -1377,7 +1393,7 @@ class PokemonGame(arcade.View):
 # to the PokemonGame object and renders the window to run the game.
 def main():
     """ Main function """
-    pokemon_bag = [pokemon_objects.pikachu, pokemon_objects.charizard, pokemon_objects.pikachu]
+    pokemon_bag = [pokemon_objects.pikachu, pokemon_objects.charizard, pokemon_objects.bulbasaur]
     user_item_bag = {item_objects.potion: 1, item_objects.super_potion: 1, item_objects.hyper_potion: 1,
                         item_objects.max_potion: 1, item_objects.revive: 0}
     enemy_item_bag = {item_objects.potion: 1, item_objects.super_potion: 1, item_objects.hyper_potion: 1,

@@ -63,7 +63,22 @@ gengar = create_pokemon("Gengar", df, [dark_pulse, shadow_ball, venoshock, thund
 
 
 #create butterfree
-#bug_buzz = move("")
+bug_buzz = move("Bug Buzz", "bug", 90, 100, "Bug", True)
+psybeam = move("Psybeam", "psychic", 65, 100, "Psychic", True)
+butterfree = create_pokemon("Butterfree", df, [bug_buzz, psybeam, aerial_ace, venoshock])
+
+#create slowbro
+surf = move("Surf", "water", 90, 100, "Water", True)
+headbutt = move("Headbutt", "normal", 70, 100, "Normal", True)
+bulldoze = move("Bulldoze", "ground", 60, 100, "Ground", True)
+psychic = move("Psychic", 'pshychic', 90, 100, "Psychic", True)
+slowbro = create_pokemon("Slowbro", df, [surf, psychic, headbutt, bulldoze])
+
+
+
+
+
+
 
 
 

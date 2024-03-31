@@ -34,6 +34,7 @@ venoshock = move("Venoshock", "Venoshock", 65, 100, "Poison", True)
 power_whip = move("Power Whip", "Power Whip", 120, 85, "Grass", True)
 moves = [tackle, vine_whip, venoshock, power_whip]
 bulbasaur = create_pokemon("Bulbasaur", df, moves)
+enemy_bulbasaur = pokemon(bulbasaur)
 
 #create charizard
 flamethrower = move("Flamethrower", "Fire", 90, 100, "Fire", True)
@@ -49,25 +50,27 @@ quick_attack = move("Quick Attack", "priority", 40, 100, "Electric", True)
 thunder = move("Thunder", "electric", 110, 70, "Electric", True)
 iron_tail = move("Iron Tail", "steel", 100, 75, "Steel", True)
 pikachu = create_pokemon("Pikachu", df, [thunderbolt, quick_attack, thunder, iron_tail])
-
+enemy_pikachu = pokemon(pikachu)
 
 #create Pidgeotto
 steel_wing = move("Steel Wing", "steel", 70, 90, "Steel", True)
 aerial_ace = move("Aerial_Ace", "This move never misses", 60, 100, "Flying", True)
 hurricane = move("Hurricane", "flying", 110, 70, "Flying", True)
 pidgeotto = create_pokemon("Pidgeotto", df, [steel_wing, aerial_ace, quick_attack, hurricane])
-
+enemy_pidgeotto = pokemon(pidgeotto)
 
 #create gengar
 dark_pulse = move("Dark Pulse", "dark", 80, 100, "Dark", True)
 shadow_ball = move("Shadow Ball", "ghost", 80, 100, "Ghost", True)
 gengar = create_pokemon("Gengar", df, [dark_pulse, shadow_ball, venoshock, thunderbolt])
-
+enemy_gengar = pokemon(gengar)
 
 #create butterfree
 bug_buzz = move("Bug Buzz", "bug", 90, 100, "Bug", True)
 psybeam = move("Psybeam", "psychic", 65, 100, "Psychic", True)
 butterfree = create_pokemon("Butterfree", df, [bug_buzz, psybeam, aerial_ace, venoshock])
+enemy_butterfree = pokemon(butterfree)
+
 
 #create slowbro
 surf = move("Surf", "water", 90, 100, "Water", True)
@@ -75,7 +78,7 @@ headbutt = move("Headbutt", "normal", 70, 100, "Normal", True)
 bulldoze = move("Bulldoze", "ground", 60, 100, "Ground", True)
 psychic = move("Psychic", 'pshychic', 90, 100, "Psychic", True)
 slowbro = create_pokemon("Slowbro", df, [surf, psychic, headbutt, bulldoze])
-
+enemy_slowbro = pokemon(slowbro)
 
 
 

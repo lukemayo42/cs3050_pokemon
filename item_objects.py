@@ -13,5 +13,6 @@ hyper_potion = item("Hyper Potion", "A spray-type medicine for treating wounds. 
 max_potion = item("Max Potion", "A spray-type medicine for treating wounds. It can be used to fully restore the max HP of a Pokémon.",
                   2500, 10000, False)
 
-revive = item("Revive", "A medicine that can be used to revive a Pokémon that has fainted. It also restores half the Pokémon's max HP",
-              2000, 10, True)
+# More complicated to impliment. Won't focus on this sprint due to it not being necessary.
+# revive = item("Revive", "A medicine that can be used to revive a Pokémon that has fainted. It also restores half the Pokémon's max HP",
+#               2000, 10, True)

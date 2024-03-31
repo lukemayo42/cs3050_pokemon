@@ -34,7 +34,7 @@ def battle(player, enemy, btn_info):
     force_swap = False
     #if player pokemon faster than enemy pokemon
     if chk_spd(player_pkm, enemy_pkm):
-        action1 = player_turn(player, enemy, btn_info)
+        player_action = player_turn(player, enemy, btn_info)
         # If enemy's party is out of pokemon
         if not enemy.chk_party():
             #TODO: update text bubble to "The enemy is out of pokemon! You Win!"
@@ -42,11 +42,11 @@ def battle(player, enemy, btn_info):
         #force enemy to switch pokemon if current pokemon is fainted - takes up enemy's turn
         elif enemy.get_curr_pkm().get_is_fainted():
             force_swap = True
-            action2 = enemy_turn(enemy, player, force_swap)
+            enemy_action = enemy_turn(enemy, player, force_swap)
             
         #enemy pokemon has not fainted
         else:
-            action2 = enemy_turn(enemy, player, force_swap)
+            enemy_action = enemy_turn(enemy, player, force_swap)
             if not player.chk_party():
                 #TODO: update check bubble to say player lost
                 pass
@@ -58,7 +58,7 @@ def battle(player, enemy, btn_info):
     # if enemy pokemon faster than player pokemon
     else:
         # Take enemy action
-        action1 = enemy_turn(enemy, player, force_swap)
+        enemy_action = enemy_turn(enemy, player, force_swap)
         # If the player party is fully fainted
         if not player.chk_party():
             # update text bubble saying that the player has lost
@@ -68,22 +68,22 @@ def battle(player, enemy, btn_info):
             # force player to switch pokemon
             force_swap = True
             #update player_turn to handle force switch case
-            action2 = "fainted"
-            pass
+            player_action = "fainted"
         # The enemy turn didn't result in anything needing the player to do anything
         else:
-            action2 = player_turn(player, enemy, btn_info)
+            player_action = player_turn(player, enemy, btn_info)
             # If the player turn results in the enemy's party being all fainted
             if not enemy.chk_party():
                 # tell gui player wins
-                pass
+                player_action = "win"
             # If the enemy's current pokemon is fainted, make them switch
             elif enemy.get_curr_pkm().get_is_fainted():
                 # force enemy to switch pokemon
-                pass
+                force_swap = True
+                enemy_action = enemy_turn(enemy, player, force_swap)
             # send to gui
     # Return the first action that was done and the second action that was done
-    return action1, action2
+    return player_action, enemy_action
     
 
 #player is a character object
@@ -157,6 +157,9 @@ def enemy_turn(enemy, player, force_swap):
         while not item_is_used:
             for item, num_items in enemy.get_item_bag().items():
                 use_item = random.choice([True, False])
+                # TODO: Impliment enemy being able to use revive item
+                # if num_items > 0 and use_item and item.get_name() == "Revive":
+                    # pass
                 if num_items > 0 and use_item:
                     item.use_item(enemy_pkm)
                     enemy.get_item_bag()[item] -= 1

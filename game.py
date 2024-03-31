@@ -1501,15 +1501,19 @@ class PokemonGame(arcade.View):
 
         btn_info = ["move", self.player.get_curr_pkm().get_moves()[0]]
         action1, action2 = battle(self.player, self.enemy, btn_info)
-
+        if(self.enemy.get_curr_pkm().get_is_fainted()):
+            # Render the fight screen again with the updated sprite
+            fight_view = PokemonGame(self.player, self.enemy)
+            fight_view.setup()
+            self.window.show_view(fight_view)
         # Reflects changes in the sprite of the healthbar
         self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
         self.player_health_bar.health_bar_update(self.bar_sprite_list)
         if(action1 != "win"):
-            # Return to the battle state
-            self.state = State.Battle
-            self.remove_move_buttons()
-            self.on_draw()
+            # Render the fight screen again with the updated sprite
+            fight_view = PokemonGame(self.player, self.enemy)
+            fight_view.setup()
+            self.window.show_view(fight_view)
         else:
             self.state = State.Win
 
@@ -1524,10 +1528,10 @@ class PokemonGame(arcade.View):
         self.player_health_bar.health_bar_update(self.bar_sprite_list)
 
         if(action1 != "win"):
-            # Return to the battle state
-            self.state = State.Battle
-            self.remove_move_buttons()
-            self.on_draw()
+            # Render the fight screen again with the updated sprite
+            fight_view = PokemonGame(self.player, self.enemy)
+            fight_view.setup()
+            self.window.show_view(fight_view)
         else:
             self.state = State.Win
 
@@ -1542,10 +1546,10 @@ class PokemonGame(arcade.View):
         self.player_health_bar.health_bar_update(self.bar_sprite_list)
 
         if(action1 != "win"):
-            # Return to the battle state
-            self.state = State.Battle
-            self.remove_move_buttons()
-            self.on_draw()
+            # Render the fight screen again with the updated sprite
+            fight_view = PokemonGame(self.player, self.enemy)
+            fight_view.setup()
+            self.window.show_view(fight_view)
         else:
             self.state = State.Win
 
@@ -1560,10 +1564,10 @@ class PokemonGame(arcade.View):
         self.player_health_bar.health_bar_update(self.bar_sprite_list)
 
         if(action1 != "win"):
-            # Return to the battle state
-            self.state = State.Battle
-            self.remove_move_buttons()
-            self.on_draw()
+            # Render the fight screen again with the updated sprite
+            fight_view = PokemonGame(self.player, self.enemy)
+            fight_view.setup()
+            self.window.show_view(fight_view)
         else:
             self.state = State.Win
 
@@ -1640,14 +1644,15 @@ def main():
     pokemon_bag_user = [pokemon_objects.pikachu, pokemon_objects.charizard, pokemon_objects.bulbasaur]
     user_item_bag = {item_objects.potion: 1, item_objects.super_potion: 1, item_objects.hyper_potion: 1,
                         item_objects.max_potion: 1}
-    user_trainer = Character("Ash", pokemon_bag_user, user_item_bag, 1000,
-                              "I'm on a journey to become a Pokemon Master!")
+    
 
-    pokemon_bag_enemy = [pokemon_objects.enemy_gengar, pokemon_objects.enemy_pidgeotto]
+    pokemon_bag_enemy = [pokemon_objects.enemy_charizard, pokemon_objects.enemy_gengar, pokemon_objects.enemy_pidgeotto]
     enemy_item_bag = {item_objects.potion: 1, item_objects.super_potion: 1, item_objects.hyper_potion: 1,
                       item_objects.max_potion: 1}
 
-    enemy_trainer = Character("Misty", pokemon_bag_enemy, enemy_item_bag, 800, "Water types are the best!")
+    user_trainer = Character("Ash", pokemon_bag_enemy, user_item_bag, 1000,
+                              "I'm on a journey to become a Pokemon Master!")
+    enemy_trainer = Character("Misty", pokemon_bag_user, enemy_item_bag, 800, "Water types are the best!")
 
     # window = PokemonGame(SCREEN_WIDTH, SCREEN_HEIGHT, B_SCREEN_TITLE, user_trainer, enemy_trainer)
 

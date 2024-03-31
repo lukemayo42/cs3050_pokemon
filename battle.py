@@ -38,7 +38,9 @@ def battle(player, enemy, btn_info):
         # If enemy's party is out of pokemon
         if not enemy.chk_party():
             #TODO: update text bubble to "The enemy is out of pokemon! You Win!"
-            pass
+            # For now we need to do this to make sure we don't reference something without assignment
+            player_action = "win"
+            enemy_action = "lose"
         #force enemy to switch pokemon if current pokemon is fainted - takes up enemy's turn
         elif enemy.get_curr_pkm().get_is_fainted():
             force_swap = True
@@ -49,11 +51,13 @@ def battle(player, enemy, btn_info):
             enemy_action = enemy_turn(enemy, player, force_swap)
             if not player.chk_party():
                 #TODO: update check bubble to say player lost
-                pass
+                # For now we need to do this to make sure we don't reference something without assignment
+                player_action = "lose"
             elif player.get_curr_pkm().get_is_fainted():
                 # force player to switch pokemon
                 #TODO: updat text bubble saying that that the current pokemon ais died and prompt user to switch
-                pass
+                # For now we need to do this to make sure we don't reference something without assignment
+                player_action = "fainted"
             # send to gui
     # if enemy pokemon faster than player pokemon
     else:
@@ -61,8 +65,9 @@ def battle(player, enemy, btn_info):
         enemy_action = enemy_turn(enemy, player, force_swap)
         # If the player party is fully fainted
         if not player.chk_party():
-            # update text bubble saying that the player has lost
-            pass
+            # TODO: update text bubble saying that the player has lost
+            # For now we need to do this to make sure we don't reference something without assignment
+            player_action = "lose"
         # If the current pokemon in the players party is fainted, make them switch pokemon
         elif player.get_curr_pkm().get_is_fainted():
             # force player to switch pokemon
@@ -175,16 +180,16 @@ def enemy_turn(enemy, player, force_swap):
         #call swap pokemon function. Make sure to swap with a pokemon that is not fainted.
         if enemy.get_pokemon_list()[1].get_is_fainted():
             enemy.swap_pokemon(0, 2)
-            action = f"{enemy.get_name()} swapped out {enemy.get_pokemon_list()[2].get_name()} with {player.get_curr_pkm().get_name()}"
+            action = f"{enemy.get_name()} swapped out {enemy.get_pokemon_list()[2].get_name()} with {enemy.get_curr_pkm().get_name()}"
             print(action)
         elif enemy.get_pokemon_list()[2].get_is_fainted():
             enemy.swap_pokemon(0, 1)
-            action = f"{enemy.get_name()} swapped out {enemy.get_pokemon_list()[2].get_name()} with {player.get_curr_pkm().get_name()}"
+            action = f"{enemy.get_name()} swapped out {enemy.get_pokemon_list()[2].get_name()} with {enemy.get_curr_pkm().get_name()}"
             print(action)
         else:
             swap_index = random.randint(1,2)
             enemy.swap_pokemon(0, swap_index)
-            action = f"{enemy.get_name()} swapped out {enemy.get_pokemon_list()[swap_index].get_name()} with {player.get_curr_pkm().get_name()}"
+            action = f"{enemy.get_name()} swapped out {enemy.get_pokemon_list()[swap_index].get_name()} with {enemy.get_curr_pkm().get_name()}"
             print(action)
     #maybe later add intelligence
     

@@ -1419,9 +1419,9 @@ def main():
     """ Main function """
     pokemon_bag = [pokemon_objects.pikachu, pokemon_objects.charizard, pokemon_objects.bulbasaur]
     user_item_bag = {item_objects.potion: 1, item_objects.super_potion: 1, item_objects.hyper_potion: 1,
-                        item_objects.max_potion: 1, item_objects.revive: 0}
+                        item_objects.max_potion: 1}
     enemy_item_bag = {item_objects.potion: 1, item_objects.super_potion: 1, item_objects.hyper_potion: 1,
-                        item_objects.max_potion: 1, item_objects.revive: 0}
+                        item_objects.max_potion: 1}
 
     trainer1 = Character("Ash", pokemon_bag, user_item_bag, 1000,
                               "I'm on a journey to become a Pokemon Master!")

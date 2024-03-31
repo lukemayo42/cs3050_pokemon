@@ -124,7 +124,7 @@ def player_turn(player, enemy, btn_info):
     #update curr health of enemy
     return action_str
 
-#single turn of an enemy character, takes in character and player 
+#single turn of an enemy character, takes in enemy, player, and a boolean saying whether the enemy is forced to swap or not
 def enemy_turn(enemy, player, force_swap):
     enemy_pkm = enemy.get_curr_pkm()
     player_pkm = player.get_curr_pkm()
@@ -235,9 +235,13 @@ def get_action_based_on_probability(probability_action, enemy, probability_range
 
     if probability_action in range(1, probability_range) and has_items:
         action_str = "item"
+
     elif probability_action == 0:
+        # Add this case for testing purposes: TODO: remove when necessary
+        if len(enemy.get_pokemon_list()) == 1:
+            action_str = "move"
         # Make sure that the enemy player has a pokemon to swap to. If not, change action string to move.
-        if enemy.get_pokemon_list()[1].get_is_fainted() and enemy.get_pokemon_list()[2].get_is_fainted():
+        elif enemy.get_pokemon_list()[1].get_is_fainted() and enemy.get_pokemon_list()[2].get_is_fainted():
             action_str = "move"
         else:
             action_str = "swap"

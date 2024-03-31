@@ -13,6 +13,8 @@ def create_pokemon(name, df, moves):
     type1 = df.at[df.index[df["Name"] == name].to_list()[0], "Type 1"]
     type2 = df.at[df.index[df["Name"] == name].to_list()[0], "Type 2"]
     hp = int(df.at[df.index[df["Name"] == name].to_list()[0], "HP"])
+    hp*=1.3
+    hp = int(hp)
     attack = int(df.at[df.index[df["Name"] == name].to_list()[0], "Attack"])
     defense = int(df.at[df.index[df["Name"] == name].to_list()[0], "Defense"])
     speed = int(df.at[df.index[df["Name"] == name].to_list()[0], "Speed"])

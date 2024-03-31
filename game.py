@@ -1417,25 +1417,26 @@ class PokemonGame(arcade.View):
 # to the PokemonGame object and renders the window to run the game.
 def main():
     """ Main function """
-    pokemon_bag = [pokemon_objects.pikachu, pokemon_objects.charizard, pokemon_objects.bulbasaur]
+    pokemon_bag_user = [pokemon_objects.pikachu, pokemon_objects.charizard, pokemon_objects.bulbasaur]
     user_item_bag = {item_objects.potion: 1, item_objects.super_potion: 1, item_objects.hyper_potion: 1,
                         item_objects.max_potion: 1}
-    enemy_item_bag = {item_objects.potion: 1, item_objects.super_potion: 1, item_objects.hyper_potion: 1,
-                        item_objects.max_potion: 1}
-
-    trainer1 = Character("Ash", pokemon_bag, user_item_bag, 1000,
+    user_trainer = Character("Ash", pokemon_bag_user, user_item_bag, 1000,
                               "I'm on a journey to become a Pokemon Master!")
-    pokemon_bag_trainer2 = [pokemon_objects.enemy_charizard, pokemon_objects.gengar, pokemon_objects.pidgeotto]
-    trainer2 = Character("Misty", pokemon_bag_trainer2, enemy_item_bag, 800, "Water types are the best!")
 
-    # window = PokemonGame(SCREEN_WIDTH, SCREEN_HEIGHT, B_SCREEN_TITLE, trainer1, trainer2)
+    pokemon_bag_enemy = [pokemon_objects.enemy_charizard, pokemon_objects.enemy_gengar, pokemon_objects.enemy_pidgeotto]
+    enemy_item_bag = {item_objects.potion: 1, item_objects.super_potion: 1, item_objects.hyper_potion: 1,
+                      item_objects.max_potion: 1}
+
+    enemy_trainer = Character("Misty", pokemon_bag_enemy, enemy_item_bag, 800, "Water types are the best!")
+
+    # window = PokemonGame(SCREEN_WIDTH, SCREEN_HEIGHT, B_SCREEN_TITLE, user_trainer, enemy_trainer)
 
     window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, B_SCREEN_TITLE)
-    # battle_view = PokemonGame(trainer1, trainer2)
+    # battle_view = PokemonGame(user_trainer, enemy_trainer)
     # window.show_view(battle_view)
     # battle_view.setup()
 
-    start_view = PokemonStart(trainer1, trainer2)
+    start_view = PokemonStart(user_trainer, enemy_trainer)
     window.show_view(start_view)
     start_view.setup()
 

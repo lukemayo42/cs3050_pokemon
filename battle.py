@@ -112,6 +112,7 @@ def player_turn(player, enemy, btn_info):
         
     #item
     elif btn_info[0] == "item":
+        action_str = "placeholder"
         # Assume that the button info's index 1 will contain the key of the item that is being used.
         for item in player.get_item_bag():
             if btn_info[1] == item:
@@ -133,6 +134,10 @@ def player_turn(player, enemy, btn_info):
 
 #single turn of an enemy character, takes in enemy, player, and a boolean saying whether the enemy is forced to swap or not
 def enemy_turn(enemy, player, force_swap):
+    # Need to add this to make sure there is no reference without assignment, although I can't see a case where action is not assigned
+    # TODO: Figure out why need this
+    action = "placeholder"
+
     enemy_pkm = enemy.get_curr_pkm()
     player_pkm = player.get_curr_pkm()
     action_str = "swap"
@@ -159,7 +164,8 @@ def enemy_turn(enemy, player, force_swap):
 
     #item
     
-    elif action_str == "item":   
+    elif action_str == "item":
+        action = "placeholder"
         item_is_used = False
         while not item_is_used:
             for item, num_items in enemy.get_item_bag().items():

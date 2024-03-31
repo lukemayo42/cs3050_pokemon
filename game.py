@@ -22,6 +22,7 @@ class State(Enum):
     Win = 5
     PokemonSwap = 6
     Bag = 7
+    Loss = 8
 
 # Constants for sprite rendering and sprite movement
 SPRITE_SCALING = 3.5
@@ -562,7 +563,7 @@ class WorldMap(arcade.View):
             fight_view.setup()
             self.window.show_view(fight_view)
 
-# This PokemonSwap view class gives the fighter a chace to switch between all of the pokemon in their party during the fight.
+# This PokemonSwap view class gives the fighter a chance to switch between all of the pokemon in their party during the fight.
 class PokemonSwap(arcade.View):
     def __init__(self, player, enemy):
         super().__init__()
@@ -772,7 +773,7 @@ class PokemonSwap(arcade.View):
             self.manager.draw()
             self.player_list.draw()
 
-# This PokemonSwap view class gives the fighter a chace to switch between all of the pokemon in their party during the fight.
+# This PokemonItem view class gives the fighter a chance to use items from their bag during the fight.
 class PokemonItem(arcade.View):
     def __init__(self, player, enemy):
         super().__init__()
@@ -796,14 +797,14 @@ class PokemonItem(arcade.View):
             "bg_color_pressed":(20, 65, 115)
         }
 
-        # Create "go back" button if the pokemon hasn't fainted
+        # Create "go back" button if the player doesn't want to use an item
         self.v_box = arcade.gui.UIBoxLayout()
-        if(not self.player.get_curr_pkm().get_is_fainted()):
-            back_button = arcade.gui.UIFlatButton(text="Go Back", width=BUTTON_WIDTH * .75, style=button_style)
-            self.v_box.add(back_button.with_space_around(bottom=20))
 
-            # Assign self.items_button as a callback to render item bag
-            back_button.on_click = self.back_button_action
+        back_button = arcade.gui.UIFlatButton(text="Go Back", width=BUTTON_WIDTH * .75, style=button_style)
+        self.v_box.add(back_button.with_space_around(bottom=20))
+
+        # Assign self.items_button as a callback to render item bag
+        back_button.on_click = self.back_button_action
 
         self.manager = UIManager()
         self.manager.enable()
@@ -815,161 +816,115 @@ class PokemonItem(arcade.View):
                 child=self.v_box)
         )
         # Add name/stats for pokemon
-        self.name_text = arcade.create_text_sprite (
-            start_x=SCREEN_WIDTH / 4,
-            start_y=SCREEN_HEIGHT / 2,
-            color=arcade.color.BLACK,
-            text = str(self.pokemon.get_name()) +
-                    "\nHealth: " + str(math.trunc(self.player.get_curr_pkm().get_curr_hlth()))
-                                    + "\nAttack: " + str(int(self.pokemon.get_curr_atk()))
-                                    + "\nDefense: " + str(int(self.pokemon.get_curr_def()))
-                                    + "\nSpeed: " + str(int(self.pokemon.get_curr_spd()))
-                                    + "\n\nMoves:\n"
-                                    + "(1) " + str(self.player.get_curr_pkm().moves[0].name) + " (Power: " + str(int(self.player.get_curr_pkm().moves[0].get_power())) + " and Accuracy: " + str(int(self.player.get_curr_pkm().moves[0].get_accuracy())) + ")"
-                                    + "\n(2) " + str(self.player.get_curr_pkm().moves[1].name) + " (Power: " + str(int(self.player.get_curr_pkm().moves[1].get_power())) + " and Accuracy: " + str(int(self.player.get_curr_pkm().moves[1].get_accuracy())) + ")"
-                                    + "\n(3) " + str(self.player.get_curr_pkm().moves[2].name) + " (Power: " + str(int(self.player.get_curr_pkm().moves[2].get_power())) + " and Accuracy: " + str(int(self.player.get_curr_pkm().moves[2].get_accuracy())) + ")"
-                                    + "\n(4) " + str(self.player.get_curr_pkm().moves[3].name) + " (Power: " + str(int(self.player.get_curr_pkm().moves[3].get_power())) + " and Accuracy: " + str(int(self.player.get_curr_pkm().moves[3].get_accuracy())) + ")"
-        )
+        # self.name_text = arcade.create_text_sprite (
+        #     start_x=SCREEN_WIDTH / 4,
+        #     start_y=SCREEN_HEIGHT / 2,
+        #     color=arcade.color.BLACK,
+        #     text = str(self.pokemon.get_name()) +
+        #             "\nHealth: " + str(math.trunc(self.player.get_curr_pkm().get_curr_hlth()))
+        #                             + "\nAttack: " + str(int(self.pokemon.get_curr_atk()))
+        #                             + "\nDefense: " + str(int(self.pokemon.get_curr_def()))
+        #                             + "\nSpeed: " + str(int(self.pokemon.get_curr_spd()))
+        #                             + "\n\nMoves:\n"
+        #                             + "(1) " + str(self.player.get_curr_pkm().moves[0].name) + " (Power: " + str(int(self.player.get_curr_pkm().moves[0].get_power())) + " and Accuracy: " + str(int(self.player.get_curr_pkm().moves[0].get_accuracy())) + ")"
+        #                             + "\n(2) " + str(self.player.get_curr_pkm().moves[1].name) + " (Power: " + str(int(self.player.get_curr_pkm().moves[1].get_power())) + " and Accuracy: " + str(int(self.player.get_curr_pkm().moves[1].get_accuracy())) + ")"
+        #                             + "\n(3) " + str(self.player.get_curr_pkm().moves[2].name) + " (Power: " + str(int(self.player.get_curr_pkm().moves[2].get_power())) + " and Accuracy: " + str(int(self.player.get_curr_pkm().moves[2].get_accuracy())) + ")"
+        #                             + "\n(4) " + str(self.player.get_curr_pkm().moves[3].name) + " (Power: " + str(int(self.player.get_curr_pkm().moves[3].get_power())) + " and Accuracy: " + str(int(self.player.get_curr_pkm().moves[3].get_accuracy())) + ")"
+        # )
 
 
 
     def setup(self):
         # TODO: create any sprites needed for rules page
+        self.button_box_1 = arcade.gui.UIBoxLayout(vertical=False)
+
         self.player_list = arcade.SpriteList()
-        self.player_sprite = Sprite("../cs3050_pokemon/sprites/" + self.player.get_curr_pkm().get_name().lower() + "-front.png", SPRITE_SCALING)
-        self.player_sprite.center_x = SCREEN_WIDTH / 4
-        self.player_sprite.center_y = 3 * SCREEN_HEIGHT / 4
+        self.item1_sprite = Sprite("../cs3050_pokemon/sprites/potion.png", SPRITE_SCALING)
+        self.item1_sprite.center_x = SCREEN_WIDTH / 5
+        self.item1_sprite.center_y = SCREEN_HEIGHT / 4
+        self.player_list.append(self.item1_sprite)
+        self.item1_text = arcade.create_text_sprite(
+            start_x=SCREEN_WIDTH / 5,
+            start_y=SCREEN_HEIGHT / 4 - 50,
+            color=arcade.color.BLACK,
+            text = "Potion"
+        )
+        self.item1_text.center_x = SCREEN_WIDTH / 5
+        self.item1_text.center_y = SCREEN_HEIGHT / 4 - 50
+        self.player_list.append(self.item1_text)
 
-        self.player_list.append(self.player_sprite)
-        self.name_text.center_x = SCREEN_WIDTH / 4
-        self.name_text.center_y = self.player_sprite.bottom - self.name_text.height / 2
-        self.player_list.append(self.name_text)
-        self.pokemon_list = self.player.get_pokemon_list()
-        # Iterate through pokemon party and display other sprites on the side
-        for pokemon in self.pokemon_list:
-            print(pokemon.get_name())
-        for i in range(1, len(self.pokemon_list)):
-                # Add the sprite image to the list of sprites to render
-                # sprite = Sprite("../cs3050_pokemon/sprites/" + self.pokemon_list[i].get_name().lower() + "-front.png", 0.65 * SPRITE_SCALING)
-                sprite = Sprite("../cs3050_pokemon/sprites/" + self.pokemon_list[i].get_name().lower() + "-front.png")
-                sprite.scale = SCREEN_HEIGHT / (self.player_sprite.height * 1.2)
+        self.item2_sprite = Sprite("../cs3050_pokemon/sprites/super-potion.png", SPRITE_SCALING)
+        self.item2_sprite.center_x = 2 * SCREEN_WIDTH / 5
+        self.item2_sprite.center_y = SCREEN_HEIGHT / 4
+        self.player_list.append(self.item2_sprite)
+        self.item2_text = arcade.create_text_sprite(
+            start_x=2 * SCREEN_WIDTH / 5,
+            start_y=SCREEN_HEIGHT / 4 - 50,
+            color=arcade.color.BLACK,
+            text = "Super Potion"
+        )
+        self.item2_text.center_x = 2 * SCREEN_WIDTH / 5
+        self.item2_text.center_y = SCREEN_HEIGHT / 4 - 50
+        self.player_list.append(self.item2_text)
 
-                sprite.center_x = SCREEN_HEIGHT
-                sprite.center_y = i * SCREEN_WIDTH / 3.2
-                self.player_list.append(sprite)
+        self.item3_sprite = Sprite("../cs3050_pokemon/sprites/hyper-potion.png", SPRITE_SCALING)
+        self.item3_sprite.center_x = 3 * SCREEN_WIDTH / 5
+        self.item3_sprite.center_y = SCREEN_HEIGHT / 4
+        self.player_list.append(self.item3_sprite)
+        self.item3_text = arcade.create_text_sprite(
+            start_x=3 * SCREEN_WIDTH / 5,
+            start_y=SCREEN_HEIGHT / 4 - 50,
+            color=arcade.color.BLACK,
+            text = "Potion"
+        )
+        self.item3_text.center_x = 3 * SCREEN_WIDTH / 5
+        self.item3_text.center_y = SCREEN_HEIGHT / 4 - 50
+        self.player_list.append(self.item3_text)
 
-                # Add the pokemon name to the list of sprites to render
-                name = arcade.create_text_sprite (
-                    start_x=SCREEN_HEIGHT,
-                    start_y=i * SCREEN_WIDTH / 3.2,
-                    color=arcade.color.BLACK,
-                    text = str(self.pokemon_list[i].get_name())
-                )
-                name.center_x = SCREEN_HEIGHT
-                name.center_y = sprite.bottom - SCREEN_HEIGHT / 30
+        self.item4_sprite = Sprite("../cs3050_pokemon/sprites/max-potion.png", SPRITE_SCALING)
+        self.item4_sprite.center_x = 4 * SCREEN_WIDTH / 5
+        self.item4_sprite.center_y = SCREEN_HEIGHT / 4
+        self.player_list.append(self.item4_sprite)
+        self.item4_text = arcade.create_text_sprite(
+            start_x=4 * SCREEN_WIDTH / 5,
+            start_y=SCREEN_HEIGHT / 4 - 50,
+            color=arcade.color.BLACK,
+            text = "Potion"
+        )
+        self.item4_text.center_x = 4 * SCREEN_WIDTH / 5
+        self.item4_text.center_y = SCREEN_HEIGHT / 4 - 50
+        self.player_list.append(self.item4_text)
 
-                self.player_list.append(name)
-                if(self.pokemon_list[i].get_is_fainted()):
-                    self.create_pokemon_buttons(SCREEN_HEIGHT, sprite.bottom - SCREEN_HEIGHT/ 30, i == 1, True)
-                else:   
-                    self.create_pokemon_buttons(SCREEN_HEIGHT, sprite.bottom - SCREEN_HEIGHT/ 30, i == 1, False)
+        self.create_item_buttons()
 
-
-
-        print("here is your pokemon party")
+        
 
     def back_button_action(self, event):
-        #TODO: switch screen to fighting screen
+        # switch screen to fighting screen
         print("returning to fight screen")
         fight_view = PokemonGame(self.player, self.enemy)
         fight_view.setup()
         self.window.show_view(fight_view)
 
-    def create_pokemon_buttons(self, pos_x, pos_y, top, fainted):
-        if(top):
-            self.button_box_1 = arcade.gui.UIBoxLayout(vertical=False)
+    def create_item_buttons(self):
+        self.button1 = arcade.gui.UIFlatButton(text="Use", width=BUTTON_WIDTH / 2)
+        self.button_box_1.add(self.button1.with_space_around(left=20))
+        self.button1.on_click = self.use1
+        # Create widgets to hold the button_box_1 widgets, that will center the buttons
+        self.manager.add(
+            arcade.gui.UIAnchorWidget(align_x=SCREEN_WIDTH / 5, align_y=V_BOX_Y,
+                anchor_x="center_x",
+                anchor_y="center_y",
+                child=self.button_box_1)
+        )
 
-            stats_button = arcade.gui.UIFlatButton(text="Stats", width=BUTTON_WIDTH / 2)
-            self.button_box_1.add(stats_button.with_space_around(left=20))
-            stats_button.on_click = self.generate_stats_view_1
-
-            if(not fainted):
-                swap_button = arcade.gui.UIFlatButton(text="Swap", width=BUTTON_WIDTH / 2)
-                self.button_box_1.add(swap_button.with_space_around(left=20))
-                swap_button.on_click = self.swap_action_1
-            # Create widgets to hold the button_box_1 widgets, that will center the buttons
-            self.manager.add(
-                arcade.gui.UIAnchorWidget(align_x=pos_x / 3, align_y=V_BOX_Y,
-                    anchor_x="center_x",
-                    anchor_y="center_y",
-                    child=self.button_box_1)
-            )
-
-        else:
-            self.button_box_2 = arcade.gui.UIBoxLayout(vertical=False)
-            stats_button = arcade.gui.UIFlatButton(text="Stats", width=BUTTON_WIDTH / 2)
-            self.button_box_2.add(stats_button.with_space_around(left=20))
-            stats_button.on_click = self.generate_stats_view_2
-
-            if(not fainted):
-                swap_button = arcade.gui.UIFlatButton(text="Swap", width=BUTTON_WIDTH / 2)
-                self.button_box_2.add(swap_button.with_space_around(left=20))
-                swap_button.on_click = self.swap_action_2
-
-            # Create widgets to hold the button_box_2 widgets, that will center the buttons
-            self.manager.add(
-                arcade.gui.UIAnchorWidget(align_x=pos_x / 3, align_y= SCREEN_HEIGHT / 9,
-                    anchor_x="center_x",
-                    anchor_y="center_y",
-                    child=self.button_box_2)
-            )
-    def generate_stats_view_1(self, event):
-        self.index = 1
-        self.generate_stats()
-
-    def swap_action_1(self, event):
-        self.index = 1
-        self.swap_pokemon()
-
-    def generate_stats_view_2(self, event):
-        self.index = 2
-        self.generate_stats()
-
-    def swap_action_2(self, event):
-        self.index = 2
-        self.swap_pokemon()
-
-    def generate_stats(self):
-        # Get the selected pokemon and pass it to the stats view
-        pokemon = self.player.get_pokemon_list()[self.index]
-        print("going to stats screen")
-        stats_view = PokemonStats(self.player, self.enemy, pokemon)
-        stats_view.setup()
-        self.window.show_view(stats_view)
-
-    def swap_pokemon(self):
-        # Call backend method to swap the pokemon order so that the first pokemon is back in front
-        # Return to the battle screen
-        # self.player.swap_pokemon(0, self.index)
-        btn_info = ["swap", self.index]
-        player_action, enemy_action = battle(self.player, self.enemy, btn_info)
-        if(player_action != "fainted"):
-            print("returning to battle screen")
-
-            fight_view = PokemonGame(self.player, self.enemy)
-            fight_view.setup()
-            self.window.show_view(fight_view)
-        else:
-            # swap_view = PokemonSwap(self.player, self.enemy)
-            # swap_view.setup()
-            # self.window.show_view(swap_view)
-            self.player.swap_pokemon(0, self.index)
-            # swap_view = PokemonSwap(self.player, self.enemy)
-            # swap_view.setup()
-            # self.window.show_view(swap_view)
-            fight_view = PokemonGame(self.player, self.enemy)
-            fight_view.setup()
-            self.window.show_view(fight_view)
+    def use1(self, event):
+        self.index = "Potion"
+        self.use()
+    
+    def use(self):
+        # Call use in backend
+        print("using " + self.index)
 
     def on_draw(self):
             # Clear the screen
@@ -1298,8 +1253,9 @@ class PokemonGame(arcade.View):
 
     def items_button_action(self, event):
         self.state = State.Bag
-        # TODO: Call method to render items bag
-        self.on_draw()
+        bag_view = PokemonItem(self.player, self.enemy)
+        bag_view.setup()
+        self.window.show_view(bag_view)
 
     # This setup method is called when creating all the sprites to be stored on the screen when the window is rendered
     def setup(self):
@@ -1329,7 +1285,8 @@ class PokemonGame(arcade.View):
     # This on_draw method renders all of the buttons and sprites depending on what the current state is
     def on_draw(self):
         """ Render the screen. """
-        print(self.enemy.get_curr_pkm().get_name())
+        # print(self.enemy.get_curr_pkm().get_name())
+        print(self.player.chk_party())
         if(self.state == State.Battle):
             #print("battle")
             # Clear the screen
@@ -1375,6 +1332,8 @@ class PokemonGame(arcade.View):
         # When the backend determines the enemy has been defeated, change states
         if not self.enemy.chk_party():
             self.state = State.Win
+        if not self.player.chk_party():
+            self.state = State.Loss
         if(self.state == State.Moves):
             self.clear()
             # Draw the background texture
@@ -1403,7 +1362,23 @@ class PokemonGame(arcade.View):
             self.health_text.center_y = 500
             self.bar_sprite_list.append(self.health_text)
             self.bar_sprite_list.draw()
-        if(self.player.get_curr_pkm().get_is_fainted()):
+        if(self.state == State.Loss):
+            self.clear()
+            self.bar_sprite_list.clear()
+
+            # TODO: Set up a winning screen for later deliverables
+            arcade.set_background_color(arcade.color.BLUE)
+            self.health_text = arcade.create_text_sprite (
+                start_x=350,
+                start_y=500,
+                color=arcade.color.BLACK,
+                text = "LOSS"
+            )
+            self.health_text.center_x = 350
+            self.health_text.center_y = 500
+            self.bar_sprite_list.append(self.health_text)
+            self.bar_sprite_list.draw()
+        if(self.player.get_curr_pkm().get_is_fainted() and self.player.chk_party()):
             # Render swap screen so they can switch.
             self.state = State.PokemonSwap
             # TODO: Call method to render sprites to swap with
@@ -1650,9 +1625,9 @@ def main():
     enemy_item_bag = {item_objects.potion: 1, item_objects.super_potion: 1, item_objects.hyper_potion: 1,
                       item_objects.max_potion: 1}
 
-    user_trainer = Character("Ash", pokemon_bag_enemy, user_item_bag, 1000,
+    user_trainer = Character("Ash", pokemon_bag_user, user_item_bag, 1000,
                               "I'm on a journey to become a Pokemon Master!")
-    enemy_trainer = Character("Misty", pokemon_bag_user, enemy_item_bag, 800, "Water types are the best!")
+    enemy_trainer = Character("Misty", pokemon_bag_enemy, enemy_item_bag, 800, "Water types are the best!")
 
     # window = PokemonGame(SCREEN_WIDTH, SCREEN_HEIGHT, B_SCREEN_TITLE, user_trainer, enemy_trainer)
 

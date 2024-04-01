@@ -46,7 +46,7 @@ enemy_charizard = pokemon(charizard)
 
 #create pikachu
 thunderbolt = move("Thunderbolt", "electric", 90, 100, "Electric", True)
-quick_attack = move("Quick Attack", "priority", 40, 100, "Electric", True)
+quick_attack = move("Quick Attack", "priority", 40, 100, "Normal", True)
 thunder = move("Thunder", "electric", 110, 70, "Electric", True)
 iron_tail = move("Iron Tail", "steel", 100, 75, "Steel", True)
 pikachu = create_pokemon("Pikachu", df, [thunderbolt, quick_attack, thunder, iron_tail])

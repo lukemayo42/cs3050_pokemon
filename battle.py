@@ -17,6 +17,10 @@ import time
 #ideas for text bubble waiting in battle - wait using threads in the backend
 # the battle logic/ implementation may need to change
 
+#idea for waiting and text bubbles - invisible timer - set timer to 0 and set condition to continue after x amount of time - using deltatime
+#timer = 0 //using deltatime
+# if timer > 5:
+#   continue;
 
 #returns 2 strings, what move player did and what move the enemy did
 #TODO:implement the text bubble from gui and add as parameter
@@ -40,6 +44,7 @@ def battle(player, enemy, btn_info):
         #force enemy to switch pokemon if current pokemon is fainted - takes up enemy's turn
         elif enemy.get_curr_pkm().get_is_fainted():
             force_swap = True
+            print(f"{enemy.get_curr_pkm().get_name()} fainted")
             enemy_action = enemy_turn(enemy, player, force_swap)
             
         #enemy pokemon has not fainted
@@ -55,6 +60,7 @@ def battle(player, enemy, btn_info):
                 #TODO: updat text bubble saying that that the current pokemon ais died and prompt user to switch
                 # For now we need to do this to make sure we don't reference something without assignment
                 player_action = "fainted"
+                print(f"{player.get_curr_pkm().get_name()} fainted")
             # send to gui
     # if enemy pokemon faster than player pokemon
     else:
@@ -72,6 +78,7 @@ def battle(player, enemy, btn_info):
             force_swap = True
             #update player_turn to handle force switch case
             player_action = "fainted"
+            print(f"{player.get_curr_pkm().get_name()} fainted")
         # The enemy turn didn't result in anything needing the player to do anything
         else:
             player_action = player_turn(player, enemy, btn_info)
@@ -84,6 +91,7 @@ def battle(player, enemy, btn_info):
             elif enemy.get_curr_pkm().get_is_fainted():
                 # force enemy to switch pokemon
                 force_swap = True
+                print(f"{enemy.get_curr_pkm().get_name()} fainted")
                 enemy_action = enemy_turn(enemy, player, force_swap)
             # send to gui
     # Return the first action that was done and the second action that was done
@@ -461,7 +469,7 @@ def roll_accuracy(move):
     
 #this function waits for 5 seconds in a different thread so that the screen keeps rendering
 def thread_wait():
-    pass
+    time.sleep()
 
 
 ''' for testing only

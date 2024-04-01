@@ -552,7 +552,6 @@ class WorldMap(arcade.View):
         # Move the player
         self.player_list.update()
 
-
         # Update the players animation
 
         self.player_list.update_animation()
@@ -623,10 +622,8 @@ class PokemonSwap(arcade.View):
                                     + "\n(4) " + str(self.player.get_curr_pkm().moves[3].name) + " (Power: " + str(int(self.player.get_curr_pkm().moves[3].get_power())) + " and Accuracy: " + str(int(self.player.get_curr_pkm().moves[3].get_accuracy())) + ")"
         )
 
-
-
     def setup(self):
-        # TODO: create any sprites needed for rules page
+        # Create sprites for swap page
         self.player_list = arcade.SpriteList()
         self.player_sprite = Sprite("../cs3050_pokemon/sprites/" + self.player.get_curr_pkm().get_name().lower() + "-front.png", SPRITE_SCALING)
         self.player_sprite.center_x = SCREEN_WIDTH / 4
@@ -642,7 +639,6 @@ class PokemonSwap(arcade.View):
             print(pokemon.get_name())
         for i in range(1, len(self.pokemon_list)):
                 # Add the sprite image to the list of sprites to render
-                # sprite = Sprite("../cs3050_pokemon/sprites/" + self.pokemon_list[i].get_name().lower() + "-front.png", 0.65 * SPRITE_SCALING)
                 sprite = Sprite("../cs3050_pokemon/sprites/" + self.pokemon_list[i].get_name().lower() + "-front.png")
                 sprite.scale = SCREEN_HEIGHT / (self.player_sprite.height * 1.2)
 
@@ -665,19 +661,17 @@ class PokemonSwap(arcade.View):
                     self.create_pokemon_buttons(SCREEN_HEIGHT, sprite.bottom - SCREEN_HEIGHT/ 30, i == 1, True)
                 else:   
                     self.create_pokemon_buttons(SCREEN_HEIGHT, sprite.bottom - SCREEN_HEIGHT/ 30, i == 1, False)
-
-
-
         print("here is your pokemon party")
 
     def back_button_action(self, event):
-        #TODO: switch screen to fighting screen
+        # switch screen to fighting screen
         print("returning to fight screen")
         fight_view = PokemonGame(self.player, self.enemy)
         fight_view.setup()
         self.window.show_view(fight_view)
 
     def create_pokemon_buttons(self, pos_x, pos_y, top, fainted):
+        # Create the option to swap to the pokemon if it hasn't fainted and to see stats
         if(top):
             self.button_box_1 = arcade.gui.UIBoxLayout(vertical=False)
 
@@ -742,7 +736,6 @@ class PokemonSwap(arcade.View):
     def swap_pokemon(self):
         # Call backend method to swap the pokemon order so that the first pokemon is back in front
         # Return to the battle screen
-        # self.player.swap_pokemon(0, self.index)
         btn_info = ["swap", self.index]
         player_action, enemy_action = battle(self.player, self.enemy, btn_info)
         if(player_action != "fainted"):
@@ -766,10 +759,7 @@ class PokemonSwap(arcade.View):
     def on_draw(self):
             # Clear the screen
             self.clear()
-            # Draw the background texture
-            # arcade.draw_lrwh_rectangle_textured(0, 150,
-            #                                     SCREEN_WIDTH, SCREEN_HEIGHT,
-            #                                     self.background)
+    
             # Draw all the sprites.
             self.manager.draw()
             self.player_list.draw()
@@ -789,8 +779,8 @@ class PokemonItem(arcade.View):
         self.background = None
         arcade.set_background_color(arcade.color.WHITE)
 
+        # List of sprites for the items
         self.player_list = None
-
 
         # Button styling
         button_style = {
@@ -803,8 +793,6 @@ class PokemonItem(arcade.View):
 
         back_button = arcade.gui.UIFlatButton(text="Go Back", width=BUTTON_WIDTH * .75, style=button_style)
         self.v_box.add(back_button.with_space_around(bottom=20))
-
-        # Assign self.items_button as a callback to render item bag
         back_button.on_click = self.back_button_action
 
         self.manager = UIManager()
@@ -816,27 +804,9 @@ class PokemonItem(arcade.View):
                 anchor_y="center_y",
                 child=self.v_box)
         )
-        # Add name/stats for pokemon
-        # self.name_text = arcade.create_text_sprite (
-        #     start_x=SCREEN_WIDTH / 4,
-        #     start_y=SCREEN_HEIGHT / 2,
-        #     color=arcade.color.BLACK,
-        #     text = str(self.pokemon.get_name()) +
-        #             "\nHealth: " + str(math.trunc(self.player.get_curr_pkm().get_curr_hlth()))
-        #                             + "\nAttack: " + str(int(self.pokemon.get_curr_atk()))
-        #                             + "\nDefense: " + str(int(self.pokemon.get_curr_def()))
-        #                             + "\nSpeed: " + str(int(self.pokemon.get_curr_spd()))
-        #                             + "\n\nMoves:\n"
-        #                             + "(1) " + str(self.player.get_curr_pkm().moves[0].name) + " (Power: " + str(int(self.player.get_curr_pkm().moves[0].get_power())) + " and Accuracy: " + str(int(self.player.get_curr_pkm().moves[0].get_accuracy())) + ")"
-        #                             + "\n(2) " + str(self.player.get_curr_pkm().moves[1].name) + " (Power: " + str(int(self.player.get_curr_pkm().moves[1].get_power())) + " and Accuracy: " + str(int(self.player.get_curr_pkm().moves[1].get_accuracy())) + ")"
-        #                             + "\n(3) " + str(self.player.get_curr_pkm().moves[2].name) + " (Power: " + str(int(self.player.get_curr_pkm().moves[2].get_power())) + " and Accuracy: " + str(int(self.player.get_curr_pkm().moves[2].get_accuracy())) + ")"
-        #                             + "\n(4) " + str(self.player.get_curr_pkm().moves[3].name) + " (Power: " + str(int(self.player.get_curr_pkm().moves[3].get_power())) + " and Accuracy: " + str(int(self.player.get_curr_pkm().moves[3].get_accuracy())) + ")"
-        # )
-
-
 
     def setup(self):
-        # TODO: create any sprites needed for rules page
+        # Create sprites for each of the items
         self.button_box_1 = arcade.gui.UIBoxLayout(vertical=False)
 
         self.player_list = arcade.SpriteList()
@@ -898,8 +868,6 @@ class PokemonItem(arcade.View):
 
         self.create_item_buttons()
 
-        
-
     def back_button_action(self, event):
         # switch screen to fighting screen
         print("returning to fight screen")
@@ -908,6 +876,7 @@ class PokemonItem(arcade.View):
         self.window.show_view(fight_view)
 
     def create_item_buttons(self):
+        # Create a button to use an item for each of the items in the dictionary with a value over 0
         if(int(self.player.amount_of_item(item_objects.potion) >= 1)):
             self.button1 = arcade.gui.UIFlatButton(text="Use", width=BUTTON_WIDTH / 2)
             self.button_box_1.add(self.button1.with_space_around(left=20))
@@ -928,7 +897,6 @@ class PokemonItem(arcade.View):
                     anchor_y="center_y",
                     child=self.button2)
             )
-
         if(int(self.player.amount_of_item(item_objects.hyper_potion) >= 1)):
             self.button3 = arcade.gui.UIFlatButton(text="Use", width=BUTTON_WIDTH / 2)
             self.button_box_1.add(self.button3.with_space_around(left=20))
@@ -939,7 +907,6 @@ class PokemonItem(arcade.View):
                     anchor_y="center_y",
                     child=self.button3)
             )
-        
         if(int(self.player.amount_of_item(item_objects.max_potion) >= 1)):
             self.button4 = arcade.gui.UIFlatButton(text="Use", width=BUTTON_WIDTH / 2)
             self.button_box_1.add(self.button4.with_space_around(left=20))
@@ -950,14 +917,6 @@ class PokemonItem(arcade.View):
                     anchor_y="center_y",
                     child=self.button4)
             )
-        
-        # # Create widgets to hold the button_box_1 widgets, that will center the buttons
-        # self.manager.add(
-        #     arcade.gui.UIAnchorWidget(align_x=-SCREEN_WIDTH / 5, align_y=SCREEN_HEIGHT / 12,
-        #         anchor_x="center_x",
-        #         anchor_y="center_y",
-        #         child=self.button_box_1)
-        # )
 
     def use1(self, event):
         self.index = "Potion"
@@ -976,7 +935,7 @@ class PokemonItem(arcade.View):
         self.use()
     
     def use(self):
-        # Call use in backend
+        # Call battle function with the request to use an item
         btn_info = []
         if(self.index == "Potion"):
             btn_info = ["item", item_objects.potion]
@@ -999,10 +958,7 @@ class PokemonItem(arcade.View):
     def on_draw(self):
             # Clear the screen
             self.clear()
-            # Draw the background texture
-            # arcade.draw_lrwh_rectangle_textured(0, 150,
-            #                                     SCREEN_WIDTH, SCREEN_HEIGHT,
-            #                                     self.background)
+
             # Draw all the sprites.
             self.manager.draw()
             self.player_list.draw()
@@ -1070,7 +1026,6 @@ class PokemonStats(arcade.View):
         self.player_list.append(self.name_text)
 
         # Stats text output
-        # HEALTH
         self.health_text = arcade.create_text_sprite (
             start_x=SCREEN_WIDTH / 4,
             start_y=SCREEN_HEIGHT / 2,
@@ -1089,11 +1044,8 @@ class PokemonStats(arcade.View):
         self.health_text.center_y = 3*SCREEN_HEIGHT / 4
         self.player_list.append(self.health_text)
 
-
-
-
     def back_button_action(self, event):
-        #TODO: switch screen to swapping screen
+        # switch screen to swapping screen
         print("returning to swap screen")
         swap_view = PokemonSwap(self.player, self.enemy)
         swap_view.setup()
@@ -1102,10 +1054,7 @@ class PokemonStats(arcade.View):
     def on_draw(self):
             # Clear the screen
             self.clear()
-            # Draw the background texture
-            # arcade.draw_lrwh_rectangle_textured(0, 150,
-            #                                     SCREEN_WIDTH, SCREEN_HEIGHT,
-            #                                     self.background)
+        
             # Draw all the sprites.
             self.manager.draw()
             self.player_list.draw()
@@ -1162,7 +1111,6 @@ class PokemonRules(arcade.View):
             )
         )
 
-
     def setup(self):
         # TODO: create any sprites needed for rules page
         print("setting up rules")
@@ -1178,10 +1126,7 @@ class PokemonRules(arcade.View):
     def on_draw(self):
             # Clear the screen
             self.clear()
-            # Draw the background texture
-            # arcade.draw_lrwh_rectangle_textured(0, 150,
-            #                                     SCREEN_WIDTH, SCREEN_HEIGHT,
-            #                                     self.background)
+        
             # Draw all the sprites.
             self.manager.draw()
 

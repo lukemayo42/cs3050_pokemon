@@ -839,60 +839,60 @@ class PokemonItem(arcade.View):
         self.button_box_1 = arcade.gui.UIBoxLayout(vertical=False)
 
         self.player_list = arcade.SpriteList()
-        self.item1_sprite = Sprite("../cs3050_pokemon/sprites/potion.png", SPRITE_SCALING)
+        self.item1_sprite = Sprite("../cs3050_pokemon/sprites/potion.png", .25 * SPRITE_SCALING)
         self.item1_sprite.center_x = SCREEN_WIDTH / 5
-        self.item1_sprite.center_y = SCREEN_HEIGHT / 4
+        self.item1_sprite.center_y = 3 * SCREEN_HEIGHT / 4
         self.player_list.append(self.item1_sprite)
         self.item1_text = arcade.create_text_sprite(
             start_x=SCREEN_WIDTH / 5,
-            start_y=SCREEN_HEIGHT / 4 - 50,
+            start_y=3 * SCREEN_HEIGHT / 4 - 50,
             color=arcade.color.BLACK,
             text = "Potion"
         )
         self.item1_text.center_x = SCREEN_WIDTH / 5
-        self.item1_text.center_y = SCREEN_HEIGHT / 4 - 50
+        self.item1_text.center_y = 3 * SCREEN_HEIGHT / 4 - 50
         self.player_list.append(self.item1_text)
 
-        self.item2_sprite = Sprite("../cs3050_pokemon/sprites/super-potion.png", SPRITE_SCALING)
+        self.item2_sprite = Sprite("../cs3050_pokemon/sprites/super-potion.png", .25 * SPRITE_SCALING)
         self.item2_sprite.center_x = 2 * SCREEN_WIDTH / 5
-        self.item2_sprite.center_y = SCREEN_HEIGHT / 4
+        self.item2_sprite.center_y = 3 * SCREEN_HEIGHT / 4
         self.player_list.append(self.item2_sprite)
         self.item2_text = arcade.create_text_sprite(
             start_x=2 * SCREEN_WIDTH / 5,
-            start_y=SCREEN_HEIGHT / 4 - 50,
+            start_y=3 * SCREEN_HEIGHT / 4 - 50,
             color=arcade.color.BLACK,
             text = "Super Potion"
         )
         self.item2_text.center_x = 2 * SCREEN_WIDTH / 5
-        self.item2_text.center_y = SCREEN_HEIGHT / 4 - 50
+        self.item2_text.center_y = 3 * SCREEN_HEIGHT / 4 - 50
         self.player_list.append(self.item2_text)
 
-        self.item3_sprite = Sprite("../cs3050_pokemon/sprites/hyper-potion.png", SPRITE_SCALING)
+        self.item3_sprite = Sprite("../cs3050_pokemon/sprites/hyper-potion.png", .25 * SPRITE_SCALING)
         self.item3_sprite.center_x = 3 * SCREEN_WIDTH / 5
-        self.item3_sprite.center_y = SCREEN_HEIGHT / 4
+        self.item3_sprite.center_y = 3 * SCREEN_HEIGHT / 4
         self.player_list.append(self.item3_sprite)
         self.item3_text = arcade.create_text_sprite(
             start_x=3 * SCREEN_WIDTH / 5,
-            start_y=SCREEN_HEIGHT / 4 - 50,
+            start_y=3 * SCREEN_HEIGHT / 4 - 50,
             color=arcade.color.BLACK,
-            text = "Potion"
+            text = "Hyper Potion"
         )
         self.item3_text.center_x = 3 * SCREEN_WIDTH / 5
-        self.item3_text.center_y = SCREEN_HEIGHT / 4 - 50
+        self.item3_text.center_y = 3 * SCREEN_HEIGHT / 4 - 50
         self.player_list.append(self.item3_text)
 
-        self.item4_sprite = Sprite("../cs3050_pokemon/sprites/max-potion.png", SPRITE_SCALING)
+        self.item4_sprite = Sprite("../cs3050_pokemon/sprites/max-potion.png", .25 * SPRITE_SCALING)
         self.item4_sprite.center_x = 4 * SCREEN_WIDTH / 5
-        self.item4_sprite.center_y = SCREEN_HEIGHT / 4
+        self.item4_sprite.center_y = 3 * SCREEN_HEIGHT / 4
         self.player_list.append(self.item4_sprite)
         self.item4_text = arcade.create_text_sprite(
             start_x=4 * SCREEN_WIDTH / 5,
-            start_y=SCREEN_HEIGHT / 4 - 50,
+            start_y=3 * SCREEN_HEIGHT / 4 - 50,
             color=arcade.color.BLACK,
-            text = "Potion"
+            text = "Max Potion"
         )
         self.item4_text.center_x = 4 * SCREEN_WIDTH / 5
-        self.item4_text.center_y = SCREEN_HEIGHT / 4 - 50
+        self.item4_text.center_y = 3 * SCREEN_HEIGHT / 4 - 50
         self.player_list.append(self.item4_text)
 
         self.create_item_buttons()
@@ -910,21 +910,88 @@ class PokemonItem(arcade.View):
         self.button1 = arcade.gui.UIFlatButton(text="Use", width=BUTTON_WIDTH / 2)
         self.button_box_1.add(self.button1.with_space_around(left=20))
         self.button1.on_click = self.use1
-        # Create widgets to hold the button_box_1 widgets, that will center the buttons
         self.manager.add(
-            arcade.gui.UIAnchorWidget(align_x=SCREEN_WIDTH / 5, align_y=V_BOX_Y,
+            arcade.gui.UIAnchorWidget(align_x=SCREEN_WIDTH / 5 - SCREEN_WIDTH / 2, align_y=SCREEN_HEIGHT / 12,
                 anchor_x="center_x",
                 anchor_y="center_y",
-                child=self.button_box_1)
+                child=self.button1)
         )
+        
+        self.button2 = arcade.gui.UIFlatButton(text="Use", width=BUTTON_WIDTH / 2)
+        self.button_box_1.add(self.button1.with_space_around(left=20))
+        self.button2.on_click = self.use2
+        self.manager.add(
+            arcade.gui.UIAnchorWidget(align_x=2 * SCREEN_WIDTH / 5 - SCREEN_WIDTH / 2, align_y=SCREEN_HEIGHT / 12,
+                anchor_x="center_x",
+                anchor_y="center_y",
+                child=self.button2)
+        )
+
+        
+        self.button3 = arcade.gui.UIFlatButton(text="Use", width=BUTTON_WIDTH / 2)
+        self.button_box_1.add(self.button1.with_space_around(left=20))
+        self.button3.on_click = self.use3
+        self.manager.add(
+            arcade.gui.UIAnchorWidget(align_x= 3 * SCREEN_WIDTH / 5 - SCREEN_WIDTH / 2, align_y=SCREEN_HEIGHT / 12,
+                anchor_x="center_x",
+                anchor_y="center_y",
+                child=self.button3)
+        )
+        
+        self.button4 = arcade.gui.UIFlatButton(text="Use", width=BUTTON_WIDTH / 2)
+        self.button_box_1.add(self.button1.with_space_around(left=20))
+        self.button4.on_click = self.use4
+        self.manager.add(
+            arcade.gui.UIAnchorWidget(align_x=4 * SCREEN_WIDTH / 5 - SCREEN_WIDTH / 2, align_y=SCREEN_HEIGHT / 12,
+                anchor_x="center_x",
+                anchor_y="center_y",
+                child=self.button4)
+        )
+        
+        # # Create widgets to hold the button_box_1 widgets, that will center the buttons
+        # self.manager.add(
+        #     arcade.gui.UIAnchorWidget(align_x=-SCREEN_WIDTH / 5, align_y=SCREEN_HEIGHT / 12,
+        #         anchor_x="center_x",
+        #         anchor_y="center_y",
+        #         child=self.button_box_1)
+        # )
 
     def use1(self, event):
         self.index = "Potion"
         self.use()
+
+    def use2(self, event):
+        self.index = "Super Potion"
+        self.use()
+    
+    def use3(self, event):
+        self.index = "Hyper Potion"
+        self.use()
+    
+    def use4(self, event):
+        self.index = "Max Potion"
+        self.use()
     
     def use(self):
         # Call use in backend
+        btn_info = []
+        if(self.index == "Potion"):
+            btn_info = ["item", item_objects.potion]
+        elif(self.index == "Super Potion"):
+            btn_info = ["item", item_objects.super_potion]
+        elif(self.index == "Hyper Potion"):
+            btn_info = ["item", item_objects.hyper_potion]
+        elif(self.index == "Max Potion"):
+            btn_info = ["item", item_objects.max_potion]
+        action1, action2 = battle(self.player, self.enemy, btn_info)
+        
         print("using " + self.index)
+
+        # Return to the fight view
+        fight_view = PokemonGame(self.player, self.enemy)
+        fight_view.setup()
+        self.window.show_view(fight_view)
+
 
     def on_draw(self):
             # Clear the screen

@@ -4,27 +4,19 @@ from Character import Character
 import random
 import pokemon_objects
 
-#make item class later
 #we are assuming that we are receiving the type of button that is pressed (pokemon, move, item) and the specific move/pokemon/item that is used/switched
 #please write a method in the button class which we can call that will give us a list containing the type of button that 
 
-#TODO: READ!!!!
 #some things that i have noticed/ am concerned about: when you swap in the gui, the pokemon automatically swaps, this is not how the game works, the pokemon
 #that is swapped based on the current pokemon's speed, if the other pokemon has a faster speed, that pokemon attack the current pokemon first, 
 #then the players pokemon is swapped after, the same is true for items, if an item is used and the opponents pokemon is faster that pokemon goes first
 #then the item is used
 #2. if the text bubble is updated in battle, will it be rendered in the gui?, or will it have to wait for battle to be returned for the gui to be updated
 # in this case, it may be better to do the logic, waiting, and updated text bubble in the gui
-#3. if the enemy pokemon attacks first and the and the player pokemon faints, the player then has to swap pokemon, and the pokemon cannot attack, 
-#the user input given in btn_info, has to be thrown out, and more user input has to be taken on which pokemon the user wants to switch to
-# my idea is to have a special case that will be called when this happens, call the force_player_swap from the gui and then open the swap screen
+
 # the battle logic/ implementation may need to change
-# 4. an exception is thrown when the enemy tries to use an item line 149 "for item, num_items in enemy.get_item_bag():"
-
-#swapping doesnt work for enemy
 
 
-# Battle function without while loop
 #returns 2 strings, what move player did and what move the enemy did
 #TODO:implement the text bubble from gui and add as parameter
 def battle(player, enemy, btn_info):
@@ -53,6 +45,7 @@ def battle(player, enemy, btn_info):
                 #TODO: update check bubble to say player lost
                 # For now we need to do this to make sure we don't reference something without assignment
                 player_action = "lose"
+                enemy_action = "win"
             elif player.get_curr_pkm().get_is_fainted():
                 # force player to switch pokemon
                 #TODO: updat text bubble saying that that the current pokemon ais died and prompt user to switch
@@ -68,6 +61,7 @@ def battle(player, enemy, btn_info):
             # TODO: update text bubble saying that the player has lost
             # For now we need to do this to make sure we don't reference something without assignment
             player_action = "lose"
+            enemy_action = "win"
         # If the current pokemon in the players party is fainted, make them switch pokemon
         elif player.get_curr_pkm().get_is_fainted():
             # force player to switch pokemon
@@ -81,6 +75,7 @@ def battle(player, enemy, btn_info):
             if not enemy.chk_party():
                 # tell gui player wins
                 player_action = "win"
+                enemy_action  = "lose"
             # If the enemy's current pokemon is fainted, make them switch
             elif enemy.get_curr_pkm().get_is_fainted():
                 # force enemy to switch pokemon
@@ -203,10 +198,6 @@ def enemy_turn(enemy, player, force_swap):
     #update curr health of player
     return action
 
-#this case will only be called if there is pokemon left in the party
-#expects the index of the pokemon in the party the user wants to switch to 
-def force_player_swap(player, index):
-    player.swap_pokemon(0, index)
 
 # Function is enemy's "intelligence"
 # Function determines the action the enemy will take based upon the amount of health their current pokemon has.
@@ -290,8 +281,6 @@ def chk_spd(user_pkm, enemy_pkm):
     else:
         return False
 
-def use_item():
-    pass
 
 #returns 1 or 2 to roll crit
 def roll_crit():
@@ -468,7 +457,7 @@ def roll_accuracy(move):
         return False
 
 
-
+''' for testing only
 def main():
     pokemon_bag = [pokemon_objects.bulbasaur, pokemon_objects.charazard]
 
@@ -476,3 +465,5 @@ def main():
                               "I'm on a journey to become a Pokemon Master!")
 
     trainer2 = Character("Misty", pokemon_bag, [], 800, "Water types are the best!")
+
+'''

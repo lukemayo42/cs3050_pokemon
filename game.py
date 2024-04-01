@@ -60,6 +60,7 @@ RULES_HEIGHT = 350
 # Create subclass for the user
 # Subclass for pokemon
 # Subclass for enemy
+#TODO: fix buttons so that you cant press them on the wrong screen
 
 # This HealthBar class is a subclass of the Sprite arcade class that displays the health and name
 # of pokemon on the screen in text sprites. It has a health_bar_update method that rewrites the sprite.

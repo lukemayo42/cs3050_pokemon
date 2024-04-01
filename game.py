@@ -740,18 +740,12 @@ class PokemonSwap(arcade.View):
         player_action, enemy_action = battle(self.player, self.enemy, btn_info)
         if(player_action != "fainted"):
             print("returning to battle screen")
-
             fight_view = PokemonGame(self.player, self.enemy)
             fight_view.setup()
             self.window.show_view(fight_view)
         else:
-            # swap_view = PokemonSwap(self.player, self.enemy)
-            # swap_view.setup()
-            # self.window.show_view(swap_view)
+            # Force the swap and then return to fight
             self.player.swap_pokemon(0, self.index)
-            # swap_view = PokemonSwap(self.player, self.enemy)
-            # swap_view.setup()
-            # self.window.show_view(swap_view)
             fight_view = PokemonGame(self.player, self.enemy)
             fight_view.setup()
             self.window.show_view(fight_view)
@@ -1280,9 +1274,6 @@ class PokemonGame(arcade.View):
         self.enemy_list = arcade.SpriteList()
 
         # Set up the player and enemy sprites
-        # self.player_sprite = Sprite("../cs3050_pokemon/sprites/" + self.player.get_curr_pkm().get_name().lower() + "-back.png", SPRITE_SCALING)
-
-        # New scaling so it is relative to size of image
         self.player_sprite = Sprite("../cs3050_pokemon/sprites/" + self.player.get_curr_pkm().get_name().lower() + "-back.png")
         self.player_sprite.scale = 300 / (self.player_sprite.height * 1.2)
 
@@ -1303,46 +1294,25 @@ class PokemonGame(arcade.View):
         # print(self.enemy.get_curr_pkm().get_name())
         # print(self.player.chk_party())
         if(self.state == State.Battle):
-            #print("battle")
             # Clear the screen
             self.clear()
-            # self.enemy_list = arcade.SpriteList()
             # Draw the background texture
             arcade.draw_lrwh_rectangle_textured(0, 150,
                                                 SCREEN_WIDTH, SCREEN_HEIGHT,
                                                 self.background)
-            # self.player_sprite2 = Sprite("../cs3050_pokemon/sprites/" + self.enemy.get_curr_pkm().get_name().lower() + "-front.png", OPPONENT_SPRITE_SCALING)
-            # self.player_sprite2.center_x = 600
-            # self.player_sprite2.center_y = 725
-            # self.enemy_list.append(self.player_sprite2)
+            
             # Draw all the sprites.
             self.manager.draw()
             self.player_list.draw()
             self.enemy_list.draw()
             self.bar_sprite_list.draw()
         if(self.state == State.PokemonSwap):
-            # render pokemon sprites so that you can swap between them
             self.clear()
             # Iterate through pokemon in party and display the sprites on screen
             # If you click on a sprite, it will swap and return to the battle screen
             # Give an option to check summary stats or click swap (called from pokemon_button onclick function)
-
-
-
-            # # Draw the background texture
-            # arcade.draw_lrwh_rectangle_textured(0, 150,
-            #                                     SCREEN_WIDTH, SCREEN_HEIGHT,
-            #                                     self.background)
-            # # Draw all the sprites.
-            # self.manager.draw()
-            # self.player_list.draw()
-            # self.bar_sprite_list.draw()
         if(self.state == State.Bag):
             self.clear()
-            # RENDER items bag so you can select an item to use
-            # Iterate through the bag and display each item. Clicking on one will tell you a description
-            # Add a button to 'use' item. (This should be called by items_button onclick function)
-
 
         # When the backend determines the enemy has been defeated, change states
         if not self.enemy.chk_party():
@@ -1644,12 +1614,7 @@ def main():
                               "I'm on a journey to become a Pokemon Master!")
     enemy_trainer = Character("Misty", pokemon_bag_enemy, enemy_item_bag, 800, "Water types are the best!")
 
-    # window = PokemonGame(SCREEN_WIDTH, SCREEN_HEIGHT, B_SCREEN_TITLE, user_trainer, enemy_trainer)
-
     window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, B_SCREEN_TITLE)
-    # battle_view = PokemonGame(user_trainer, enemy_trainer)
-    # window.show_view(battle_view)
-    # battle_view.setup()
 
     start_view = PokemonStart(user_trainer, enemy_trainer)
     window.show_view(start_view)

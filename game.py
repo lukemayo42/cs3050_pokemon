@@ -49,7 +49,8 @@ V_BOX_2_X = 300
 V_BOX_2_Y = -190
 
 # Rules page formatting
-RULES = '''Welcome to our Pokemon Game. 
+RULES = ''' **IMPORTANT** In order to fight, press the right arrow key in the map until the battle pops up!
+        Welcome to our Pokemon Game. 
         When you are ready, return to the start menu and click start to enter the world of Pokemon. You will select a Pokemon party of 3 Pokemon that will fight for you. Each have different attack moves and health so choose wisely. 
         When you feel ready to fight, enter the gym and challenge an opponent. You can choose between 'Fight' which gives you 4 move options, 'Pokemon' to switch between the Pokemon in your party, and 'Items' which allows you to use special items like health potions.'''
 RULES_WIDTH = 400
@@ -847,7 +848,7 @@ class PokemonItem(arcade.View):
             start_x=SCREEN_WIDTH / 5,
             start_y=3 * SCREEN_HEIGHT / 4 - 50,
             color=arcade.color.BLACK,
-            text = "Potion"
+            text = "Potion: " + str(self.player.amount_of_item(item_objects.potion)) + "x"
         )
         self.item1_text.center_x = SCREEN_WIDTH / 5
         self.item1_text.center_y = 3 * SCREEN_HEIGHT / 4 - 50
@@ -861,7 +862,7 @@ class PokemonItem(arcade.View):
             start_x=2 * SCREEN_WIDTH / 5,
             start_y=3 * SCREEN_HEIGHT / 4 - 50,
             color=arcade.color.BLACK,
-            text = "Super Potion"
+            text = "Super Potion: " + str(self.player.amount_of_item(item_objects.super_potion)) + "x"
         )
         self.item2_text.center_x = 2 * SCREEN_WIDTH / 5
         self.item2_text.center_y = 3 * SCREEN_HEIGHT / 4 - 50
@@ -875,7 +876,7 @@ class PokemonItem(arcade.View):
             start_x=3 * SCREEN_WIDTH / 5,
             start_y=3 * SCREEN_HEIGHT / 4 - 50,
             color=arcade.color.BLACK,
-            text = "Hyper Potion"
+            text = "Hyper Potion: " + str(self.player.amount_of_item(item_objects.hyper_potion)) + "x"
         )
         self.item3_text.center_x = 3 * SCREEN_WIDTH / 5
         self.item3_text.center_y = 3 * SCREEN_HEIGHT / 4 - 50
@@ -889,7 +890,7 @@ class PokemonItem(arcade.View):
             start_x=4 * SCREEN_WIDTH / 5,
             start_y=3 * SCREEN_HEIGHT / 4 - 50,
             color=arcade.color.BLACK,
-            text = "Max Potion"
+            text = "Max Potion: " + str(self.player.amount_of_item(item_objects.max_potion)) + "x"
         )
         self.item4_text.center_x = 4 * SCREEN_WIDTH / 5
         self.item4_text.center_y = 3 * SCREEN_HEIGHT / 4 - 50
@@ -907,46 +908,48 @@ class PokemonItem(arcade.View):
         self.window.show_view(fight_view)
 
     def create_item_buttons(self):
-        self.button1 = arcade.gui.UIFlatButton(text="Use", width=BUTTON_WIDTH / 2)
-        self.button_box_1.add(self.button1.with_space_around(left=20))
-        self.button1.on_click = self.use1
-        self.manager.add(
-            arcade.gui.UIAnchorWidget(align_x=SCREEN_WIDTH / 5 - SCREEN_WIDTH / 2, align_y=SCREEN_HEIGHT / 12,
-                anchor_x="center_x",
-                anchor_y="center_y",
-                child=self.button1)
-        )
-        
-        self.button2 = arcade.gui.UIFlatButton(text="Use", width=BUTTON_WIDTH / 2)
-        self.button_box_1.add(self.button1.with_space_around(left=20))
-        self.button2.on_click = self.use2
-        self.manager.add(
-            arcade.gui.UIAnchorWidget(align_x=2 * SCREEN_WIDTH / 5 - SCREEN_WIDTH / 2, align_y=SCREEN_HEIGHT / 12,
-                anchor_x="center_x",
-                anchor_y="center_y",
-                child=self.button2)
-        )
+        if(int(self.player.amount_of_item(item_objects.potion) >= 1)):
+            self.button1 = arcade.gui.UIFlatButton(text="Use", width=BUTTON_WIDTH / 2)
+            self.button_box_1.add(self.button1.with_space_around(left=20))
+            self.button1.on_click = self.use1
+            self.manager.add(
+                arcade.gui.UIAnchorWidget(align_x=SCREEN_WIDTH / 5 - SCREEN_WIDTH / 2, align_y=SCREEN_HEIGHT / 12,
+                    anchor_x="center_x",
+                    anchor_y="center_y",
+                    child=self.button1)
+            )
+        if(int(self.player.amount_of_item(item_objects.super_potion) >= 1)):
+            self.button2 = arcade.gui.UIFlatButton(text="Use", width=BUTTON_WIDTH / 2)
+            self.button_box_1.add(self.button2.with_space_around(left=20))
+            self.button2.on_click = self.use2
+            self.manager.add(
+                arcade.gui.UIAnchorWidget(align_x=2 * SCREEN_WIDTH / 5 - SCREEN_WIDTH / 2, align_y=SCREEN_HEIGHT / 12,
+                    anchor_x="center_x",
+                    anchor_y="center_y",
+                    child=self.button2)
+            )
 
+        if(int(self.player.amount_of_item(item_objects.hyper_potion) >= 1)):
+            self.button3 = arcade.gui.UIFlatButton(text="Use", width=BUTTON_WIDTH / 2)
+            self.button_box_1.add(self.button3.with_space_around(left=20))
+            self.button3.on_click = self.use3
+            self.manager.add(
+                arcade.gui.UIAnchorWidget(align_x= 3 * SCREEN_WIDTH / 5 - SCREEN_WIDTH / 2, align_y=SCREEN_HEIGHT / 12,
+                    anchor_x="center_x",
+                    anchor_y="center_y",
+                    child=self.button3)
+            )
         
-        self.button3 = arcade.gui.UIFlatButton(text="Use", width=BUTTON_WIDTH / 2)
-        self.button_box_1.add(self.button1.with_space_around(left=20))
-        self.button3.on_click = self.use3
-        self.manager.add(
-            arcade.gui.UIAnchorWidget(align_x= 3 * SCREEN_WIDTH / 5 - SCREEN_WIDTH / 2, align_y=SCREEN_HEIGHT / 12,
-                anchor_x="center_x",
-                anchor_y="center_y",
-                child=self.button3)
-        )
-        
-        self.button4 = arcade.gui.UIFlatButton(text="Use", width=BUTTON_WIDTH / 2)
-        self.button_box_1.add(self.button1.with_space_around(left=20))
-        self.button4.on_click = self.use4
-        self.manager.add(
-            arcade.gui.UIAnchorWidget(align_x=4 * SCREEN_WIDTH / 5 - SCREEN_WIDTH / 2, align_y=SCREEN_HEIGHT / 12,
-                anchor_x="center_x",
-                anchor_y="center_y",
-                child=self.button4)
-        )
+        if(int(self.player.amount_of_item(item_objects.max_potion) >= 1)):
+            self.button4 = arcade.gui.UIFlatButton(text="Use", width=BUTTON_WIDTH / 2)
+            self.button_box_1.add(self.button4.with_space_around(left=20))
+            self.button4.on_click = self.use4
+            self.manager.add(
+                arcade.gui.UIAnchorWidget(align_x=4 * SCREEN_WIDTH / 5 - SCREEN_WIDTH / 2, align_y=SCREEN_HEIGHT / 12,
+                    anchor_x="center_x",
+                    anchor_y="center_y",
+                    child=self.button4)
+            )
         
         # # Create widgets to hold the button_box_1 widgets, that will center the buttons
         # self.manager.add(
@@ -1353,7 +1356,7 @@ class PokemonGame(arcade.View):
     def on_draw(self):
         """ Render the screen. """
         # print(self.enemy.get_curr_pkm().get_name())
-        print(self.player.chk_party())
+        # print(self.player.chk_party())
         if(self.state == State.Battle):
             #print("battle")
             # Clear the screen

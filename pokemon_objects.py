@@ -121,4 +121,4 @@ swift = move("Swift", "normal", 60, 100, "Normal", True)
 noctowl = create_pokemon("Noctowl", df, [air_slash, swift, extrasensory, shadow_ball])
 enemy_noctowl = pokemon(noctowl)
 
-#TODO: Dragonite, Heracross, Piloswine, Farfetch'd, Gliscor, any other pokemone
+#TODO: Dragonite, Heracross, Piloswine, Farfetch'd, Gliscor, any other pokemon

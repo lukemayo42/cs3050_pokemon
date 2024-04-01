@@ -3,6 +3,7 @@ from move import move
 from Character import Character
 import random
 import pokemon_objects
+import time
 
 #we are assuming that we are receiving the type of button that is pressed (pokemon, move, item) and the specific move/pokemon/item that is used/switched
 #please write a method in the button class which we can call that will give us a list containing the type of button that 
@@ -13,7 +14,7 @@ import pokemon_objects
 #then the item is used
 #2. if the text bubble is updated in battle, will it be rendered in the gui?, or will it have to wait for battle to be returned for the gui to be updated
 # in this case, it may be better to do the logic, waiting, and updated text bubble in the gui
-
+#ideas for text bubble waiting in battle - wait using threads in the backend
 # the battle logic/ implementation may need to change
 
 
@@ -24,15 +25,18 @@ def battle(player, enemy, btn_info):
     player_pkm = player.get_curr_pkm()
     enemy_pkm = enemy.get_curr_pkm()
     force_swap = False
+
     #if player pokemon faster than enemy pokemon
     if chk_spd(player_pkm, enemy_pkm):
         player_action = player_turn(player, enemy, btn_info)
+
         # If enemy's party is out of pokemon
         if not enemy.chk_party():
             #TODO: update text bubble to "The enemy is out of pokemon! You Win!"
             # For now we need to do this to make sure we don't reference something without assignment
             player_action = "win"
             enemy_action = "lose"
+            
         #force enemy to switch pokemon if current pokemon is fainted - takes up enemy's turn
         elif enemy.get_curr_pkm().get_is_fainted():
             force_swap = True
@@ -336,7 +340,6 @@ def chk_effective(move_used, pkm):
         #not very effective moves
         if move_type == "water" or move_type == "electric" or move_type == "grass" or move_type == "ground":
             effectiveness/=2
-        #
         elif move_type == "fire" or move_type == "ice" or move_type == "poison" or move_type == "flying" or move_type == "bug":
             effectiveness*=2
     #defending pokemon ice
@@ -455,6 +458,10 @@ def roll_accuracy(move):
         return True
     else:
         return False
+    
+#this function waits for 5 seconds in a different thread so that the screen keeps rendering
+def thread_wait():
+    pass
 
 
 ''' for testing only

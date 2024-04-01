@@ -15,7 +15,7 @@ class pokemon:
     base_spd - base speed of the pokemon - int
     curr_spd - current spd of the pokemon - int
     is_fainted - flag whether or not  a pokemon is faineted or not - bool
-    """
+    
     def __init__(self, name, types, moves, max_hlth, base_atk, base_def, base_spd):
         #current stats are set to base stats 
         self.name = name
@@ -30,6 +30,53 @@ class pokemon:
         self.base_spd = base_spd
         self.curr_spd = base_spd
         self.is_fainted = False
+    """
+    #define multiple contructors
+    def __init__(self, *args):
+        #copy contructor called if 1 argument is passed to contructor
+        if len(args) == 1:
+            self.name = args[0].get_name()
+            self.types = args[0].get_types()
+            self.moves = args[0].get_moves()
+            self.max_hlth = args[0].get_max_hlth()
+            self.curr_hlth = args[0].get_max_hlth()
+            self.base_atk = args[0].get_base_atk()
+            self.curr_atk = args[0].get_base_atk()
+            self.base_def = args[0].get_base_def()
+            self.curr_def = args[0].get_base_def()
+            self.base_spd = args[0].get_base_spd()
+            self.curr_spd = args[0].get_base_spd()
+            self.is_fainted = False
+        #regular contructor takes 7 arguments
+        elif len(args) == 7:
+            self.name = args[0]
+            self.types = args[1]
+            self.moves = args[2]
+            self.max_hlth = args[3]
+            self.curr_hlth = args[3]
+            self.base_atk = args[4]
+            self.curr_atk = args[4]
+            self.base_def = args[5]
+            self.curr_def = args[5]
+            self.base_spd = args[6]
+            self.curr_spd = args[6]
+            self.is_fainted = False
+   
+    '''
+    def __init__(self, pkm):
+        self.name = pkm.get_name()
+        self.types = pkm.get_types()
+        self.moves = pkm.get_moves()
+        self.max_hlth = pkm.get_max_hlth()
+        self.curr_hlth = pkm.get_max_hlth()
+        self.base_atk = pkm.get_base_atk()
+        self.curr_atk = pkm.get_base_atk()
+        self.base_def = pkm.get_base_def()
+        self.curr_def = pkm.get_base_def()
+        self.base_spd = pkm.get_base_spd()
+        self.curr_spd = pkm.get_base_spd()
+        self.is_fainted = False
+'''
 
     #getters
     def get_name(self):
@@ -68,9 +115,6 @@ class pokemon:
     def get_is_fainted(self):
         return self.is_fainted
     
-    def get_curr_pkm(self):
-        return self.pokemon[0]
-    
     #setters
     def set_curr_hlth(self, new_hlth):
         self.curr_hlth = new_hlth
@@ -83,6 +127,15 @@ class pokemon:
 
     def set_curr_spd(self, new_spd):
         self.curr_spd = new_spd
+
+    def set_is_fainted(self, new_is_fainted):
+        self.is_fainted = new_is_fainted
+
+
+    def set_moves(self, moves):
+        self.moves = moves
+
+    
 
     #add health and remove health functions
     def add_health(self, hlth):
@@ -99,12 +152,16 @@ class pokemon:
 
     #print functions!!!! - need to know how gui wants text info
 
-    def move_to_string(self, move_used, hit):
+    def move_to_string(self, move_used, hit, effectiveness):
         if hit:
-            return f"{self.name} used {move_used.get_name()}"
+            if effectiveness == 1:
+                return f"{self.name} used {move_used.get_name()}"
+            elif effectiveness == .5 or effectiveness == .25:
+                return f"{self.name} used {move_used.get_name()}. It's not very effective."
+            elif effectiveness == 2 or 4:
+                return f"{self.name} used {move_used.get_name()}. It's Super Effective!"
         else:
             return f"{self.name}'s move missed"
-        return move_str
     
     '''
     def get_move_names(self):

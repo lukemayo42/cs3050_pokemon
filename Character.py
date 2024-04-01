@@ -90,6 +90,12 @@ class Character:
             else:
                 self.item_bag[item] -= amount
 
+    # Function Checks to see how many of an item the character has, and returns that number
+    def amount_of_item(self, trainer_item):
+        for item in self.item_bag:
+            if item == trainer_item:
+                return self.item_bag[item]
+
     # Function that updates the characters money
     def add_money(self, amount):
         self.money += amount

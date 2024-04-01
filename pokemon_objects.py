@@ -80,11 +80,60 @@ psychic = move("Psychic", 'pshychic', 90, 100, "Psychic", True)
 slowbro = create_pokemon("Slowbro", df, [surf, psychic, headbutt, bulldoze])
 enemy_slowbro = pokemon(slowbro)
 
+#create lucario
+aura_sphere = move("Aura Sphere", "fighting", 80, 100, "Fighting", True)
+cross_chop = move("Cross Chop", "fighting", 100, 80, "Fighting", True)
+metal_claw = move("Metal Claw", "fighting", 50, 95, "Steel", True)
+lucario = create_pokemon("Lucario", df, [aura_sphere, cross_chop, metal_claw, aerial_ace])
+enemy_lucario = pokemon(lucario)
+
+#create crobat
+x_scissor = move("X-Scissor", "bug", 80, 100, "Bug", True)
+crobat = create_pokemon("Crobat", df, [air_slash, venoshock, steel_wing, x_scissor])
+enemy_crobat = pokemon(crobat)
+
+#create shiftry
+leaf_blade = move("Leaf Blade", "grass", 90, 100, "Grass", True)
+foul_play = move("Foul Play", "dark", 95, 100, "Dark", True)
+shiftry = create_pokemon("Shiftry", df, [leaf_blade, air_slash, foul_play, x_scissor])
+enemy_shiftry = pokemon(shiftry)
+
+#create scyther
+wing_attack = move("Wing Attack", "flying", 60, 100, "Flying", True)
+slash = move("Slash", "normal", 70, 100, "Flying", True)
+scyther = create_pokemon("Scyther", df, [wing_attack, slash, air_slash, x_scissor])
+enemy_scyther = pokemon(scyther)
+
+#create mr.mime
+mr_mime = create_pokemon("Mr.Mime", df, [psychic, thunder, aerial_ace, psybeam])
+enemy_mr_mime = pokemon(mr_mime)
 
 
+#create wooper
+ice_beam = move("Ice Beam", "ice", 90, 100, "Ice", True)
+earthquake = move("Earthquake", "ground", 100, 100, "Ground", True)
+sludge_bomb = move("Sludge Bomb", "posion", 90, 100, True)
+wooper = create_pokemon("Wooper", df, [surf, ice_beam, earthquake, sludge_bomb])
+
+#create noctowl
+extrasensory = move("Extrasensory", "psychic", 80, 100, "Psychic", True)
+swift = move("Swift", "normal", 60, 100, "Normal", True)
+noctowl = create_pokemon("Noctowl", df, [air_slash, swift, extrasensory, shadow_ball])
+enemy_noctowl = pokemon(noctowl)
+
+#create Dragonite
 
 
+#create heracross
 
+
+#create piloswine
+
+
+#create farfetchd
+
+
+#create gliscor
 
 
 

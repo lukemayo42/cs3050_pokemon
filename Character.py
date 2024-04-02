@@ -32,7 +32,7 @@ class Character:
     def get_item_bag(self):
         return self.item_bag
 
-    def money(self):
+    def get_money(self):
         return self.money
 
     def get_speech_bubble_text(self):

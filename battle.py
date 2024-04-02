@@ -22,6 +22,12 @@ import time
 # if timer > 5:
 #   continue;
 
+#wierd thing happening with charizard and bulbasuar swapping: heres what I think is happening
+#user is faster than enemy so bulbasuar gets thrown out, bulbasuar is out and battle is called, 
+#bulbasaur faints and for some reason gui then automatically renders charizard back out as pokemon
+
+#when you swap and the current pokemon faints sometimes the message doesnt get printed in the terminal
+
 #returns 2 strings, what move player did and what move the enemy did
 #TODO:implement the text bubble from gui and add as parameter
 def battle(player, enemy, btn_info):
@@ -61,6 +67,7 @@ def battle(player, enemy, btn_info):
                 # For now we need to do this to make sure we don't reference something without assignment
                 player_action = "fainted"
                 print(f"{player.get_curr_pkm().get_name()} fainted")
+                #force player to switch
             # send to gui
     # if enemy pokemon faster than player pokemon
     else:
@@ -79,6 +86,7 @@ def battle(player, enemy, btn_info):
             #update player_turn to handle force switch case
             player_action = "fainted"
             print(f"{player.get_curr_pkm().get_name()} fainted")
+            #TODO: fix this case - player pokemon is faster than enemy pokemon, and the player pokemon faints, current pokemon stays the same without prompt being asked
         # The enemy turn didn't result in anything needing the player to do anything
         else:
             player_action = player_turn(player, enemy, btn_info)
@@ -280,13 +288,13 @@ def calc_dmg(atk_pkm, def_pkm, move):
     dmg = (((((2 * level * roll_crit())/5) + 2)* move.get_power() * (atk_pkm.get_curr_atk()/def_pkm.get_curr_def())/50) + 2 ) * random_variable * effectiveness
     return dmg , effectiveness
 
-#rerturns True if user spedd is greater then enemy otherwise False
+#rerturns True if the user will fo first , false if the enemy will go first
 def chk_spd(user_pkm, enemy_pkm):
     user_spd = user_pkm.get_curr_spd()
     enemy_spd = enemy_pkm.get_curr_spd()
     #if user speed is equal to enemy speed flip coin to see who goes first
     if user_spd == enemy_spd:
-        rand_list = [True, False]
+        rand_list = [True, True]
         return random.choice(rand_list)
     elif(user_pkm.get_curr_spd() > enemy_pkm.get_curr_spd()):
         return True

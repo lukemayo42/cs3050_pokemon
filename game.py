@@ -1179,6 +1179,7 @@ class PokemonRules(arcade.View):
 # This PokemonGame class is created with two trainers passed in, the player and the enemy trainer
 # the pokemon bags of each trainer are represented on the screen with Sprites and health_bar sprites.
 class PokemonGame(arcade.View):
+
     """
     constructor for PokemonGame class 
     attributes of class
@@ -1352,7 +1353,7 @@ class PokemonGame(arcade.View):
     # This on_draw method renders all of the buttons and sprites depending on what the current state is
     def on_draw(self):
         """ Render the screen. """
-        # print(self.enemy.get_curr_pkm().get_name())
+        #print(self.player.get_curr_pkm().get_name())
         # print(self.player.chk_party())
         if(self.state == State.Battle):
             # Clear the screen
@@ -1380,6 +1381,8 @@ class PokemonGame(arcade.View):
             self.state = State.Win
         if not self.player.chk_party():
             self.state = State.Loss
+
+        
         if(self.state == State.Moves):
             self.clear()
             # Draw the background texture
@@ -1424,7 +1427,10 @@ class PokemonGame(arcade.View):
             self.health_text.center_y = 500
             self.bar_sprite_list.append(self.health_text)
             self.bar_sprite_list.draw()
+
+        #should be handling weird swap case
         if(self.player.get_curr_pkm().get_is_fainted() and self.player.chk_party()):
+            print("current player pokemon fainted - swap pokemon")
             # Render swap screen so they can switch.
             self.state = State.PokemonSwap
             global GLOBAL_STATE
@@ -1433,7 +1439,6 @@ class PokemonGame(arcade.View):
             start_view = PokemonSwap(self.player, self.enemy)
             start_view.setup()
             self.window.show_view(start_view)
-
     # This add_move_buttons methis is called from the fight on_click method and adds the move buttons to
     # the vertical box storing the window's buttons. 
     def add_move_buttons(self):
@@ -1570,6 +1575,7 @@ class PokemonGame(arcade.View):
             else:
                 GLOBAL_STATE = State.Win
                 self.state = State.Win
+            
 
     # This move_3_go method is called when the third move button is clicked, it passes button information
     # to the backend where the battle function is called. The results of the tern are reflected in the 

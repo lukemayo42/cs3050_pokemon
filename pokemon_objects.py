@@ -46,7 +46,7 @@ enemy_charizard = pokemon(charizard)
 
 #create pikachu
 thunderbolt = move("Thunderbolt", "electric", 90, 100, "Electric", True)
-quick_attack = move("Quick Attack", "priority", 40, 100, "Electric", True)
+quick_attack = move("Quick Attack", "priority", 40, 100, "Normal", True)
 thunder = move("Thunder", "electric", 110, 70, "Electric", True)
 iron_tail = move("Iron Tail", "steel", 100, 75, "Steel", True)
 pikachu = create_pokemon("Pikachu", df, [thunderbolt, quick_attack, thunder, iron_tail])
@@ -121,4 +121,4 @@ swift = move("Swift", "normal", 60, 100, "Normal", True)
 noctowl = create_pokemon("Noctowl", df, [air_slash, swift, extrasensory, shadow_ball])
 enemy_noctowl = pokemon(noctowl)
 
-#TODO: Dragonite, Heracross, Piloswine, Farfetch'd, Gliscor, any other pokemone
+#TODO: Dragonite, Heracross, Piloswine, Farfetch'd, Gliscor, any other pokemon

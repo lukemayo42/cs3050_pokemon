@@ -3,6 +3,7 @@ from move import move
 from Character import Character
 import random
 import pokemon_objects
+import time
 
 #we are assuming that we are receiving the type of button that is pressed (pokemon, move, item) and the specific move/pokemon/item that is used/switched
 #please write a method in the button class which we can call that will give us a list containing the type of button that 
@@ -13,9 +14,19 @@ import pokemon_objects
 #then the item is used
 #2. if the text bubble is updated in battle, will it be rendered in the gui?, or will it have to wait for battle to be returned for the gui to be updated
 # in this case, it may be better to do the logic, waiting, and updated text bubble in the gui
-
+#ideas for text bubble waiting in battle - wait using threads in the backend
 # the battle logic/ implementation may need to change
 
+#idea for waiting and text bubbles - invisible timer - set timer to 0 and set condition to continue after x amount of time - using deltatime
+#timer = 0 //using deltatime
+# if timer > 5:
+#   continue;
+
+#wierd thing happening with charizard and bulbasuar swapping: heres what I think is happening
+#user is faster than enemy so bulbasuar gets thrown out, bulbasuar is out and battle is called, 
+#bulbasaur faints and for some reason gui then automatically renders charizard back out as pokemon
+
+#when you swap and the current pokemon faints sometimes the message doesnt get printed in the terminal
 
 #returns 2 strings, what move player did and what move the enemy did
 #TODO:implement the text bubble from gui and add as parameter
@@ -24,18 +35,22 @@ def battle(player, enemy, btn_info):
     player_pkm = player.get_curr_pkm()
     enemy_pkm = enemy.get_curr_pkm()
     force_swap = False
+
     #if player pokemon faster than enemy pokemon
     if chk_spd(player_pkm, enemy_pkm):
         player_action = player_turn(player, enemy, btn_info)
+
         # If enemy's party is out of pokemon
         if not enemy.chk_party():
             #TODO: update text bubble to "The enemy is out of pokemon! You Win!"
             # For now we need to do this to make sure we don't reference something without assignment
             player_action = "win"
             enemy_action = "lose"
+            
         #force enemy to switch pokemon if current pokemon is fainted - takes up enemy's turn
         elif enemy.get_curr_pkm().get_is_fainted():
             force_swap = True
+            print(f"{enemy.get_curr_pkm().get_name()} fainted")
             enemy_action = enemy_turn(enemy, player, force_swap)
             
         #enemy pokemon has not fainted
@@ -51,6 +66,8 @@ def battle(player, enemy, btn_info):
                 #TODO: updat text bubble saying that that the current pokemon ais died and prompt user to switch
                 # For now we need to do this to make sure we don't reference something without assignment
                 player_action = "fainted"
+                print(f"{player.get_curr_pkm().get_name()} fainted")
+                #force player to switch
             # send to gui
     # if enemy pokemon faster than player pokemon
     else:
@@ -68,6 +85,8 @@ def battle(player, enemy, btn_info):
             force_swap = True
             #update player_turn to handle force switch case
             player_action = "fainted"
+            print(f"{player.get_curr_pkm().get_name()} fainted")
+            #TODO: fix this case - player pokemon is faster than enemy pokemon, and the player pokemon faints, current pokemon stays the same without prompt being asked
         # The enemy turn didn't result in anything needing the player to do anything
         else:
             player_action = player_turn(player, enemy, btn_info)
@@ -80,6 +99,7 @@ def battle(player, enemy, btn_info):
             elif enemy.get_curr_pkm().get_is_fainted():
                 # force enemy to switch pokemon
                 force_swap = True
+                print(f"{enemy.get_curr_pkm().get_name()} fainted")
                 enemy_action = enemy_turn(enemy, player, force_swap)
             # send to gui
     # Return the first action that was done and the second action that was done
@@ -268,13 +288,13 @@ def calc_dmg(atk_pkm, def_pkm, move):
     dmg = (((((2 * level * roll_crit())/5) + 2)* move.get_power() * (atk_pkm.get_curr_atk()/def_pkm.get_curr_def())/50) + 2 ) * random_variable * effectiveness
     return dmg , effectiveness
 
-#rerturns True if user spedd is greater then enemy otherwise False
+#rerturns True if the user will fo first , false if the enemy will go first
 def chk_spd(user_pkm, enemy_pkm):
     user_spd = user_pkm.get_curr_spd()
     enemy_spd = enemy_pkm.get_curr_spd()
     #if user speed is equal to enemy speed flip coin to see who goes first
     if user_spd == enemy_spd:
-        rand_list = [True, False]
+        rand_list = [True, True]
         return random.choice(rand_list)
     elif(user_pkm.get_curr_spd() > enemy_pkm.get_curr_spd()):
         return True
@@ -336,7 +356,6 @@ def chk_effective(move_used, pkm):
         #not very effective moves
         if move_type == "water" or move_type == "electric" or move_type == "grass" or move_type == "ground":
             effectiveness/=2
-        #
         elif move_type == "fire" or move_type == "ice" or move_type == "poison" or move_type == "flying" or move_type == "bug":
             effectiveness*=2
     #defending pokemon ice
@@ -455,6 +474,10 @@ def roll_accuracy(move):
         return True
     else:
         return False
+    
+#this function waits for 5 seconds in a different thread so that the screen keeps rendering
+def thread_wait():
+    time.sleep()
 
 
 ''' for testing only

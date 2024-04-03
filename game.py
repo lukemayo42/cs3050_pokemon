@@ -227,9 +227,9 @@ class PokemonStart(arcade.View):
 
     def rules_button_action(self, event):
         # TODO: Render a list of rules/how to play
-        print("Here is how to play the game")
         global GLOBAL_STATE
         if(GLOBAL_STATE == State.Start):
+            print("Here is how to play the game")
             GLOBAL_STATE = State.Rules
             rules_view = PokemonRules(self.player, self.enemy)
             rules_view.setup()
@@ -683,9 +683,9 @@ class PokemonSwap(arcade.View):
 
     def back_button_action(self, event):
         # switch screen to fighting screen
-        print("returning to fight screen")
         global GLOBAL_STATE
         if(GLOBAL_STATE == State.Swap):
+            print("returning to fight screen")
             GLOBAL_STATE = State.Battle
             fight_view = PokemonGame(self.player, self.enemy)
             fight_view.setup()
@@ -749,9 +749,9 @@ class PokemonSwap(arcade.View):
     def generate_stats(self):
         # Get the selected pokemon and pass it to the stats view
         pokemon = self.player.get_pokemon_list()[self.index]
-        print("going to stats screen")
         global GLOBAL_STATE
         if(GLOBAL_STATE == State.Swap):
+            print("going to stats screen")
             GLOBAL_STATE = State.Stat
             stats_view = PokemonStats(self.player, self.enemy, pokemon)
             stats_view.setup()
@@ -760,17 +760,28 @@ class PokemonSwap(arcade.View):
     def swap_pokemon(self):
         # Call backend method to swap the pokemon order so that the first pokemon is back in front
         # Return to the battle screen
-        btn_info = ["swap", self.index]
-        player_action, enemy_action = battle(self.player, self.enemy, btn_info)
         global GLOBAL_STATE
-        if(player_action != "fainted" and GLOBAL_STATE == State.Swap):
-            GLOBAL_STATE = State.Battle
-            print("returning to battle screen")
-            fight_view = PokemonGame(self.player, self.enemy)
-            fight_view.setup()
-            self.window.show_view(fight_view)
-        elif(GLOBAL_STATE == State.Swap):
-            # Force the swap and then return to fight
+        if(not self.player.get_curr_pkm().get_is_fainted()):
+            btn_info = ["swap", self.index]
+            player_action, enemy_action = battle(self.player, self.enemy, btn_info)
+            if(player_action != "fainted" and GLOBAL_STATE == State.Swap):
+                GLOBAL_STATE = State.Battle
+                print("returning to battle screen")
+                fight_view = PokemonGame(self.player, self.enemy)
+                fight_view.setup()
+                self.window.show_view(fight_view)
+            elif(GLOBAL_STATE == State.Swap):
+                # Force the swap and then return to fight
+                swap_view = PokemonSwap(self.player, self.enemy)
+                swap_view.setup()
+                self.window.show_view(swap_view)
+                # print("fainted")
+                # self.player.swap_pokemon(0, self.index)
+                # GLOBAL_STATE = State.Battle
+                # fight_view = PokemonGame(self.player, self.enemy)
+                # fight_view.setup()
+                # self.window.show_view(fight_view)
+        else:
             self.player.swap_pokemon(0, self.index)
             GLOBAL_STATE = State.Battle
             fight_view = PokemonGame(self.player, self.enemy)
@@ -892,9 +903,9 @@ class PokemonItem(arcade.View):
 
     def back_button_action(self, event):
         # switch screen to fighting screen
-        print("returning to fight screen")
         global GLOBAL_STATE
         if(GLOBAL_STATE == State.Item):
+            print("returning to fight screen")
             GLOBAL_STATE = State.Battle
             fight_view = PokemonGame(self.player, self.enemy)
             fight_view.setup()
@@ -1074,9 +1085,9 @@ class PokemonStats(arcade.View):
 
     def back_button_action(self, event):
         # switch screen to swapping screen
-        print("returning to swap screen")
         global GLOBAL_STATE
         if(GLOBAL_STATE == State.Stat):
+            print("returning to swap screen")
             GLOBAL_STATE = State.Swap
             swap_view = PokemonSwap(self.player, self.enemy)
             swap_view.setup()
@@ -1149,9 +1160,9 @@ class PokemonRules(arcade.View):
 
     def back_button_action(self, event):
         #TODO: switch screen to starting screen
-        print("returning to start screen")
         global GLOBAL_STATE
         if(GLOBAL_STATE == State.Rules):
+            print("returning to start screen")
             GLOBAL_STATE = State.Start
             start_view = PokemonStart(self.player, self.enemy)
             start_view.setup()

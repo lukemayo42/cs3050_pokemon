@@ -627,6 +627,36 @@ class Gym(arcade.View):
 
         # -- Set up the walls
         # Create a row of boxes
+        for x in range(0, 800, 64):
+            wall = arcade.Sprite(":resources:images/tiles/boxCrate_double.png",
+                                 MAP_CHARACTER_SCALING)
+            wall.center_x = x
+            wall.center_y = 0
+            self.wall_list.append(wall)
+
+        # Create a row of boxes
+        for x in range(0, 800, 64):
+            wall = arcade.Sprite(":resources:images/tiles/boxCrate_double.png",
+                                 MAP_CHARACTER_SCALING)
+            wall.center_x = x
+            wall.center_y = 450
+            self.wall_list.append(wall)
+
+        # Create a column of boxes
+        for y in range(0, 400, 64):
+            wall = arcade.Sprite(":resources:images/tiles/boxCrate_double.png",
+                                 MAP_CHARACTER_SCALING)
+            wall.center_y = y
+            wall.center_x = 0
+            self.wall_list.append(wall)
+
+        # Create a column of boxes
+        for y in range(0, 400, 64):
+            wall = arcade.Sprite(":resources:images/tiles/boxCrate_double.png",
+                                 MAP_CHARACTER_SCALING)
+            wall.center_y = y
+            wall.center_x = 800
+            self.wall_list.append(wall)
 
         self.physics_engine = arcade.PhysicsEngineSimple(self.player, self.wall_list)
 

@@ -28,6 +28,8 @@ class State(Enum):
     Item = 10
     Stat = 11
     Rules = 12
+    Gym = 13
+
 
 # Constants for sprite rendering and sprite movement
 SPRITE_SCALING = 3.5
@@ -574,11 +576,120 @@ class WorldMap(arcade.View):
 
         # TEMPORARY SOLUTION TO START FIGHT
         global GLOBAL_STATE
+        if 150 <= self.player.center_x <= 160 and GLOBAL_STATE == State.World:
+            GLOBAL_STATE = State.Battle
+            fight_view = PokemonGame(self.pkm_player, self.pkm_enemy)
+            fight_view.setup()
+            self.window.show_view(fight_view)
+
+        if 130 <= self.player.center_x <= 140 and GLOBAL_STATE == State.World:
+            GLOBAL_STATE = State.Gym
+            gym_view = Gym(self.pkm_player, self.pkm_enemy)
+            gym_view.setup()
+            self.window.show_view(gym_view)
+
+
+class Gym(arcade.View):
+    """ Main application class. """
+
+    # def __init__(self, width, height, title):
+    def __init__(self, player, enemy):
+        """ Set up the game and initialize the variables. """
+        # super().__init__(width, height, title)
+        super().__init__()
+        self.pkm_player = player
+        self.pkm_enemy = enemy
+
+        # Sprite lists
+        self.physics_engine = None
+        self.player_list = None
+
+        # Set up bounds on map
+        self.wall_list = None
+
+        # Set up the player
+        self.player = None
+
+        # Set up map image as background
+        self.background = None
+
+    def setup(self):
+        self.player_list = arcade.SpriteList()
+        self.wall_list = arcade.SpriteList()
+        # Set up the player
+        self.player = PlayerCharacter()
+
+        self.player.center_x = 400
+        self.player.center_y = 100
+        self.player.scale = 0.8
+
+        self.player_list.append(self.player)
+
+        # -- Set up the walls
+        # Create a row of boxes
+
+        self.physics_engine = arcade.PhysicsEngineSimple(self.player, self.wall_list)
+
+        # Set the background color
+
+        arcade.set_background_color(arcade.color.AMAZON)
+        self.background = arcade.load_texture("images/poke-gym.png")
+
+    def on_draw(self):
+        """
+        Render the screen.
+        """
+
+        # This command has to happen before we start drawing
+        self.clear()
+
+        # Draw all the sprites.
+
+        arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
+        #self.wall_list.draw()
+        self.player_list.draw()
+
+    def on_key_press(self, key, modifiers):
+        """
+        Called whenever a key is pressed.
+        """
+        if key == arcade.key.UP:
+            self.player.change_y = MAP_MOVEMENT_SPEED
+        elif key == arcade.key.DOWN:
+            self.player.change_y = -MAP_MOVEMENT_SPEED
+        elif key == arcade.key.LEFT:
+            self.player.change_x = -MAP_MOVEMENT_SPEED
+        elif key == arcade.key.RIGHT:
+            self.player.change_x = MAP_MOVEMENT_SPEED
+
+    def on_key_release(self, key, modifiers):
+        """
+        Called when the user releases a key.
+        """
+        if key == arcade.key.UP or key == arcade.key.DOWN:
+            self.player.change_y = 0
+        elif key == arcade.key.LEFT or key == arcade.key.RIGHT:
+            self.player.change_x = 0
+
+    def on_update(self, delta_time):
+        """ Movement and game logic """
+
+        # Move the player
+        self.player_list.update()
+
+        # Update the players animation
+
+        self.player_list.update_animation()
+        self.physics_engine.update()
+
+        # TEMPORARY SOLUTION TO START FIGHT
+        global GLOBAL_STATE
         if(self.player.center_x >= 130 and self.player.center_x <= 140 and GLOBAL_STATE == State.World):
             GLOBAL_STATE = State.Battle
             fight_view = PokemonGame(self.pkm_player, self.pkm_enemy)
             fight_view.setup()
             self.window.show_view(fight_view)
+
 
 # This PokemonSwap view class gives the fighter a chance to switch between all of the pokemon in their party during the fight.
 class PokemonSwap(arcade.View):

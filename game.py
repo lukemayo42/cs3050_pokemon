@@ -1,3 +1,5 @@
+### NO LONGER USED (game runs through main.py)
+
 import arcade
 from arcade import load_texture
 import arcade.gui

@@ -13,7 +13,8 @@ class State(Enum):
     Item = 10
     Stat = 11
     Rules = 12
-    End = 13
+    Gym = 13
+    End = 14
 
 # GameState object to store information about the current state of the game
 class GameState:

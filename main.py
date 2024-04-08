@@ -5,7 +5,7 @@ import pokemon_objects
 import item_objects
 
 from views.start import PokemonStart
-from views.world import WorldMap
+from views.world import WorldMap, Gym
 from views.fight_view import PokemonGame
 from views.move_view import PokemonMove
 from views.swap_view import PokemonSwap
@@ -46,6 +46,10 @@ class Pokemon(arcade.Window):
             map_view = WorldMap(self.player, self.enemy, self.state)
             map_view.setup()
             self.show_view(map_view)
+        if(check_render(self.state, State.Gym)):
+            gym_view = Gym(self.player, self.enemy, self.state)
+            gym_view.setup()
+            self.show_view(gym_view)
         if(check_render(self.state, State.Battle)):
             print("battle")
             self.state.set_rendered(True)

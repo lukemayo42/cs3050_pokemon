@@ -71,7 +71,6 @@ psybeam = move("Psybeam", "psychic", 65, 100, "Psychic", True)
 butterfree = create_pokemon("Butterfree", df, [bug_buzz, psybeam, aerial_ace, venoshock])
 enemy_butterfree = pokemon(butterfree)
 
-
 #create slowbro
 surf = move("Surf", "water", 90, 100, "Water", True)
 headbutt = move("Headbutt", "normal", 70, 100, "Normal", True)
@@ -107,7 +106,6 @@ enemy_scyther = pokemon(scyther)
 #create mr.mime
 mr_mime = create_pokemon("Mr. Mime", df, [psychic, thunder, aerial_ace, psybeam])
 enemy_mr_mime = pokemon(mr_mime)
-
 
 #create wooper
 ice_beam = move("Ice Beam", "ice", 90, 100, "Ice", True)

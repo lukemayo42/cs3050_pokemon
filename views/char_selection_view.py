@@ -51,8 +51,8 @@ class PlayerSelectView(arcade.View):
         self.character_sprites.append(arcade.Sprite(":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png", scale=2, center_x=SCREEN_WIDTH * 3 / 4, center_y=SCREEN_HEIGHT / 4 * 2 + 40))
 
         # Load and play background music
-        self.background_music = arcade.load_sound(":resources:music/funkyrobot.mp3")
-        self.background_music_player = None
+        # self.background_music = arcade.load_sound(":resources:music/funkyrobot.mp3")
+        # self.background_music_player = None
 
         # Create buttons below players
         for i in range(2):
@@ -62,18 +62,21 @@ class PlayerSelectView(arcade.View):
     def on_show(self):
         # Set background color and start background music
         arcade.set_background_color(arcade.color.LIGHT_BLUE)
-        if self.background_music_player is None:
-            self.background_music_player = arcade.play_sound(self.background_music, volume=0.5)
+        # if self.background_music_player is None:
+        #     self.background_music_player = arcade.play_sound(self.background_music, volume=0.5)
 
     def on_draw(self):
         # Draw everything on the screen
         arcade.start_render()
-
+        arcade.draw_lrwh_rectangle_textured(0, 0,
+                                        SCREEN_WIDTH, SCREEN_HEIGHT,
+                                        arcade.load_texture("../cs3050_pokemon/images/screen_background.png"))
         # Draw title text
         arcade.draw_text("Select Your Player", SCREEN_WIDTH / 2, SCREEN_HEIGHT - 50, arcade.color.WHITE, font_size=30, anchor_x="center")
 
         # Draw character sprites
         self.character_sprites.draw()
+
 
         # Draw buttons
         for button in self.buttons:
@@ -110,7 +113,7 @@ class PlayerSelectView(arcade.View):
                     self.state.set_state(State.Party)
                     self.state.set_rendered(False)
 
-                if self.background_music_player is not None:
-                    arcade.stop_sound(self.background_music_player)
+                # if self.background_music_player is not None:
+                #     arcade.stop_sound(self.background_music_player)
                 break
             btn.is_pressed = False

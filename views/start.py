@@ -43,8 +43,8 @@ class PokemonStart(arcade.View):
 
         # Create start button
         self.v_box = arcade.gui.UIBoxLayout()
-        # start_button = arcade.gui.UIFlatButton(text="Start", width=BUTTON_WIDTH * 2, style=start_style)
         start_button = arcade.gui.UIFlatButton(text="Start", width=BUTTON_WIDTH * 2, style=start_style)
+        # start_button = CustomButton(text="Start", width=BUTTON_WIDTH * 2, style=start_style, id=1)
         self.v_box.add(start_button.with_space_around(bottom=20))
 
         # Assign self.items_button as a callback to render item bag

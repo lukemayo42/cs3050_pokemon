@@ -17,6 +17,7 @@ class State(Enum):
     End = 14
     Party = 15
     PartyStat = 16
+    CharacterSelect = 17
 
 # GameState object to store information about the current state of the game
 class GameState:

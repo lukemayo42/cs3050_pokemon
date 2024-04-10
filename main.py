@@ -29,7 +29,9 @@ class Pokemon(arcade.Window):
         self.state = state
         self.player = player
         self.enemy = enemy
-        self.pokemon_bag_user = [pokemon_objects.pikachu, pokemon_objects.charizard, pokemon_objects.bulbasaur, pokemon_objects.pidgeotto, pokemon_objects.gengar, pokemon_objects.butterfree, pokemon_objects.slowbro, pokemon_objects.lucario]
+        self.pokemon_bag_user = [pokemon_objects.pikachu, pokemon_objects.charizard, pokemon_objects.bulbasaur, 
+                                 pokemon_objects.pidgeotto, pokemon_objects.gengar, pokemon_objects.butterfree, 
+                                 pokemon_objects.slowbro, pokemon_objects.lucario, pokemon_objects.wooper]
 
 
         # Background image will be stored in this variable
@@ -49,7 +51,7 @@ class Pokemon(arcade.Window):
             self.state.set_rendered(True)
             character_view = PlayerSelectView(self.state)
             self.show_view(character_view)
-        if(check_render(self.state, State.Party)):
+        if(check_render(self.state, State.Party) or check_render(self.state, State.Party2)):
             print("choose party")
             self.state.set_rendered(True)
             choose_view = PokemonParty(self.player, self.enemy, self.pokemon_bag_user, self.state)
@@ -90,6 +92,12 @@ class Pokemon(arcade.Window):
             stat_view.setup()
             self.show_view(stat_view)
         if(check_render(self.state, State.PartyStat)):
+            print("stats")
+            self.state.set_rendered(True)
+            stat_view = PokemonStats(self.player, self.enemy, self.pokemon_bag_user[self.state.get_user_choice()], self.state)
+            stat_view.setup()
+            self.show_view(stat_view)
+        if(check_render(self.state, State.PartyStat2)):
             print("stats")
             self.state.set_rendered(True)
             stat_view = PokemonStats(self.player, self.enemy, self.pokemon_bag_user[self.state.get_user_choice()], self.state)

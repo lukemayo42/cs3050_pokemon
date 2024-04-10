@@ -113,6 +113,10 @@ class PokemonStats(arcade.View):
             print("returning to party screen")
             self.state.set_state(State.Party)
             self.state.set_rendered(False)
+        elif(self.state.get_state().value == State.PartyStat2.value):
+            print("returning to party screen")
+            self.state.set_state(State.Party2)
+            self.state.set_rendered(False)
 
     def on_draw(self):
         # Clear the screen

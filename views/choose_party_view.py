@@ -57,6 +57,14 @@ class PokemonParty(arcade.View):
         # Assign self.items_button as a callback to render item bag
         back_button.on_click = self.back_button_action
 
+        # Create "next page" button
+        self.v_box_2 = arcade.gui.UIBoxLayout()
+        next_page_button = arcade.gui.UIFlatButton(text="Next page", width=BUTTON_WIDTH * .75, style=button_style)
+        self.v_box_2.add(next_page_button.with_space_around(bottom=20))
+
+        # Assign self.items_button as a callback to render item bag
+        next_page_button.on_click = self.next_page_action
+
         self.manager = UIManager()
         self.manager.enable()
         # Create a widget to hold the v_box widget, that will center the buttons
@@ -66,6 +74,13 @@ class PokemonParty(arcade.View):
                 anchor_y="center_y",
                 child=self.v_box)
         )
+        if(self.state.get_state().value != State.Party2.value):
+            self.manager.add(
+                arcade.gui.UIAnchorWidget(align_x=SCREEN_WIDTH / 3, align_y= -SCREEN_HEIGHT / 2.5,
+                    anchor_x="center_x",
+                    anchor_y="center_y",
+                    child=self.v_box_2)
+            )
         # Add name/stats for pokemon
         self.header_text = arcade.create_text_sprite (
             start_x=SCREEN_WIDTH / 4,
@@ -75,18 +90,39 @@ class PokemonParty(arcade.View):
         )
     def setup(self):
         self.background_sky = arcade.load_texture("../cs3050_pokemon/images/screen_background.png")
-        for i in range(0, len(self.pokemon_list)):
+        start = 0
+        end = 0
+        if(self.state.get_state().value == State.Party.value):
+            if(len(self.pokemon_list) >= PAGE_SIZE):
+                end = PAGE_SIZE
+            else:
+                end = len(self.pokemon_list)
+        elif(self.state.get_state().value == State.Party2.value):
+            start = PAGE_SIZE
+            if(len(self.pokemon_list) >= PAGE_SIZE * 2):
+                end = 2 * PAGE_SIZE
+            else:
+                end = len(self.pokemon_list)
+        for i in range(start, end):
             sprite = Sprite("../cs3050_pokemon/sprites/" + self.pokemon_list[i].get_name().lower() + "-front.png")
             sprite.scale = SCREEN_HEIGHT / (sprite.height * 5)
             
             # TODO: Have both x and y be based on i so it goes across the page
             # Even i will be top row, odd will be bottom row
-            if(i % 2 == 0):
-                sprite.center_x = (SCREEN_WIDTH / 8) + (i * (SCREEN_WIDTH / 8))
-                sprite.center_y = TOP_ROW
+            if(self.state.get_state().value == State.Party.value):
+                if(i % 2 == 0):
+                    sprite.center_x = (SCREEN_WIDTH / 8) + (i * (SCREEN_WIDTH / 8))
+                    sprite.center_y = TOP_ROW
+                else:
+                    sprite.center_x = (i * (SCREEN_WIDTH / 8))
+                    sprite.center_y = BOTTOM_ROW
             else:
-                sprite.center_x = (i * (SCREEN_WIDTH / 8))
-                sprite.center_y = BOTTOM_ROW
+                if(i % 2 == 0):
+                    sprite.center_x = (SCREEN_WIDTH / 8) + ((i - 8) * (SCREEN_WIDTH / 8))
+                    sprite.center_y = TOP_ROW
+                else:
+                    sprite.center_x = ((i - 8) * (SCREEN_WIDTH / 8))
+                    sprite.center_y = BOTTOM_ROW
             # sprite.center_x = SCREEN_HEIGHT
             # sprite.center_y = i * SCREEN_WIDTH / 3.2
             self.sprite_list.append(sprite)
@@ -198,6 +234,14 @@ class PokemonParty(arcade.View):
             print("returning to start screen")
             self.state.set_state(State.Start)
             self.state.set_rendered(False)
+        elif(self.state.get_state().value == State.Party2.value):
+            self.state.set_state(State.Party)
+            self.state.set_rendered(False)
+    def next_page_action(self, event):
+        if(self.state.get_state().value == State.Party.value):
+            self.state.set_state(State.Party2)
+            self.state.set_rendered(False)
+
 
     def generate_stats_view_1(self, event):
         self.index = 0
@@ -337,12 +381,22 @@ class PokemonParty(arcade.View):
             print("going to stats screen")
             self.state.set_state(State.PartyStat)
             self.state.set_rendered(False)
+        if(self.state.get_state().value == State.Party2.value):
+            print("going to stats screen")
+            self.state.set_state(State.PartyStat2)
+            self.state.set_rendered(False)
     def add_pokemon(self, index):
         if(self.state.get_state().value == State.Party.value):
             pokemon = self.pokemon_list[self.index]
             self.player.add_pokemon(pokemon)
             self.state.set_state(State.Party)
             self.state.set_rendered(False)
+        elif(self.state.get_state().value == State.Party2.value):
+            pokemon = self.pokemon_list[self.index]
+            self.player.add_pokemon(pokemon)
+            self.state.set_state(State.Party2)
+            self.state.set_rendered(False)
+
 
     def on_draw(self):
             # Clear the screen

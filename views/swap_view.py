@@ -10,6 +10,8 @@ from state import State
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 FONT_SIZE = 20
+TOP_ROW = 2 * SCREEN_HEIGHT / 3 + (SCREEN_HEIGHT / 8)
+BOTTOM_ROW = SCREEN_HEIGHT / 3 + (SCREEN_HEIGHT / 8)
 
 SPRITE_SCALING = 3.5
 OPPONENT_SPRITE_SCALING = 3
@@ -102,7 +104,10 @@ class PokemonSwap(arcade.View):
                 sprite.scale = SCREEN_HEIGHT / (self.player_sprite.height * 1.2)
 
                 sprite.center_x = SCREEN_HEIGHT
-                sprite.center_y = i * SCREEN_WIDTH / 3.2
+                if( i == 1):
+                    sprite.center_y = 2 * SCREEN_WIDTH / 3.2
+                else:
+                    sprite.center_y = SCREEN_WIDTH / 3.2
                 self.player_list.append(sprite)
 
                 # Add the pokemon name to the list of sprites to render
@@ -116,10 +121,11 @@ class PokemonSwap(arcade.View):
                 name.center_y = sprite.bottom - SCREEN_HEIGHT / 30
 
                 self.player_list.append(name)
-                if(self.pokemon_list[i].get_is_fainted()):
-                    self.create_pokemon_buttons(SCREEN_HEIGHT, sprite.bottom - SCREEN_HEIGHT/ 30, i == 1, True)
-                else:   
-                    self.create_pokemon_buttons(SCREEN_HEIGHT, sprite.bottom - SCREEN_HEIGHT/ 30, i == 1, False)
+                if(i == 1):
+                    self.create_pokemon_buttons(SCREEN_HEIGHT, .85 * TOP_ROW, True, self.pokemon_list[i].get_is_fainted())
+                else:
+                    self.create_pokemon_buttons(SCREEN_HEIGHT,  BOTTOM_ROW / 2, False, self.pokemon_list[i].get_is_fainted())                    
+            
         print("here is your pokemon party")
 
     def back_button_action(self, event):
@@ -143,8 +149,14 @@ class PokemonSwap(arcade.View):
                 self.button_box_1.add(swap_button.with_space_around(left=20))
                 swap_button.on_click = self.swap_action_1
             # Create widgets to hold the button_box_1 widgets, that will center the buttons
+            # self.manager.add(
+            #     arcade.gui.UIAnchorWidget(align_x=pos_x / 3, align_y=pos_y,
+            #         anchor_x="center_x",
+            #         anchor_y="center_y",
+            #         child=self.button_box_1)
+            # )
             self.manager.add(
-                arcade.gui.UIAnchorWidget(align_x=pos_x / 3, align_y=V_BOX_Y,
+                arcade.gui.UIAnchorWidget(align_x=pos_x / 3, align_y=(pos_y - (SCREEN_HEIGHT / 20)) - SCREEN_HEIGHT / 2,
                     anchor_x="center_x",
                     anchor_y="center_y",
                     child=self.button_box_1)
@@ -163,7 +175,7 @@ class PokemonSwap(arcade.View):
 
             # Create widgets to hold the button_box_2 widgets, that will center the buttons
             self.manager.add(
-                arcade.gui.UIAnchorWidget(align_x=pos_x / 3, align_y= SCREEN_HEIGHT / 9,
+                arcade.gui.UIAnchorWidget(align_x=pos_x / 3, align_y=(pos_y - (SCREEN_HEIGHT / 20)) - SCREEN_HEIGHT / 2,
                     anchor_x="center_x",
                     anchor_y="center_y",
                     child=self.button_box_2)

@@ -11,6 +11,7 @@ from views.move_view import PokemonMove
 from views.swap_view import PokemonSwap
 from views.stat_view import PokemonStats
 from views.items_view import PokemonItem
+from views.choose_party_view import PokemonParty
 import state
 from state import State
 
@@ -27,19 +28,27 @@ class Pokemon(arcade.Window):
         self.state = state
         self.player = player
         self.enemy = enemy
+        self.pokemon_bag_user = [pokemon_objects.pikachu, pokemon_objects.charizard, pokemon_objects.bulbasaur, pokemon_objects.pidgeotto, pokemon_objects.gengar, pokemon_objects.butterfree, pokemon_objects.slowbro, pokemon_objects.lucario]
+
 
         # Background image will be stored in this variable
         self.background = None
 
     # Check states set by individual views and update rendering
     def on_update(self, delta_time):
-        print(self.state.get_state())
+        # print(self.state.get_state())
         if(check_render(self.state, State.Start)):
             print("rendering")
             self.state.set_rendered(True)
             start_view = PokemonStart(self.player, self.enemy, self.state)
             self.show_view(start_view)
             start_view.setup()
+        if(check_render(self.state, State.Party)):
+            print("choose party")
+            self.state.set_rendered(True)
+            choose_view = PokemonParty(self.player, self.enemy, self.pokemon_bag_user, self.state)
+            self.show_view(choose_view)
+            choose_view.setup()
         if(check_render(self.state, State.World)):
             print("entering the world")
             self.state.set_rendered(True)
@@ -74,6 +83,12 @@ class Pokemon(arcade.Window):
             stat_view = PokemonStats(self.player, self.enemy, self.player.get_pokemon_list()[self.state.get_user_choice()], self.state)
             stat_view.setup()
             self.show_view(stat_view)
+        if(check_render(self.state, State.PartyStat)):
+            print("stats")
+            self.state.set_rendered(True)
+            stat_view = PokemonStats(self.player, self.enemy, self.pokemon_bag_user[self.state.get_user_choice()], self.state)
+            stat_view.setup()
+            self.show_view(stat_view)
         if(check_render(self.state, State.Item)):
             print("items")
             self.state.set_rendered(True)
@@ -90,6 +105,7 @@ class Pokemon(arcade.Window):
         if(check_render(self.state, State.Loss)):
             print("loss")
             # TODO: Change this screen to include logic for losing
+            # TODO: Call the heal all pokemon
             self.state.set_rendered(True)
             start_view = PokemonStart(self.player, self.enemy, self.state)
             self.show_view(start_view)
@@ -109,13 +125,14 @@ def main():
     pokemon_bag_user = [pokemon_objects.pikachu, pokemon_objects.charizard, pokemon_objects.bulbasaur]
     user_item_bag = {item_objects.potion: 1, item_objects.super_potion: 1, item_objects.hyper_potion: 1,
                         item_objects.max_potion: 1}
+    pokemon_bag_user_2 = []
     
 
     pokemon_bag_enemy = [pokemon_objects.enemy_charizard, pokemon_objects.enemy_gengar, pokemon_objects.enemy_pidgeotto]
     enemy_item_bag = {item_objects.potion: 1, item_objects.super_potion: 1, item_objects.hyper_potion: 1,
                       item_objects.max_potion: 1}
 
-    user_trainer = Character("Ash", pokemon_bag_user, user_item_bag, 1000,
+    user_trainer = Character("Ash", pokemon_bag_user_2, user_item_bag, 1000,
                               "I'm on a journey to become a Pokemon Master!")
     enemy_trainer = Character("Misty", pokemon_bag_enemy, enemy_item_bag, 800, "Water types are the best!")
 

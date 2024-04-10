@@ -124,24 +124,24 @@ enemy_noctowl = pokemon(noctowl)
 
 #create Dragonite
 dragon_rush = move("Dragon Rush", "dragon", 100, 75, "Dragon", True)
-dragonite = create_pokemon("Dragonite", df, dragon_rush, aerial_ace, thunderbolt, hurricane)
+dragonite = create_pokemon("Dragonite", df, [dragon_rush, aerial_ace, thunderbolt, hurricane])
 enemy_dragonite = pokemon(dragonite)
 
 #create gligar
-gligar = create_pokemon("Gligar", df, earthquake, x_scissor, slash, aerial_ace)
+gligar = create_pokemon("Gligar", df, [earthquake, x_scissor, slash, aerial_ace])
 enemy_gligar = pokemon(gligar)
 
 #create farfetchd 
-farfetchd = create_pokemon("Farfetch'd", df, air_slash, slash, steel_wing, leaf_blade)
+farfetchd = create_pokemon("Farfetch'd", df, [ air_slash, slash, steel_wing, leaf_blade])
 enemy_farfetchd = pokemon(farfetchd)
 
 #create piloswine
 ancient_power = move("Ancient Power", "rock", 60, 100, "Rock", True)
-piloswine = create_pokemon("Piloswine", df, ancient_power, earthquake, ice_beam)
+piloswine = create_pokemon("Piloswine", df, [ancient_power, earthquake, ice_beam])
 enemy_piloswine = pokemon(piloswine)
 
 #create rattata
-rattata = create_pokemon("Rattata", df, ice_beam, thunderbolt, shadow_ball, sludge_bomb)
+rattata = create_pokemon("Rattata", df, [ice_beam, thunderbolt, shadow_ball, sludge_bomb])
 enemy_rattata = pokemon(rattata)
 
 #create enemy trainers
@@ -164,5 +164,3 @@ ace_trainer = Character("Ace Trainer Jane", [enemy_crobat, enemy_scyther, enemy_
 
 
 
-
-#TODO: Dragonite, Heracross, Piloswine, Farfetch'd, Gliscor, any other pokemon

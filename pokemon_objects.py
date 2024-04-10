@@ -1,6 +1,8 @@
 from move import move
 from pokemon import pokemon
 import pandas as pd
+from Character import Character
+import item_objects
 
 
 #function to read stats from pkm_csv and create pokemon object
@@ -112,11 +114,55 @@ ice_beam = move("Ice Beam", "ice", 90, 100, "Ice", True)
 earthquake = move("Earthquake", "ground", 100, 100, "Ground", True)
 sludge_bomb = move("Sludge Bomb", "posion", 90, 100, "Poison", True)
 wooper = create_pokemon("Wooper", df, [surf, ice_beam, earthquake, sludge_bomb])
+enemy_wooper = pokemon(wooper)
 
 #create noctowl
 extrasensory = move("Extrasensory", "psychic", 80, 100, "Psychic", True)
 swift = move("Swift", "normal", 60, 100, "Normal", True)
 noctowl = create_pokemon("Noctowl", df, [air_slash, swift, extrasensory, shadow_ball])
 enemy_noctowl = pokemon(noctowl)
+
+#create Dragonite
+dragon_rush = move("Dragon Rush", "dragon", 100, 75, "Dragon", True)
+dragonite = create_pokemon("Dragonite", df, dragon_rush, aerial_ace, thunderbolt, hurricane)
+enemy_dragonite = pokemon(dragonite)
+
+#create gligar
+gligar = create_pokemon("Gligar", df, earthquake, x_scissor, slash, aerial_ace)
+enemy_gligar = pokemon(gligar)
+
+#create farfetchd 
+farfetchd = create_pokemon("Farfetch'd", df, air_slash, slash, steel_wing, leaf_blade)
+enemy_farfetchd = pokemon(farfetchd)
+
+#create piloswine
+ancient_power = move("Ancient Power", "rock", 60, 100, "Rock", True)
+piloswine = create_pokemon("Piloswine", df, ancient_power, earthquake, ice_beam)
+enemy_piloswine = pokemon(piloswine)
+
+#create rattata
+rattata = create_pokemon("Rattata", df, ice_beam, thunderbolt, shadow_ball, sludge_bomb)
+enemy_rattata = pokemon(rattata)
+
+#create enemy trainers
+youngster_joey_item_bag = {item_objects.potion: 3, item_objects.super_potion: 0, item_objects.hyper_potion: 0,
+                      item_objects.max_potion: 0}
+youngster_joey = Character("Youngster Joey", [enemy_rattata, enemy_farfetchd, enemy_wooper], youngster_joey_item_bag, 0, "Let's Battle")
+
+gym_leader_item_bag = {item_objects.potion: 0, item_objects.super_potion: 0, item_objects.hyper_potion: 0,
+                      item_objects.max_potion: 3}
+gym_leader = Character("Gym Leader Red", [enemy_dragonite, enemy_charizard, enemy_shiftry], gym_leader_item_bag, 0, "Get Ready to lose!")
+
+team_rocket_item_bag = {item_objects.potion: 1, item_objects.super_potion: 1, item_objects.hyper_potion: 0,
+                      item_objects.max_potion: 0}
+team_rocket_member = Character("Team Rocket Grunt", [enemy_noctowl, enemy_crobat, enemy_gligar],  team_rocket_item_bag, 0, "I'm gonna steal your pokemon!")
+
+ace_trainer_item_bag = {item_objects.potion: 0, item_objects.super_potion: 1, item_objects.hyper_potion: 1,
+                      item_objects.max_potion: 1}
+ace_trainer = Character("Ace Trainer Jane", [enemy_crobat, enemy_scyther, enemy_mr_mime], ace_trainer_item_bag, 0 ,"No way I'll lose!")
+
+
+
+
 
 #TODO: Dragonite, Heracross, Piloswine, Farfetch'd, Gliscor, any other pokemon

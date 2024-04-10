@@ -70,6 +70,7 @@ class PokemonStats(arcade.View):
 
     def setup(self):
         # Create the sprite for the pokemon to be displayed
+        self.background_sky = arcade.load_texture("../cs3050_pokemon/images/screen_background.png")
         self.player_list = arcade.SpriteList()
         self.player_sprite = Sprite("../cs3050_pokemon/sprites/" + self.pokemon.get_name().lower() + "-front.png")
         self.player_sprite.scale = SCREEN_HEIGHT  / (self.player_sprite.height * 2)
@@ -114,10 +115,12 @@ class PokemonStats(arcade.View):
             self.state.set_rendered(False)
 
     def on_draw(self):
-            # Clear the screen
-            self.clear()
-        
-            # Draw all the sprites.
-            self.manager.draw()
-            self.player_list.draw()
+        # Clear the screen
+        self.clear()
+        arcade.draw_lrwh_rectangle_textured(0, 0,
+                                        SCREEN_WIDTH, SCREEN_HEIGHT,
+                                        self.background_sky)
+        # Draw all the sprites.
+        self.manager.draw()
+        self.player_list.draw()
 

@@ -5,6 +5,7 @@ from arcade.gui import UIManager
 from arcade.gui.widgets import UITextArea, UITexturePane
 from state import State
 from views.button import CustomButton
+from views.health import Sprite
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
@@ -68,7 +69,13 @@ class PokemonStart(arcade.View):
         )
 
     def setup(self):
-        self.background = arcade.load_texture("../cs3050_pokemon/images/start.png")
+        self.player_list = arcade.SpriteList()
+        self.player_sprite = Sprite("../cs3050_pokemon/images/start.png")
+        self.player_sprite.scale = SCREEN_HEIGHT  / (self.player_sprite.height * 3)
+        self.player_sprite.center_x = SCREEN_WIDTH / 2
+        self.player_sprite.center_y = 3 * SCREEN_HEIGHT / 4
+        self.player_list.append(self.player_sprite)
+        self.background_sky = arcade.load_texture("../cs3050_pokemon/images/screen_background.png")
 
     def start_button_action(self, event):
         #TODO: switch screen to choosing pokemon party
@@ -81,13 +88,9 @@ class PokemonStart(arcade.View):
         # global GLOBAL_STATE
         if(self.state.get_state().value == State.Start.value):
             # self.state = State.World
-            self.state.set_state(State.Party)
+            self.state.set_state(State.CharacterSelect)
             self.state.set_rendered(False)
-        # if(GLOBAL_STATE == State.Start):
-            # GLOBAL_STATE = State.World
-            # map_view = WorldMap(self.player, self.enemy)
-            # map_view.setup()
-            # self.window.show_view(map_view)
+        
 
     def rules_button_action(self, event):
         # TODO: Render a list of rules/how to play
@@ -104,11 +107,13 @@ class PokemonStart(arcade.View):
             # Clear the screen
             self.clear()
             # Draw the background texture
-            arcade.draw_lrwh_rectangle_textured(0, 150,
+            arcade.draw_lrwh_rectangle_textured(0, 0,
                                                 SCREEN_WIDTH, SCREEN_HEIGHT,
-                                                self.background)
+                                                self.background_sky)
+            
             # Draw all the sprites.
             self.manager.draw()
+            self.player_list.draw()
 
 # This PokemonRules view class displays a scrollable textbox with the information on how to play the game.
 # It has a button to return to the start screen that renders the PokemonStart view.
@@ -164,6 +169,7 @@ class PokemonRules(arcade.View):
 
     def setup(self):
         # TODO: create any sprites needed for rules page
+        self.background_sky = arcade.load_texture("../cs3050_pokemon/images/screen_background.png")
         print("setting up rules")
 
     def back_button_action(self, event):
@@ -178,8 +184,10 @@ class PokemonRules(arcade.View):
 
 
     def on_draw(self):
-            # Clear the screen
-            self.clear()
-        
-            # Draw all the sprites.
-            self.manager.draw()
+        # Clear the screen
+        self.clear()
+        arcade.draw_lrwh_rectangle_textured(0, 0,
+                                            SCREEN_WIDTH, SCREEN_HEIGHT,
+                                            self.background_sky)
+        # Draw all the sprites.
+        self.manager.draw()

@@ -46,6 +46,9 @@ class Pokemon(arcade.Window):
         if(check_render(self.state, State.CharacterSelect)):
             print("choosing character")
             self.state.set_rendered(True)
+            character_view = PlayerSelectView(self.state)
+            self.show_view(character_view)
+            character_view.setup()
         if(check_render(self.state, State.Party)):
             print("choose party")
             self.state.set_rendered(True)

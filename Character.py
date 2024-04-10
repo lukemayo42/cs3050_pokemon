@@ -114,3 +114,10 @@ class Character:
             if not pkm.get_is_fainted():
                 valid = True
         return valid
+    
+    #heals all pokemon in the characters party and resets is_fainted back to false
+    def heal_all_pkm(self):
+        for pkm in self.pokemon_list:
+            pkm.set_is_fainted(False)
+            pkm.set_curr_hlth(pkm.get_max_hlth)
+        

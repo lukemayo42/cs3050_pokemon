@@ -12,6 +12,7 @@ from views.swap_view import PokemonSwap
 from views.stat_view import PokemonStats
 from views.items_view import PokemonItem
 from views.choose_party_view import PokemonParty
+from views.end_battle import LoseBattle
 import state
 from state import State
 
@@ -110,7 +111,7 @@ class Pokemon(arcade.Window):
             # TODO: Change this screen to include logic for losing
             # TODO: Call the heal all pokemon
             self.state.set_rendered(True)
-            start_view = PokemonStart(self.player, self.enemy, self.state)
+            start_view = LoseBattle(self.player, self.enemy, self.state)
             self.show_view(start_view)
             start_view.setup()
 

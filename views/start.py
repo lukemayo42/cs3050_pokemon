@@ -4,6 +4,7 @@ import arcade.gui
 from arcade.gui import UIManager
 from arcade.gui.widgets import UITextArea, UITexturePane
 from state import State
+from views.button import CustomButton
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
@@ -42,11 +43,13 @@ class PokemonStart(arcade.View):
 
         # Create start button
         self.v_box = arcade.gui.UIBoxLayout()
+        # start_button = arcade.gui.UIFlatButton(text="Start", width=BUTTON_WIDTH * 2, style=start_style)
         start_button = arcade.gui.UIFlatButton(text="Start", width=BUTTON_WIDTH * 2, style=start_style)
         self.v_box.add(start_button.with_space_around(bottom=20))
 
         # Assign self.items_button as a callback to render item bag
         start_button.on_click = self.start_button_action
+        self.start_button = start_button
 
         # Create rules button
         rules_button = arcade.gui.UIFlatButton(text="Rules", width=BUTTON_WIDTH * 2, style=start_style)
@@ -78,7 +81,7 @@ class PokemonStart(arcade.View):
         # global GLOBAL_STATE
         if(self.state.get_state().value == State.Start.value):
             # self.state = State.World
-            self.state.set_state(State.World)
+            self.state.set_state(State.Party)
             self.state.set_rendered(False)
         # if(GLOBAL_STATE == State.Start):
             # GLOBAL_STATE = State.World

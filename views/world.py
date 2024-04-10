@@ -6,23 +6,13 @@ SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 MAP_CHARACTER_SCALING = 0.5
 
-
 # How fast to move, and how fast to run the animation
-
 MAP_MOVEMENT_SPEED = 1.5
-
 MAP_UPDATES_PER_FRAME = 5
 
-
-
 # Constants used to track if the player is facing left or right
-
 MAP_RIGHT_FACING = 0
-
 MAP_LEFT_FACING = 1
-
-
-
 
 def load_texture_pair(filename):
 
@@ -367,9 +357,9 @@ class WorldMap(arcade.View):
             self.state.set_state(State.Battle)
             self.state.set_rendered(False) 
 
-        if 130 <= self.player.center_x <= 140 and self.state.get_state().value == State.World.value:
-            self.state.set_state(State.Gym)
-            self.state.set_rendered(False)
+        # if 130 <= self.player.center_x <= 140 and self.state.get_state().value == State.World.value:
+        #     self.state.set_state(State.Gym)
+        #     self.state.set_rendered(False)
 
 class Gym(arcade.View):
     """ Main application class. """

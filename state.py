@@ -15,6 +15,8 @@ class State(Enum):
     Rules = 12
     Gym = 13
     End = 14
+    Party = 15
+    PartyStat = 16
 
 # GameState object to store information about the current state of the game
 class GameState:

@@ -65,6 +65,7 @@ class PokemonItem(arcade.View):
 
     def setup(self):
         # Create sprites for each of the items
+        self.background_sky = arcade.load_texture("../cs3050_pokemon/images/screen_background.png")
         self.button_box_1 = arcade.gui.UIBoxLayout(vertical=False)
 
         self.player_list = arcade.SpriteList()
@@ -213,9 +214,11 @@ class PokemonItem(arcade.View):
 
 
     def on_draw(self):
-            # Clear the screen
-            self.clear()
-
-            # Draw all the sprites.
-            self.manager.draw()
-            self.player_list.draw()
+        # Clear the screen
+        self.clear()
+        arcade.draw_lrwh_rectangle_textured(0, 0,
+                                                        SCREEN_WIDTH, SCREEN_HEIGHT,
+                                                        self.background_sky)
+        # Draw all the sprites.
+        self.manager.draw()
+        self.player_list.draw()

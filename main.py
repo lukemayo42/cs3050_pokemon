@@ -13,6 +13,7 @@ from views.stat_view import PokemonStats
 from views.items_view import PokemonItem
 from views.choose_party_view import PokemonParty
 from views.end_battle import LoseBattle
+from views.char_selection_view import PlayerSelectView
 import state
 from state import State
 
@@ -47,6 +48,8 @@ class Pokemon(arcade.Window):
         if(check_render(self.state, State.CharacterSelect)):
             print("choosing character")
             self.state.set_rendered(True)
+            character_view = PlayerSelectView(self.state)
+            self.show_view(character_view)
         if(check_render(self.state, State.Party)):
             print("choose party")
             self.state.set_rendered(True)

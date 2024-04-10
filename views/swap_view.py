@@ -85,6 +85,7 @@ class PokemonSwap(arcade.View):
 
     def setup(self):
         # Create sprites for swap page
+        self.background_sky = arcade.load_texture("../cs3050_pokemon/images/screen_background.png")
         self.player_list = arcade.SpriteList()
         self.player_sprite = Sprite("../cs3050_pokemon/sprites/" + self.player.get_curr_pkm().get_name().lower() + "-front.png", SPRITE_SCALING)
         self.player_sprite.center_x = SCREEN_WIDTH / 4
@@ -228,9 +229,11 @@ class PokemonSwap(arcade.View):
             self.state.set_rendered(False)
 
     def on_draw(self):
-            # Clear the screen
-            self.clear()
-    
-            # Draw all the sprites.
-            self.manager.draw()
-            self.player_list.draw()
+        # Clear the screen
+        self.clear()
+        arcade.draw_lrwh_rectangle_textured(0, 0,
+                                        SCREEN_WIDTH, SCREEN_HEIGHT,
+                                        self.background_sky)
+        # Draw all the sprites.
+        self.manager.draw()
+        self.player_list.draw()

@@ -74,22 +74,7 @@ class PokemonParty(arcade.View):
             text = "Choose your party!"
         )
     def setup(self):
-        # self.pokemon1_sprite = Sprite("../cs3050_pokemon/sprites/" + self.pokemon.get_name().lower() + "-front.png")
-        # self.pokemon1_sprite.scale = SCREEN_HEIGHT  / (self.pokemon1_sprite.height * 2)
-        # self.pokemon2_sprite = Sprite("../cs3050_pokemon/sprites/" + self.pokemon.get_name().lower() + "-front.png")
-        # self.pokemon2_sprite.scale = SCREEN_HEIGHT  / (self.pokemon2_sprite.height * 2)
-        # self.pokemon3_sprite = Sprite("../cs3050_pokemon/sprites/" + self.pokemon.get_name().lower() + "-front.png")
-        # self.pokemon3_sprite.scale = SCREEN_HEIGHT  / (self.pokemon3_sprite.height * 2)
-        # self.pokemon4_sprite = Sprite("../cs3050_pokemon/sprites/" + self.pokemon.get_name().lower() + "-front.png")
-        # self.pokemon4_sprite.scale = SCREEN_HEIGHT  / (self.pokemon4_sprite.height * 2)
-        # self.pokemon5_sprite = Sprite("../cs3050_pokemon/sprites/" + self.pokemon.get_name().lower() + "-front.png")
-        # self.pokemon5_sprite.scale = SCREEN_HEIGHT  / (self.pokemon5_sprite.height * 2)
-        # self.pokemon6_sprite = Sprite("../cs3050_pokemon/sprites/" + self.pokemon.get_name().lower() + "-front.png")
-        # self.pokemon6_sprite.scale = SCREEN_HEIGHT  / (self.pokemon6_sprite.height * 2)
-        # self.pokemon7_sprite = Sprite("../cs3050_pokemon/sprites/" + self.pokemon.get_name().lower() + "-front.png")
-        # self.pokemon7_sprite.scale = SCREEN_HEIGHT  / (self.pokemon7_sprite.height * 2)
-        # self.pokemon8_sprite = Sprite("../cs3050_pokemon/sprites/" + self.pokemon.get_name().lower() + "-front.png")
-        # self.pokemon8_sprite.scale = SCREEN_HEIGHT  / (self.pokemon8_sprite.height * 2)       
+        self.background_sky = arcade.load_texture("../cs3050_pokemon/images/screen_background.png")
         for i in range(0, len(self.pokemon_list)):
             sprite = Sprite("../cs3050_pokemon/sprites/" + self.pokemon_list[i].get_name().lower() + "-front.png")
             sprite.scale = SCREEN_HEIGHT / (sprite.height * 5)
@@ -362,6 +347,9 @@ class PokemonParty(arcade.View):
     def on_draw(self):
             # Clear the screen
             self.clear()
+            arcade.draw_lrwh_rectangle_textured(0, 0,
+                                                SCREEN_WIDTH, SCREEN_HEIGHT,
+                                                self.background_sky)
         
             # Draw all the sprites.
             self.manager.draw()

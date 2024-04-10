@@ -25,18 +25,23 @@ class GameState:
         self.state = state
         self.rendered = False
         self.user_choice = 0
+        self.character_sprite = ''
     def get_state(self):
         return self.state
     def get_rendered(self):
         return self.rendered
     def get_user_choice(self):
         return self.user_choice
+    def get_character_sprite(self):
+        return self.character_sprite
     def set_state(self, state):
         self.state = state
     def set_rendered(self, rendered):
         self.rendered = rendered
     def set_user_choice(self, user_choice):
         self.user_choice = user_choice
+    def set_character_sprite(self, character):
+        self.character_sprite = character
 
 # State object used in main
 game_state = GameState(State.Start)

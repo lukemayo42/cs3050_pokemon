@@ -1,4 +1,5 @@
 import arcade
+from state import State
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
@@ -35,8 +36,9 @@ class Button:
         return False
 
 class PlayerSelectView(arcade.View):
-    def __init__(self):
+    def __init__(self, state):
         super().__init__()
+        self.state = state
         self.selected_player = None
         self.buttons = []
         self.character_sprites = arcade.SpriteList()
@@ -98,39 +100,17 @@ class PlayerSelectView(arcade.View):
         for btn in self.buttons:
             if btn.is_pressed and btn.check_collision(x, y):
                 self.selected_player = btn.text
-                game_view = GameView(player=self.selected_player)
-                self.window.show_view(game_view)
+                if (self.selected_player == "Billy Bob"):
+                    self.state.set_character_sprite(":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png")
+                else:
+                    self.state.set_character_sprite(
+                        ":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png")
+
+                if (self.state.get_state().value == State.CharacterSelect.value):
+                    self.state.set_state(State.Party)
+                    self.state.set_rendered(False)
+
                 if self.background_music_player is not None:
                     arcade.stop_sound(self.background_music_player)
                 break
             btn.is_pressed = False
-
-class GameView(arcade.View):
-    def __init__(self, player):
-        super().__init__()
-        self.player = player
-
-        # Load and play game music
-        self.game_music = arcade.load_sound(":resources:music/1918.mp3")
-        self.game_music_player = None
-
-    def on_show(self):
-        # Set background color and start game music
-        arcade.set_background_color(arcade.color.BLACK)
-        if self.game_music_player is None:
-            self.game_music_player = arcade.play_sound(self.game_music, volume=0.5)
-
-    def on_draw(self):
-        # Draw everything on the screen
-        arcade.start_render()
-        arcade.draw_text(f"Game Screen for {self.player}", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, arcade.color.WHITE, font_size=30, anchor_x="center")
-
-def main():
-    # Set up the window and start the application
-    window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, "Player Select Screen")
-    player_select_view = PlayerSelectView()
-    window.show_view(player_select_view)
-    arcade.run()
-
-if __name__ == "__main__":
-    main()

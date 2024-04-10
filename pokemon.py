@@ -47,6 +47,9 @@ class pokemon:
             self.base_spd = args[0].get_base_spd()
             self.curr_spd = args[0].get_base_spd()
             self.is_fainted = False
+            self.atk_mod = 0
+            self.def_mod = 0
+            self.spd_mod = 0
         #regular contructor takes 7 arguments
         elif len(args) == 7:
             self.name = args[0]
@@ -61,6 +64,9 @@ class pokemon:
             self.base_spd = args[6]
             self.curr_spd = args[6]
             self.is_fainted = False
+            self.atk_mod = 0
+            self.def_mod = 0
+            self.spd_mod = 0
    
     '''
     def __init__(self, pkm):
@@ -115,6 +121,15 @@ class pokemon:
     def get_is_fainted(self):
         return self.is_fainted
     
+    def get_atk_mod(self):
+        return self.atk_mod
+    
+    def get_def_mod(self):
+        return self.def_mod
+
+    def get_spd_mod(self):
+        return self.spd_mod
+        
     #setters
     def set_curr_hlth(self, new_hlth):
         self.curr_hlth = new_hlth
@@ -131,9 +146,17 @@ class pokemon:
     def set_is_fainted(self, new_is_fainted):
         self.is_fainted = new_is_fainted
 
-
     def set_moves(self, moves):
         self.moves = moves
+
+    def set_atk_mod(self, mod):
+        self.atk_mod = mod
+
+    def set_def_mod(self, mod):
+        self.def_mod = mod
+
+    def set_spd_mod(self, mod):
+        self.spd_mod = mod
 
     
 

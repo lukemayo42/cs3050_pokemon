@@ -56,7 +56,7 @@ enemy_pikachu = pokemon(pikachu)
 
 #create Pidgeotto
 steel_wing = move("Steel Wing", "steel", 70, 90, "Steel", True)
-aerial_ace = move("Aerial_Ace", "This move never misses", 60, 100, "Flying", True)
+aerial_ace = move("Aerial Ace", "This move never misses", 60, 100, "Flying", True)
 hurricane = move("Hurricane", "flying", 110, 70, "Flying", True)
 pidgeotto = create_pokemon("Pidgeotto", df, [steel_wing, aerial_ace, quick_attack, hurricane])
 enemy_pidgeotto = pokemon(pidgeotto)
@@ -145,21 +145,15 @@ rattata = create_pokemon("Rattata", df, [ice_beam, thunderbolt, shadow_ball, slu
 enemy_rattata = pokemon(rattata)
 
 #create enemy trainers
-youngster_joey_item_bag = {item_objects.potion: 3, item_objects.super_potion: 0, item_objects.hyper_potion: 0,
-                      item_objects.max_potion: 0}
-youngster_joey = Character("Youngster Joey", [enemy_rattata, enemy_farfetchd, enemy_wooper], youngster_joey_item_bag, 0, "Let's Battle")
-
-gym_leader_item_bag = {item_objects.potion: 0, item_objects.super_potion: 0, item_objects.hyper_potion: 0,
-                      item_objects.max_potion: 3}
-gym_leader = Character("Gym Leader Red", [enemy_dragonite, enemy_charizard, enemy_shiftry], gym_leader_item_bag, 0, "Get Ready to lose!")
-
-team_rocket_item_bag = {item_objects.potion: 1, item_objects.super_potion: 1, item_objects.hyper_potion: 0,
-                      item_objects.max_potion: 0}
-team_rocket_member = Character("Team Rocket Grunt", [enemy_noctowl, enemy_crobat, enemy_gligar],  team_rocket_item_bag, 0, "I'm gonna steal your pokemon!")
-
-ace_trainer_item_bag = {item_objects.potion: 0, item_objects.super_potion: 1, item_objects.hyper_potion: 1,
+enemy_item_bag = {item_objects.potion: 1, item_objects.super_potion: 1, item_objects.hyper_potion: 1,
                       item_objects.max_potion: 1}
-ace_trainer = Character("Ace Trainer Jane", [enemy_crobat, enemy_scyther, enemy_mr_mime], ace_trainer_item_bag, 0 ,"No way I'll lose!")
+youngster_joey = Character("Youngster Joey", [enemy_rattata, enemy_farfetchd, enemy_wooper], enemy_item_bag, 0, "Let's Battle")
+
+gym_leader = Character("Gym Leader Red", [enemy_dragonite, enemy_charizard, enemy_shiftry], enemy_item_bag, 0, "Get Ready to lose!")
+
+team_rocket_member = Character("Team Rocket Grunt", [enemy_noctowl, enemy_crobat, enemy_gligar],  enemy_item_bag, 0, "I'm gonna steal your pokemon!")
+
+ace_trainer = Character("Ace Trainer Jane", [enemy_crobat, enemy_scyther, enemy_mr_mime], enemy_item_bag, 0 ,"No way I'll lose!")
 
 
 

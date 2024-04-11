@@ -1,4 +1,4 @@
-import arcade
+import item_objects
 class Character:
     """
     Constructor for character class
@@ -62,11 +62,17 @@ class Character:
     def add_pokemon(self, pokemon):
         self.pokemon_list.append(pokemon)
 
-    # Function adds a pokemon to the players pokemon list
+    # Function removes a pokemon to the players pokemon list
     def remove_pokemon(self, pokemon):
         for i in range(len(self.pokemon_list)):
             if self.pokemon_list[i] == pokemon:
                 self.pokemon_list.remove(i)
+
+    #removes all pokemon from characters party
+    def remove_all_pokemon(self):
+        self.pokemon_list = []
+
+
 
     # Function that allows user to reorder the list of pokemon they have
     def swap_pokemon(self, pokemon1_index, pokemon2_index):
@@ -115,9 +121,13 @@ class Character:
                 valid = True
         return valid
     
-    #heals all pokemon in the characters party and resets is_fainted back to false
-    def heal_all_pkm(self):
+    #heals all pokemon in the characters party and resets is_fainted back to false, and resets items 
+    def reset(self):
         for pkm in self.pokemon_list:
             pkm.set_is_fainted(False)
-            pkm.set_curr_hlth(pkm.get_max_hlth)
+            pkm.set_curr_hlth(pkm.get_max_hlth())
+        self.items = {item_objects.potion: 1, item_objects.super_potion: 1, item_objects.hyper_potion: 1,
+                      item_objects.max_potion: 1}
+
+    
         

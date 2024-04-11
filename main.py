@@ -1,7 +1,7 @@
 import arcade
 import arcade.gui
 from Character import Character
-import pokemon_objects
+import pokemon_objects as pkm_obj
 import item_objects
 
 from views.start import PokemonStart
@@ -12,7 +12,7 @@ from views.swap_view import PokemonSwap
 from views.stat_view import PokemonStats
 from views.items_view import PokemonItem
 from views.choose_party_view import PokemonParty
-from views.end_battle import LoseBattle
+from views.end_battle import EndBattle
 from views.char_selection_view import PlayerSelectView
 import state
 from state import State
@@ -30,9 +30,9 @@ class Pokemon(arcade.Window):
         self.state = state
         self.player = player
         self.enemy = enemy
-        self.pokemon_bag_user = [pokemon_objects.pikachu, pokemon_objects.charizard, pokemon_objects.bulbasaur, 
-                                 pokemon_objects.pidgeotto, pokemon_objects.gengar, pokemon_objects.butterfree, 
-                                 pokemon_objects.slowbro, pokemon_objects.lucario, pokemon_objects.wooper]
+        self.pokemon_bag_user = [pkm_obj.pikachu, pkm_obj.charizard, pkm_obj.bulbasaur, 
+                                 pkm_obj.pidgeotto, pkm_obj.gengar, pkm_obj.butterfree, 
+                                 pkm_obj.slowbro, pkm_obj.lucario, pkm_obj.wooper]
 
 
         # Background image will be stored in this variable
@@ -114,15 +114,18 @@ class Pokemon(arcade.Window):
             print("won")
             # TODO: Change this screen to include logic for winning
             self.state.set_rendered(True)
-            start_view = PokemonStart(self.player, self.enemy, self.state)
+            self.player.remove_all_pokemon()
+            reset_characters([self.player, pkm_obj.gym_leader, pkm_obj.youngster_joey, pkm_obj.team_rocket_member, pkm_obj.ace_trainer, self.enemy])
+            start_view = EndBattle(self.player, self.enemy, self.state)
             self.show_view(start_view)
             start_view.setup()
         if(check_render(self.state, State.Loss)):
             print("loss")
-            # TODO: Change this screen to include logic for losing
-            # TODO: Call the heal all pokemon
+            # TODO: Create function to remove all pokemon from user party so they can choose again
             self.state.set_rendered(True)
-            start_view = LoseBattle(self.player, self.enemy, self.state)
+            self.player.remove_all_pokemon()
+            reset_characters([self.player, pkm_obj.gym_leader, pkm_obj.youngster_joey, pkm_obj.team_rocket_member, pkm_obj.ace_trainer, self.enemy])
+            start_view = EndBattle(self.player, self.enemy, self.state)
             self.show_view(start_view)
             start_view.setup()
 
@@ -132,18 +135,24 @@ def check_render(state, check_state):
         return True
     else:
         return False
+
+#hepler function to reset all character objects after winning/losing to play again
+# takes in character objects as a list
+def reset_characters(objects_list):
+    for character in objects_list:
+        character.reset()
     
 # This main function creates two pokemon bags, two Character objects, and passes them
 # to the PokemonGame object and renders the window to run the game.
 def main():
     """ Main function """
-    pokemon_bag_user = [pokemon_objects.pikachu, pokemon_objects.charizard, pokemon_objects.bulbasaur]
+    pokemon_bag_user = [pkm_obj.pikachu, pkm_obj.charizard, pkm_obj.bulbasaur]
     user_item_bag = {item_objects.potion: 1, item_objects.super_potion: 1, item_objects.hyper_potion: 1,
                         item_objects.max_potion: 1}
     pokemon_bag_user_2 = []
     
 
-    pokemon_bag_enemy = [pokemon_objects.enemy_charizard, pokemon_objects.enemy_gengar, pokemon_objects.enemy_pidgeotto]
+    pokemon_bag_enemy = [pkm_obj.enemy_charizard, pkm_obj.enemy_gengar, pkm_obj.enemy_pidgeotto]
     enemy_item_bag = {item_objects.potion: 1, item_objects.super_potion: 1, item_objects.hyper_potion: 1,
                       item_objects.max_potion: 1}
 
@@ -156,3 +165,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+

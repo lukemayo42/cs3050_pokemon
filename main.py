@@ -22,6 +22,7 @@ SCREEN_HEIGHT = 600
 W_SCREEN_TITLE = "Pokemon World"
 B_SCREEN_TITLE = "Battle"
 
+
 # Pokemon is a python arcade window that renders the views from the directory and updates the rendering
 # as the views change the state of the game.
 class Pokemon(arcade.Window):
@@ -117,8 +118,8 @@ class Pokemon(arcade.Window):
             self.player.remove_all_pokemon()
             reset_characters([self.player, pkm_obj.gym_leader, pkm_obj.youngster_joey, pkm_obj.team_rocket_member, pkm_obj.ace_trainer, self.enemy])
             start_view = EndBattle(self.player, self.enemy, self.state)
-            self.show_view(start_view)
             start_view.setup()
+            self.show_view(start_view)
         if(check_render(self.state, State.Loss)):
             print("loss")
             # TODO: Create function to remove all pokemon from user party so they can choose again
@@ -126,8 +127,14 @@ class Pokemon(arcade.Window):
             self.player.remove_all_pokemon()
             reset_characters([self.player, pkm_obj.gym_leader, pkm_obj.youngster_joey, pkm_obj.team_rocket_member, pkm_obj.ace_trainer, self.enemy])
             start_view = EndBattle(self.player, self.enemy, self.state)
-            self.show_view(start_view)
             start_view.setup()
+            self.show_view(start_view)
+        if(check_render(self.state, State.Wait)):
+            print("wait")
+            self.state.set_rendered(True)
+            start_view = PokemonGame(self.player, self.enemy, self.state)
+            start_view.setup()
+            self.show_view(start_view)
 
 # Helper function to act as an overloaded operator and confirm the screen needs to be rendered
 def check_render(state, check_state):

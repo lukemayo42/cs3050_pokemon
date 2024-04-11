@@ -36,14 +36,14 @@ class PokemonGame(arcade.View):
     enemy - Character object representing the enemy trainer - Character
     wait - boolean whether game is waiting or not
     """
-    def __init__(self, player, enemy, state, wait):
+    def __init__(self, player, enemy, state):
         super().__init__()
         # Start in the battle state for deliverable 1
         self.state = state
         self.player = player
         self.enemy = enemy
-        self.wait = False
         self.total_time = 0.0
+
 
         # Background image will be stored in this variable
         self.background = None
@@ -113,7 +113,7 @@ class PokemonGame(arcade.View):
         self.v_box_2 = arcade.gui.UIBoxLayout()
         #create the buttons only if not waiting
         # Create the fight button 
-        if not self.wait:
+        if self.state.get_state().value != State.Wait.value:
             fight = arcade.gui.UIFlatButton(text="Fight", width=BUTTON_WIDTH)
             self.v_box.add(fight.with_space_around(bottom=20))
 
@@ -152,7 +152,7 @@ class PokemonGame(arcade.View):
 
     # This fight_action method is called when the fight button is clicked, it changes the state and adds new buttons
     def fight_action(self, event):
-        if(self.state.get_state().value == State.Battle.value  and not self.wait):
+        if(self.state.get_state().value == State.Battle.value  and self.state.get_state().value != State.Wait.value):
             self.state.set_state(State.Moves)
             self.state.set_rendered(False)
             # self.state = State.Moves
@@ -160,7 +160,7 @@ class PokemonGame(arcade.View):
             # self.on_draw()
 
     def pokemon_button_action(self, event):
-        if(self.state.get_state().value == State.Battle.value and not self.wait):
+        if(self.state.get_state().value == State.Battle.value and self.state.get_state().value != State.Wait.value):
             self.state.set_state(State.PokemonSwap)
             self.state.set_rendered(False)
             # TODO: Call method to render sprites to swap with
@@ -169,7 +169,7 @@ class PokemonGame(arcade.View):
             # self.window.show_view(start_view)
 
     def items_button_action(self, event):
-        if(self.state.get_state().value == State.Battle.value and not self.wait):
+        if(self.state.get_state().value == State.Battle.value and self.state.get_state().value != State.Wait.value):
             self.state.set_state(State.Item)
             self.state.set_rendered(False)
 
@@ -198,13 +198,13 @@ class PokemonGame(arcade.View):
         self.player_list.append(self.player_sprite)
         self.enemy_list.append(self.player_sprite2)
         self.background = arcade.load_texture("../cs3050_pokemon/images/fight-background.png")
-
+        self.total_time = 0.0
     # This on_draw method renders all of the buttons and sprites depending on what the current state is
     def on_draw(self):
         """ Render the screen. """
         #print(self.player.get_curr_pkm().get_name())
         # print(self.player.chk_party())
-        if(self.state.get_state().value == State.Battle.value):
+        if(self.state.get_state().value == State.Battle.value or self.state.get_state().value == State.Wait.value):
             # Clear the screen
             self.clear()
             # Draw the background texture
@@ -213,7 +213,8 @@ class PokemonGame(arcade.View):
                                                 self.background)
             
             # Draw all the sprites.
-            self.manager.draw()
+            if not self.state.get_state().value == State.Wait.value:
+                self.manager.draw()
             self.player_list.draw()
             self.enemy_list.draw()
             self.bar_sprite_list.draw()
@@ -235,7 +236,6 @@ class PokemonGame(arcade.View):
             self.state.set_rendered(False)
 
 
-        
         # if(self.state == State.Moves):
         #     self.clear()
         #     # Draw the background texture
@@ -379,13 +379,16 @@ class PokemonGame(arcade.View):
         self.enemy_list.update()
         self.bar_sprite_list.update()
 
-        if self.wait:
+        
+        if self.state.get_state().value == State.Wait.value:
             self.total_time += delta_time
             print("waiting")
 
-        if int(self.total_time % 60) > 3:
+        if int(self.total_time)% 60 > 3:
             print("resume")
-            self.wait = False
+            self.total_time = 0.0
+            self.state.set_state(State.Battle)
+            self.state.set_rendered(False)
             
         
     

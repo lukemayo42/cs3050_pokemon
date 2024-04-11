@@ -212,20 +212,22 @@ class PokemonSwap(arcade.View):
     def swap_pokemon(self):
         # Call backend method to swap the pokemon order so that the first pokemon is back in front
         # Return to the battle screen
+        state_switched = False
         if(not self.player.get_curr_pkm().get_is_fainted()):
             btn_info = ["swap", self.index]
             player_action, enemy_action = battle(self.player, self.enemy, btn_info)
             if(player_action != "fainted" and self.state.get_state().value == State.PokemonSwap.value):
-                self.state.set_state(State.Battle)
+                self.state.set_state(State.Wait)
                 self.state.set_rendered(False)
+                state_switched = True
                 print("returning to battle screen")
             elif(self.state.get_state().value == State.PokemonSwap.value):
                 # Force the swap and then return to fight
                 self.state.set_state(State.PokemonSwap)
                 self.state.set_rendered(False)
-        else:
+        elif not state_switched:
             self.player.swap_pokemon(0, self.index)
-            self.state.set_state(State.Battle)
+            self.state.set_state(State.Wait)
             self.state.set_rendered(False)
 
     def on_draw(self):

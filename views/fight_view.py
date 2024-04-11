@@ -34,13 +34,16 @@ class PokemonGame(arcade.View):
     title - the name of the screen - string
     player - Character object representing the player - Character
     enemy - Character object representing the enemy trainer - Character
+    wait - boolean whether game is waiting or not
     """
-    def __init__(self, player, enemy, state):
+    def __init__(self, player, enemy, state, wait):
         super().__init__()
         # Start in the battle state for deliverable 1
         self.state = state
         self.player = player
         self.enemy = enemy
+        self.wait = False
+        self.total_time = 0.0
 
         # Background image will be stored in this variable
         self.background = None
@@ -108,47 +111,48 @@ class PokemonGame(arcade.View):
         # Create a vertical BoxGroup to align buttons
         self.v_box = arcade.gui.UIBoxLayout()
         self.v_box_2 = arcade.gui.UIBoxLayout()
-
+        #create the buttons only if not waiting
         # Create the fight button 
-        fight = arcade.gui.UIFlatButton(text="Fight", width=BUTTON_WIDTH)
-        self.v_box.add(fight.with_space_around(bottom=20))
+        if not self.wait:
+            fight = arcade.gui.UIFlatButton(text="Fight", width=BUTTON_WIDTH)
+            self.v_box.add(fight.with_space_around(bottom=20))
 
-        # Assign self.fight_action as callback
-        fight.on_click = self.fight_action
+            # Assign self.fight_action as callback
+            fight.on_click = self.fight_action
 
-        # Create the pokemon button
-        pokemon_button = arcade.gui.UIFlatButton(text="Pokemon", width=BUTTON_WIDTH)
-        self.v_box.add(pokemon_button.with_space_around(bottom=20))
+            # Create the pokemon button
+            pokemon_button = arcade.gui.UIFlatButton(text="Pokemon", width=BUTTON_WIDTH)
+            self.v_box.add(pokemon_button.with_space_around(bottom=20))
 
-        # Assign self.pokemon_button_action as a callback to render pokemon party
-        pokemon_button.on_click = self.pokemon_button_action
+            # Assign self.pokemon_button_action as a callback to render pokemon party
+            pokemon_button.on_click = self.pokemon_button_action
 
-        # Create the item bag button
-        items_button = arcade.gui.UIFlatButton(text="Items", width=BUTTON_WIDTH)
-        self.v_box_2.add(items_button.with_space_around(bottom=20))
+            # Create the item bag button
+            items_button = arcade.gui.UIFlatButton(text="Items", width=BUTTON_WIDTH)
+            self.v_box_2.add(items_button.with_space_around(bottom=20))
 
-        # Assign self.items_button as a callback to render item bag
-        items_button.on_click = self.items_button_action
+            # Assign self.items_button as a callback to render item bag
+            items_button.on_click = self.items_button_action
 
-        # Create a widget to hold the v_box widget, that will center the buttons
-        self.manager.add(
-            arcade.gui.UIAnchorWidget(align_x=V_BOX_X, align_y= V_BOX_Y,
-                anchor_x="center_x",
-                anchor_y="center_y",
-                child=self.v_box)
-        )
+            # Create a widget to hold the v_box widget, that will center the buttons
+            self.manager.add(
+                arcade.gui.UIAnchorWidget(align_x=V_BOX_X, align_y= V_BOX_Y,
+                    anchor_x="center_x",
+                    anchor_y="center_y",
+                    child=self.v_box)
+            )
 
-        # Create a widget to hold the v_box_2 widget, that will center the buttons
-        self.manager.add(
-            arcade.gui.UIAnchorWidget(align_x=V_BOX_2_X, align_y= V_BOX_2_Y,
-                anchor_x="center_x",
-                anchor_y="center_y",
-                child=self.v_box_2)
-        )
+            # Create a widget to hold the v_box_2 widget, that will center the buttons
+            self.manager.add(
+                arcade.gui.UIAnchorWidget(align_x=V_BOX_2_X, align_y= V_BOX_2_Y,
+                    anchor_x="center_x",
+                    anchor_y="center_y",
+                    child=self.v_box_2)
+            )
 
     # This fight_action method is called when the fight button is clicked, it changes the state and adds new buttons
     def fight_action(self, event):
-        if(self.state.get_state().value == State.Battle.value):
+        if(self.state.get_state().value == State.Battle.value  and not self.wait):
             self.state.set_state(State.Moves)
             self.state.set_rendered(False)
             # self.state = State.Moves
@@ -156,7 +160,7 @@ class PokemonGame(arcade.View):
             # self.on_draw()
 
     def pokemon_button_action(self, event):
-        if(self.state.get_state().value == State.Battle.value):
+        if(self.state.get_state().value == State.Battle.value and not self.wait):
             self.state.set_state(State.PokemonSwap)
             self.state.set_rendered(False)
             # TODO: Call method to render sprites to swap with
@@ -165,7 +169,7 @@ class PokemonGame(arcade.View):
             # self.window.show_view(start_view)
 
     def items_button_action(self, event):
-        if(self.state.get_state().value == State.Battle.value):
+        if(self.state.get_state().value == State.Battle.value and not self.wait):
             self.state.set_state(State.Item)
             self.state.set_rendered(False)
 
@@ -375,4 +379,13 @@ class PokemonGame(arcade.View):
         self.enemy_list.update()
         self.bar_sprite_list.update()
 
+        if self.wait:
+            self.total_time += delta_time
+            print("waiting")
+
+        if int(self.total_time % 60) > 3:
+            print("resume")
+            self.wait = False
+            
+        
     

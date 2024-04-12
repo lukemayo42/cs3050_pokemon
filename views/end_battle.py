@@ -10,7 +10,7 @@ SCREEN_HEIGHT = 600
 BUTTON_WIDTH = 175
 
 
-class LoseBattle(arcade.View):
+class EndBattle(arcade.View):
     def __init__(self, player, enemy, state):
         super().__init__()
         self.player = player
@@ -44,35 +44,49 @@ class LoseBattle(arcade.View):
                 anchor_y="center_y",
                 child=self.v_box)
         )
-        #create you lose text
-        self.lose_text = arcade.create_text_sprite (
-            start_x=SCREEN_WIDTH / 4,
+        display_text = ""
+        
+        #determine text to be displayed based on state
+        if self.state.get_state().value == State.Win.value:
+            display_text ="You Win!"
+        else:
+            display_text = "You Lose!"
+    
+        self.text = arcade.create_text_sprite (
+            start_x=SCREEN_WIDTH / 2 - 100,
             start_y=SCREEN_HEIGHT / 2,
             color=arcade.color.BLACK,
-            text = "You lost",
-            font_size = 25
+            text = display_text,
+            font_size = 40
         )
 
+        
 
     def setup(self):
-        print("set up lose battle")
         self.text_list = arcade.SpriteList()
-        self.text_list.append(self.lose_text)
+        self.text_list.append(self.text)
+        self.background_sky = arcade.load_texture("../cs3050_pokemon/images/screen_background.png")
 
 
     def play_again_button_action(self, event):
         #return to start screen and heal all pokemon
-        if(self.state.get_state().value == State.Loss.value):
+        
+        if(self.state.get_state().value == State.Loss.value or self.state.get_state().value == State.Win.value):
             print("returning to start screen")
             self.state.set_state(State.Start)
-            print(self.state)
+            print("Button pressed")
             self.state.set_rendered(False)
-            self.player.heal_all_pkm()
+
 
 
     def on_draw(self):
         # Clear the screen
         self.clear()
+
+        #draw background
+        arcade.draw_lrwh_rectangle_textured(0, 0,
+                                    SCREEN_WIDTH, SCREEN_HEIGHT,
+                                    self.background_sky)
     
         # Draw all the sprites.
         self.manager.draw()

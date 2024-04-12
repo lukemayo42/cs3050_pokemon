@@ -1,5 +1,6 @@
 import arcade
 from state import State
+from Character import Character
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
@@ -37,9 +38,10 @@ class Button:
         return False
 
 class PlayerSelectView(arcade.View):
-    def __init__(self, state):
+    def __init__(self, player, state):
         super().__init__()
         self.state = state
+        self.player = player
         self.selected_player = None
         self.buttons = []
         self.character_sprites = arcade.SpriteList()
@@ -106,9 +108,11 @@ class PlayerSelectView(arcade.View):
                 self.selected_player = btn.text
                 if (self.selected_player == "Ace Darkstar"):
                     self.state.set_character_sprite(":resources:images/animated_characters/male_person/malePerson_idle.png")
+                    self.player.set_name("Ace Darkstar")
                 else:
                     self.state.set_character_sprite(
                         ":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png")
+                    self.player.set_name("Nova Blaze")
 
                 if (self.state.get_state().value == State.CharacterSelect.value):
                     self.state.set_state(State.Party)

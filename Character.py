@@ -87,7 +87,7 @@ class Character:
         pokemon_temp = self.pokemon_list[pokemon1_index]
         self.pokemon_list[pokemon1_index] = self.pokemon_list[pokemon2_index]
         self.pokemon_list[pokemon2_index] = pokemon_temp
-        self.prev_pkm_index = pokemon1_index
+        self.prev_pkm_index = pokemon2_index
 
 
     # Function that adds an item to a characters item_list

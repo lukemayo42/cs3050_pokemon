@@ -205,8 +205,8 @@ class PokemonItem(arcade.View):
                 btn_info = ["item", item_objects.hyper_potion]
             elif(self.index == "Max Potion"):
                 btn_info = ["item", item_objects.max_potion]
-            action1, action2 = battle(self.player, self.enemy, btn_info)
-            
+            action1, action2, action_list = battle(self.player, self.enemy, btn_info)
+            self.state.set_action_list(action_list)
             print("using " + self.index)
             self.state.set_state(State.Wait)
             self.state.set_rendered(False)

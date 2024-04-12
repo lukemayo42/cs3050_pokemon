@@ -181,7 +181,8 @@ class PokemonMove(arcade.View):
             # GLOBAL_STATE = State.Battle
 
             btn_info = ["move", self.player.get_curr_pkm().get_moves()[0]]
-            action1, action2 = battle(self.player, self.enemy, btn_info)
+            action1, action2, action_dict = battle(self.player, self.enemy, btn_info)
+            self.state.set_action_list(action_dict)
             if(self.enemy.get_curr_pkm().get_is_fainted()):
                 # Render the fight screen again with the updated sprite
                 self.state.set_state(State.Wait)
@@ -215,7 +216,8 @@ class PokemonMove(arcade.View):
             self.state.set_rendered(False)
             print("accessing second move")
             btn_info = ["move", self.player.get_curr_pkm().get_moves()[1]]
-            action1, action2 = battle(self.player, self.enemy, btn_info)
+            action1, action2, action_list = battle(self.player, self.enemy, btn_info)
+            self.state.set_action_list(action_list)
             if(self.enemy.get_curr_pkm().get_is_fainted()):
                 # Render the fight screen again with the updated sprite
                 self.state.set_state(State.Wait)
@@ -247,7 +249,8 @@ class PokemonMove(arcade.View):
             self.state.set_rendered(False)
             print("accessing third move")
             btn_info = ["move", self.player.get_curr_pkm().get_moves()[2]]
-            action1, action2 = battle(self.player, self.enemy, btn_info)
+            action1, action2, action_list = battle(self.player, self.enemy, btn_info)
+            self.state.set_action_list(action_list)
             if(self.enemy.get_curr_pkm().get_is_fainted()):
                 # Render the fight screen again with the updated sprite
                 self.state.set_state(State.Wait)
@@ -278,7 +281,8 @@ class PokemonMove(arcade.View):
             self.state.set_rendered(False)
             print("accessing fourth move")
             btn_info = ["move", self.player.get_curr_pkm().get_moves()[3]]
-            action1, action2 = battle(self.player, self.enemy, btn_info)
+            action1, action2, action_list = battle(self.player, self.enemy, btn_info)
+            self.state.set_action_list(action_list)
             if(self.enemy.get_curr_pkm().get_is_fainted()):
                 # Render the fight screen again with the updated sprite
                 self.state.set_state(State.Wait)
@@ -299,6 +303,7 @@ class PokemonMove(arcade.View):
             else:
                 self.state.set_state(State.Win)
                 self.state.set_rendered(False)
+
 
     # This on_update method is called each frame of the game and calls the respective update methods of the sprites
     def on_update(self, delta_time):

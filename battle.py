@@ -35,11 +35,11 @@ def battle(player, enemy, btn_info):
     player_pkm = player.get_curr_pkm()
     enemy_pkm = enemy.get_curr_pkm()
     force_swap = False
-    action_dict = {}
+    action_list = []
     #if player pokemon faster than enemy pokemon
     if chk_spd(player_pkm, enemy_pkm):
         player_action = player_turn(player, enemy, btn_info)
-        action_dict[btn_info[0]] = player_action
+        action_list.append(["player", btn_info[0], player_action]) 
         # If enemy's party is out of pokemon
         if not enemy.chk_party():
             #TODO: update text bubble to "The enemy is out of pokemon! You Win!"
@@ -50,15 +50,15 @@ def battle(player, enemy, btn_info):
         #force enemy to switch pokemon if current pokemon is fainted - takes up enemy's turn
         elif enemy.get_curr_pkm().get_is_fainted():
             force_swap = True
-            action_dict["fainted"] = f"{enemy.get_curr_pkm().get_name()} fainted"
+            action_list.append(["enemy", "fainted", f"{enemy.get_curr_pkm().get_name()} fainted"])
             print(f"{enemy.get_curr_pkm().get_name()} fainted")
             enemy_action, action_str = enemy_turn(enemy, player, force_swap)
-            action_dict[action_str] = enemy_action
+            action_list.append(["enemy", action_str, enemy_action])
             
         #enemy pokemon has not fainted
         else:
             enemy_action, action_str = enemy_turn(enemy, player, force_swap)
-            action_dict[action_str] = enemy_action
+            action_list.append(["enemy", action_str, enemy_action])
             if not player.chk_party():
                 #TODO: update check bubble to say player lost
                 # For now we need to do this to make sure we don't reference something without assignment
@@ -70,7 +70,7 @@ def battle(player, enemy, btn_info):
                 # For now we need to do this to make sure we don't reference something without assignment
                 player_action = "fainted"
                 print(f"{player.get_curr_pkm().get_name()} fainted")
-                action_dict["fainted"] = f"{player.get_curr_pkm().get_name()} fainted"
+                action_list.append(["player", "fainted", f"{player.get_curr_pkm().get_name()} fainted"])
                 #TODO: get string and action string from swap pokemon and add it to action_dict
                 #force player to switch
             # send to gui
@@ -78,7 +78,7 @@ def battle(player, enemy, btn_info):
     else:
         # Take enemy action
         enemy_action, action_str = enemy_turn(enemy, player, force_swap)
-        action_dict[action_str] = enemy_action
+        action_list.append(["enemy", action_str, enemy_action])
         # If the player party is fully fainted
         if not player.chk_party():
             # TODO: update text bubble saying that the player has lost
@@ -92,13 +92,14 @@ def battle(player, enemy, btn_info):
             #update player_turn to handle force switch case
             player_action = "fainted"
             print(f"{player.get_curr_pkm().get_name()} fainted")
-            action_dict["fainted"] = f"{player.get_curr_pkm().get_name()} fainted"
+            action_list.append(["player", "fainted", f"{player.get_curr_pkm().get_name()} fainted"])
+            
             #TODO: fix this case - player pokemon is faster than enemy pokemon, and the player pokemon faints, current pokemon stays the same without prompt being asked
         # The enemy turn didn't result in anything needing the player to do anything
         else:
             player_action = player_turn(player, enemy, btn_info)
             # If the player turn results in the enemy's party being all fainted
-            action_dict[btn_info[0]] = player_action
+            action_list.append(["player", btn_info[0], player_action])
 
             if not enemy.chk_party():
                 # tell gui player wins
@@ -110,11 +111,11 @@ def battle(player, enemy, btn_info):
                 force_swap = True
                 print(f"{enemy.get_curr_pkm().get_name()} fainted")
                 enemy_action = enemy_turn(enemy, player, force_swap)
-                action_dict["swap"] = enemy_action
+                action_list.append(["enemy", "swap", enemy_action])
 
             # send to gui
     # Return the first action that was done and the second action that was done
-    return player_action, enemy_action, action_dict
+    return player_action, enemy_action, action_list
     
 #this function reads an action string and determines what the action was and adds it to the given dictionary
 def add_to_dict(action):

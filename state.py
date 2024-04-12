@@ -29,6 +29,7 @@ class GameState:
         self.rendered = False
         self.user_choice = 0
         self.character_sprite = ''
+        self.action_list = []
     def get_state(self):
         return self.state
     def get_rendered(self):
@@ -37,6 +38,12 @@ class GameState:
         return self.user_choice
     def get_character_sprite(self):
         return self.character_sprite
+    def get_action_list(self):
+        return self.action_list
+    def set_action_dict(self, new_list):
+        self.action_list = new_list
+    def add_new_action(self, value):
+        self.action_list.append(value)
     def set_state(self, state):
         self.state = state
     def set_rendered(self, rendered):
@@ -45,6 +52,9 @@ class GameState:
         self.user_choice = user_choice
     def set_character_sprite(self, character):
         self.character_sprite = character
+    def remove_from_action_list(self):
+        self.action_list.pop(0)
+
 
 # State object used in main
 game_state = GameState(State.Start)

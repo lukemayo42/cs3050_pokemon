@@ -175,22 +175,22 @@ class pokemon:
 
     #print functions!!!! - need to know how gui wants text info
 
-    def move_to_string(self, move_used, hit, effectiveness, crit):
+    def move_to_string(self, move_used, hit, effectiveness, crit, character):
         return_string = ""
         if hit:
             if effectiveness == 1:
-                return_string = f"{self.name} used {move_used.get_name()}"
+                return_string = f"{character.get_name()}'s {self.name} used {move_used.get_name()}"
             elif effectiveness == .5 or effectiveness == .25:
-                return_string =  f"{self.name} used {move_used.get_name()}. It's not very effective."
+                return_string =  f"{character.get_name()}'s {self.name} used {move_used.get_name()}. It's not very effective."
             elif effectiveness == 2 or effectiveness == 4:
-                return_string =  f"{self.name} used {move_used.get_name()}. It's Super Effective!"
+                return_string =  f"{character.get_name()}'s {self.name} used {move_used.get_name()}. It's Super Effective!"
             elif effectiveness == 0:
-                return f"{self.name} used {move_used.get_name()}. It had no effect"
+                return f"{character.get_name()}'s {self.name} used {move_used.get_name()}. It had no effect"
             if crit == 2:
                 return_string += " It's a Critical Hit!"
             return return_string
         else:
-            return f"{self.name}'s move missed"
+            return f"{character.get_name()}'s {self.name}'s move missed"
     
     '''
     def get_move_names(self):

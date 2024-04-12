@@ -19,14 +19,22 @@ class Button:
     def draw(self):
         # Determine color based on button state
         if self.is_pressed:
-            color = arcade.color.BLUE
+            color = (50, 75, 125)
+            border_color = arcade.color.WHITE
         elif self.is_hovered:
-            color = arcade.color.LIGHT_GRAY
+            color = (20, 65, 115)
+            border_color = arcade.color.WHITE
         else:
-            color = arcade.color.DARK_GRAY
+            color = (50, 75, 125)
+            border_color = arcade.color.WHITE
 
         # Draw button rectangle and text
         arcade.draw_rectangle_filled(self.x, self.y, self.width, self.height, color)
+
+        # Draw button rectangle outline (border)
+        if self.is_hovered or self.is_pressed:
+            arcade.draw_rectangle_outline(self.x, self.y, self.width, self.height, border_color, border_width=3)
+
         arcade.draw_text(self.text, self.x, self.y, arcade.color.WHITE, font_size=20, anchor_x="center", anchor_y="center")
 
     def check_collision(self, x, y):

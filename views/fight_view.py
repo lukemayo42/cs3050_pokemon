@@ -390,7 +390,7 @@ class PokemonGame(arcade.View):
         #if in wait state increment total time by delta time
         if self.state.get_state().value == State.Wait.value:
             self.total_time += delta_time
-            print("waiting")
+            #print("waiting")
 
         #if total time is greater than three seconds stop waiting and go to battle state
         if int(self.total_time)% 60 > 3:

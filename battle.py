@@ -35,11 +35,11 @@ def battle(player, enemy, btn_info):
     player_pkm = player.get_curr_pkm()
     enemy_pkm = enemy.get_curr_pkm()
     force_swap = False
-
+    action_dict = {}
     #if player pokemon faster than enemy pokemon
     if chk_spd(player_pkm, enemy_pkm):
         player_action = player_turn(player, enemy, btn_info)
-
+        action_dict[btn_info[0]] = player_action
         # If enemy's party is out of pokemon
         if not enemy.chk_party():
             #TODO: update text bubble to "The enemy is out of pokemon! You Win!"
@@ -50,12 +50,15 @@ def battle(player, enemy, btn_info):
         #force enemy to switch pokemon if current pokemon is fainted - takes up enemy's turn
         elif enemy.get_curr_pkm().get_is_fainted():
             force_swap = True
+            action_dict["fainted"] = f"{enemy.get_curr_pkm().get_name()} fainted"
             print(f"{enemy.get_curr_pkm().get_name()} fainted")
-            enemy_action = enemy_turn(enemy, player, force_swap)
+            enemy_action, action_str = enemy_turn(enemy, player, force_swap)
+            action_dict[action_str] = enemy_action
             
         #enemy pokemon has not fainted
         else:
-            enemy_action = enemy_turn(enemy, player, force_swap)
+            enemy_action, action_str = enemy_turn(enemy, player, force_swap)
+            action_dict[action_str] = enemy_action
             if not player.chk_party():
                 #TODO: update check bubble to say player lost
                 # For now we need to do this to make sure we don't reference something without assignment
@@ -67,12 +70,15 @@ def battle(player, enemy, btn_info):
                 # For now we need to do this to make sure we don't reference something without assignment
                 player_action = "fainted"
                 print(f"{player.get_curr_pkm().get_name()} fainted")
+                action_dict["fainted"] = f"{player.get_curr_pkm().get_name()} fainted"
+                #TODO: get string and action string from swap pokemon and add it to action_dict
                 #force player to switch
             # send to gui
     # if enemy pokemon faster than player pokemon
     else:
         # Take enemy action
-        enemy_action = enemy_turn(enemy, player, force_swap)
+        enemy_action, action_str = enemy_turn(enemy, player, force_swap)
+        action_dict[action_str] = enemy_action
         # If the player party is fully fainted
         if not player.chk_party():
             # TODO: update text bubble saying that the player has lost
@@ -86,11 +92,14 @@ def battle(player, enemy, btn_info):
             #update player_turn to handle force switch case
             player_action = "fainted"
             print(f"{player.get_curr_pkm().get_name()} fainted")
+            action_dict["fainted"] = f"{player.get_curr_pkm().get_name()} fainted"
             #TODO: fix this case - player pokemon is faster than enemy pokemon, and the player pokemon faints, current pokemon stays the same without prompt being asked
         # The enemy turn didn't result in anything needing the player to do anything
         else:
             player_action = player_turn(player, enemy, btn_info)
             # If the player turn results in the enemy's party being all fainted
+            action_dict[btn_info[0]] = player_action
+
             if not enemy.chk_party():
                 # tell gui player wins
                 player_action = "win"
@@ -101,11 +110,15 @@ def battle(player, enemy, btn_info):
                 force_swap = True
                 print(f"{enemy.get_curr_pkm().get_name()} fainted")
                 enemy_action = enemy_turn(enemy, player, force_swap)
+                action_dict["swap"] = enemy_action
+
             # send to gui
     # Return the first action that was done and the second action that was done
-    return player_action, enemy_action
+    return player_action, enemy_action, action_dict
     
-
+#this function reads an action string and determines what the action was and adds it to the given dictionary
+def add_to_dict(action):
+    pass
 #player is a character object
 #button info is a alist containing the type of button and the move/item/pokemon switched - gives index of nrew pokemon to be put into 0 index in list
 #returns bool whether action was succesful
@@ -115,13 +128,13 @@ def player_turn(player, enemy, btn_info):
         move_used = btn_info[1]
         if roll_accuracy(move_used):
             #send gui sometyhing saying it hit 
-            dmg, effectiveness = calc_dmg(player.get_curr_pkm(), enemy.get_curr_pkm(), move_used)
+            dmg, effectiveness, crit = calc_dmg(player.get_curr_pkm(), enemy.get_curr_pkm(), move_used)
             enemy.get_curr_pkm().remove_health(dmg)
-            action_str = player.get_curr_pkm().move_to_string(move_used, True, effectiveness)
+            action_str = player.get_curr_pkm().move_to_string(move_used, True, effectiveness, crit)
             print(action_str)
         else:
             #send gui something saying it missed
-            action_str = player.get_curr_pkm().move_to_string(move_used, False, 10)
+            action_str = player.get_curr_pkm().move_to_string(move_used, False, 10, 1)
             print(action_str)
         
         
@@ -169,12 +182,12 @@ def enemy_turn(enemy, player, force_swap):
         move_used = enemy_pkm.get_moves()[move_index]
         # If the move hits, do damage
         if roll_accuracy(move_used):
-            dmg, effectiveness = calc_dmg(enemy_pkm, player_pkm, move_used)
+            dmg, effectiveness, crit = calc_dmg(enemy_pkm, player_pkm, move_used)
             player_pkm.remove_health(dmg)
-            action = enemy_pkm.move_to_string(move_used, True, effectiveness)
+            action = enemy_pkm.move_to_string(move_used, True, effectiveness, crit)
             print(action)
         else:
-            action = enemy_pkm.move_to_string(move_used, False, 0)
+            action = enemy_pkm.move_to_string(move_used, False, 0, 1)
             print(action)
 
     #item
@@ -216,7 +229,7 @@ def enemy_turn(enemy, player, force_swap):
     
     #calc damg
     #update curr health of player
-    return action
+    return action, action_str
 
 
 # Function is enemy's "intelligence"
@@ -283,10 +296,11 @@ def calc_dmg(atk_pkm, def_pkm, move):
     #STAB * TYPE 1 EFFECTIVE * TYPE 2 EFFECTIVE at end of equation
     #random variable in damage equation
     effectiveness = chk_effective(move, def_pkm)
+    crit = roll_crit()
 
     random_variable = random.randint(217, 255) / 255
-    dmg = (((((2 * level * roll_crit())/5) + 2)* move.get_power() * (atk_pkm.get_curr_atk()/def_pkm.get_curr_def())/50) + 2 ) * random_variable * effectiveness
-    return dmg , effectiveness
+    dmg = (((((2 * level * crit)/5) + 2)* move.get_power() * (atk_pkm.get_curr_atk()/def_pkm.get_curr_def())/50) + 2 ) * random_variable * effectiveness
+    return dmg , effectiveness, crit
 
 #rerturns True if the user will fo first , false if the enemy will go first
 def chk_spd(user_pkm, enemy_pkm):
@@ -294,7 +308,7 @@ def chk_spd(user_pkm, enemy_pkm):
     enemy_spd = enemy_pkm.get_curr_spd()
     #if user speed is equal to enemy speed flip coin to see who goes first
     if user_spd == enemy_spd:
-        rand_list = [True, True]
+        rand_list = [True, False]
         return random.choice(rand_list)
     elif(user_pkm.get_curr_spd() > enemy_pkm.get_curr_spd()):
         return True

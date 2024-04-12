@@ -23,13 +23,12 @@ V_BOX_2_Y = -190
 
 # This PokemonItem view class gives the fighter a chance to use items from their bag during the fight.
 class PokemonItem(arcade.View):
-    def __init__(self, player, enemy, state, wait):
+    def __init__(self, player, enemy, state):
         super().__init__()
         self.player = player
         self.enemy = enemy
         self.pokemon = player.get_curr_pkm()
         self.state = state
-        self.wait = wait
 
         # This variable keeps track of what item you are looking at
         self.index = 0
@@ -211,7 +210,7 @@ class PokemonItem(arcade.View):
             print("using " + self.index)
             self.state.set_state(State.Wait)
             self.state.set_rendered(False)
-            # Return to the fight view
+            # Return to the wait view
 
 
     def on_draw(self):

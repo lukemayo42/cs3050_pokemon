@@ -74,9 +74,7 @@ class EndBattle(arcade.View):
         if(self.state.get_state().value == State.Loss.value or self.state.get_state().value == State.Win.value):
             print("returning to start screen")
             self.state.set_state(State.Start)
-            print("Button pressed")
             self.state.set_rendered(False)
-
 
 
     def on_draw(self):

@@ -32,7 +32,7 @@ def load_texture_pair(filename):
 
 
 class PlayerCharacter(arcade.Sprite):
-    def __init__(self):
+    def __init__(self, character_sprite):
 
         # Set up parent class
         super().__init__()
@@ -61,8 +61,9 @@ class PlayerCharacter(arcade.Sprite):
         # main_path = ":resources:images/animated_characters/female_adventurer/femaleAdventurer"
 
         # main_path = ":resources:images/animated_characters/female_person/femalePerson"
-
-        main_path = ":resources:images/animated_characters/male_person/malePerson"
+        print(character_sprite)
+        # main_path = ":resources:images/animated_characters/male_person/malePerson"
+        main_path = character_sprite[0:len(character_sprite) - 9]
 
         # main_path = ":resources:images/animated_characters/male_adventurer/maleAdventurer"
 
@@ -155,7 +156,7 @@ class WorldMap(arcade.View):
         self.player_list = arcade.SpriteList()
         self.wall_list = arcade.SpriteList()
         # Set up the player
-        self.player = PlayerCharacter()
+        self.player = PlayerCharacter(self.state.get_character_sprite())
 
         self.player.center_x = 50
         self.player.center_y = 450

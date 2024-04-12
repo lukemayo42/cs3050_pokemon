@@ -112,7 +112,6 @@ class Pokemon(arcade.Window):
             self.show_view(item_view)
         if(check_render(self.state, State.Win)):
             print("won")
-            # TODO: Change this screen to include logic for winning
             self.state.set_rendered(True)
             reset_characters([self.player, pkm_obj.gym_leader, pkm_obj.youngster_joey, pkm_obj.team_rocket_member, pkm_obj.ace_trainer, self.enemy])
             self.player.remove_all_pokemon()
@@ -121,7 +120,6 @@ class Pokemon(arcade.Window):
             start_view.setup()
         if(check_render(self.state, State.Loss)):
             print("loss")
-            # TODO: Create function to remove all pokemon from user party so they can choose again
             self.state.set_rendered(True)
             reset_characters([self.player, pkm_obj.gym_leader, pkm_obj.youngster_joey, pkm_obj.team_rocket_member, pkm_obj.ace_trainer, self.enemy])
             self.player.remove_all_pokemon()

@@ -42,6 +42,7 @@ class PokemonGame(arcade.View):
         self.state = state
         self.player = player
         self.enemy = enemy
+
         self.total_time = 0.0
 
 
@@ -185,10 +186,17 @@ class PokemonGame(arcade.View):
         self.enemy_list = arcade.SpriteList()
 
         # Set up the player and enemy sprites
+        # if the enemy is in the waiting state and pokemon has been swapped render previous pokemon until out of waiting state
         self.player_sprite = Sprite("../cs3050_pokemon/sprites/" + self.player.get_curr_pkm().get_name().lower() + "-back.png")
-        self.player_sprite.scale = 300 / (self.player_sprite.height * 1.2)
-
         self.player_sprite2 = Sprite("../cs3050_pokemon/sprites/" + self.enemy.get_curr_pkm().get_name().lower() + "-front.png", OPPONENT_SPRITE_SCALING)
+        if self.state.get_state().value == State.Wait.value and self.player.get_prev_pkm() != -1:    
+            self.player_sprite = Sprite("../cs3050_pokemon/sprites/" + self.player.get_pokemon_list()[self.player.get_prev_pkm()].get_name().lower() + "-back.png")
+            self.player.set_prev_pkm_index()
+        if self.state.get_state().value == State.Wait.value and self.player.get_prev_pkm() != -1: 
+            self.player_sprite2 = Sprite("../cs3050_pokemon/sprites/" + self.enemy.get_pokemon_list()[self.enemy.get_prev_pkm()].get_name().lower() + "-front.png", OPPONENT_SPRITE_SCALING)
+            self.enemy.set_prev_pkm_index()
+
+        self.player_sprite.scale = 300 / (self.player_sprite.height * 1.2)
         # TODO: change these to constant variables
         self.player_sprite.center_x = 200
         # self.player_sprite.bottom = 500
@@ -379,11 +387,12 @@ class PokemonGame(arcade.View):
         self.enemy_list.update()
         self.bar_sprite_list.update()
 
-        
+        #if in wait state increment total time by delta time
         if self.state.get_state().value == State.Wait.value:
             self.total_time += delta_time
             print("waiting")
 
+        #if total time is greater than three seconds stop waiting and go to battle state
         if int(self.total_time)% 60 > 3:
             print("resume")
             self.total_time = 0.0

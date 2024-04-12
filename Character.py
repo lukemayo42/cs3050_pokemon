@@ -7,6 +7,7 @@ class Character:
     item_bag: Dictionary that contains items {Dictionary}
     money: amount of money the character has {integer}
     speech_bubble_text: text that is said/shows up in speech bubble when approached {string}
+    prev_pkm_index: holds the index of the previous pokemon that was out, -1 if no prev pkm
     """
     def __init__(self, name, pokemon_list, item_bag, money, speech_bubble_text):
         self.name = name
@@ -14,6 +15,7 @@ class Character:
         self.item_bag = item_bag
         self.money = money
         self.speech_bubble_text = speech_bubble_text
+        self.prev_pkm_index = -1
 
     def display_character_info(self):
         print(f"Name: {self.name}")
@@ -41,6 +43,9 @@ class Character:
     # Function gets the current first pokemon in the pokemon list
     def get_curr_pkm(self):
         return self.pokemon_list[0]
+    
+    def get_prev_pkm(self):
+        return self.prev_pkm_index
 
     # Setters
     def set_name(self, value):
@@ -57,6 +62,9 @@ class Character:
 
     def set_speech_bubble_text(self, value):
         self.speech_bubble_text = value
+
+    def set_prev_pkm_index(self):
+        self.prev_pkm_index = -1
 
     # Function adds a pokemon to the players pokemon list
     def add_pokemon(self, pokemon):
@@ -79,6 +87,7 @@ class Character:
         pokemon_temp = self.pokemon_list[pokemon1_index]
         self.pokemon_list[pokemon1_index] = self.pokemon_list[pokemon2_index]
         self.pokemon_list[pokemon2_index] = pokemon_temp
+        self.prev_pkm_index = pokemon1_index
 
 
     # Function that adds an item to a characters item_list

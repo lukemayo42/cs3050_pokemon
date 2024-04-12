@@ -22,6 +22,11 @@ SCREEN_HEIGHT = 600
 W_SCREEN_TITLE = "Pokemon World"
 B_SCREEN_TITLE = "Battle"
 
+#TODO: figure out waiting
+#right now we are wiating in the fight_view may want to make wait own view
+#idea: create different views on different waits - damage wait, fainted wait, swapping wait - some of these may be able to be in one view beacuse we just need to display text
+# send over list(or dictionary) of strings that will need to be displayed as text, would be 2 or three strings
+# based on list or dictionary determines what wait to do and we will display text, will need to wait multiple times to diplay text
 
 # Pokemon is a python arcade window that renders the views from the directory and updates the rendering
 # as the views change the state of the game.

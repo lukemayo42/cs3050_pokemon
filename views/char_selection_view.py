@@ -17,16 +17,9 @@ class Button:
         self.is_pressed = False
 
     def draw(self):
-        # Determine color based on button state
-        if self.is_pressed:
-            color = (50, 75, 125)
-            border_color = arcade.color.WHITE
-        elif self.is_hovered:
-            color = (20, 65, 115)
-            border_color = arcade.color.WHITE
-        else:
-            color = (50, 75, 125)
-            border_color = arcade.color.WHITE
+        # Set the color and border color of buttons
+        color = (50, 75, 125)
+        border_color = arcade.color.WHITE
 
         # Draw button rectangle and text
         arcade.draw_rectangle_filled(self.x, self.y, self.width, self.height, color)

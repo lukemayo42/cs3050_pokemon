@@ -44,10 +44,10 @@ class PlayerSelectView(arcade.View):
         self.character_sprites = arcade.SpriteList()
 
         # List of player names
-        player_names = ["Billy Bob", "John Doe"]
+        player_names = ["Ace Darkstar", "Nova Blaze"]
 
         # Load Pokémon-like sprites
-        self.character_sprites.append(arcade.Sprite(":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png", scale=2, center_x=SCREEN_WIDTH / 4, center_y=SCREEN_HEIGHT / 4 * 2 + 40))
+        self.character_sprites.append(arcade.Sprite(":resources:images/animated_characters/male_person/malePerson_idle.png", scale=2, center_x=SCREEN_WIDTH / 4, center_y=SCREEN_HEIGHT / 4 * 2 + 40))
         self.character_sprites.append(arcade.Sprite(":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png", scale=2, center_x=SCREEN_WIDTH * 3 / 4, center_y=SCREEN_HEIGHT / 4 * 2 + 40))
 
         # Load and play background music
@@ -103,8 +103,8 @@ class PlayerSelectView(arcade.View):
         for btn in self.buttons:
             if btn.is_pressed and btn.check_collision(x, y):
                 self.selected_player = btn.text
-                if (self.selected_player == "Billy Bob"):
-                    self.state.set_character_sprite(":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png")
+                if (self.selected_player == "Ace Darkstar"):
+                    self.state.set_character_sprite(":resources:images/animated_characters/male_person/malePerson_idle.png")
                 else:
                     self.state.set_character_sprite(
                         ":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png")

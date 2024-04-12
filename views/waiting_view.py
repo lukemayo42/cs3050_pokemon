@@ -25,7 +25,7 @@ V_BOX_2_Y = -190
 
 # This PokemonGame class is created with two trainers passed in, the player and the enemy trainer
 # the pokemon bags of each trainer are represented on the screen with Sprites and health_bar sprites.
-class PokemonGame(arcade.View):
+class Waiting(arcade.View):
     """
     constructor for PokemonGame class
     attributes of class
@@ -44,7 +44,7 @@ class PokemonGame(arcade.View):
         self.player = player
         self.enemy = enemy
         self.action_list = state.get_action_list()
-
+        print(self.action_list)
         self.total_time = 0.0
 
         # Background image will be stored in this variable
@@ -135,7 +135,7 @@ class PokemonGame(arcade.View):
         """ Render the screen. """
         # print(self.player.get_curr_pkm().get_name())
         # print(self.player.chk_party())
-        if (self.state.get_state().value == State.Battle.value or self.state.get_state().value == State.Wait.value):
+        if (self.state.get_state().value == State.Wait.value):
             # Clear the screen
             self.clear()
             # Draw the background texture
@@ -144,8 +144,8 @@ class PokemonGame(arcade.View):
                                                 self.background)
 
             # Draw all the sprites.
-            if not self.state.get_state().value == State.Wait.value:
-                self.manager.draw()
+            
+            self.manager.draw()
             self.player_list.draw()
             self.enemy_list.draw()
             self.bar_sprite_list.draw()
@@ -241,7 +241,7 @@ class PokemonGame(arcade.View):
             print("resume")
             self.total_time = 0.0
             self.action_list.pop(0)
-            if self.action_list.length == 0:
+            if len(self.action_list) == 0:
                 self.state.set_state(State.Battle)
             self.state.set_rendered(False)
 

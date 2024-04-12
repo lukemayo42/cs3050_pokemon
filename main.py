@@ -14,6 +14,7 @@ from views.items_view import PokemonItem
 from views.choose_party_view import PokemonParty
 from views.end_battle import EndBattle
 from views.char_selection_view import PlayerSelectView
+from views.waiting_view import Waiting
 import state
 from state import State
 
@@ -137,7 +138,7 @@ class Pokemon(arcade.Window):
         if(check_render(self.state, State.Wait)):
             print("wait")
             self.state.set_rendered(True)
-            start_view = PokemonGame(self.player, self.enemy, self.state)
+            start_view = Waiting(self.player, self.enemy, self.state)
             start_view.setup()
             self.show_view(start_view)
 

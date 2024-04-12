@@ -40,7 +40,7 @@ class GameState:
         return self.character_sprite
     def get_action_list(self):
         return self.action_list
-    def set_action_dict(self, new_list):
+    def set_action_list(self, new_list):
         self.action_list = new_list
     def add_new_action(self, value):
         self.action_list.append(value)

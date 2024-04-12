@@ -130,11 +130,11 @@ def player_turn(player, enemy, btn_info):
             #send gui sometyhing saying it hit 
             dmg, effectiveness, crit = calc_dmg(player.get_curr_pkm(), enemy.get_curr_pkm(), move_used)
             enemy.get_curr_pkm().remove_health(dmg)
-            action_str = player.get_curr_pkm().move_to_string(move_used, True, effectiveness, crit)
+            action_str = player.get_curr_pkm().move_to_string(move_used, True, effectiveness, crit, player)
             print(action_str)
         else:
             #send gui something saying it missed
-            action_str = player.get_curr_pkm().move_to_string(move_used, False, 10, 1)
+            action_str = player.get_curr_pkm().move_to_string(move_used, False, 10, 1, player)
             print(action_str)
         
         
@@ -184,10 +184,10 @@ def enemy_turn(enemy, player, force_swap):
         if roll_accuracy(move_used):
             dmg, effectiveness, crit = calc_dmg(enemy_pkm, player_pkm, move_used)
             player_pkm.remove_health(dmg)
-            action = enemy_pkm.move_to_string(move_used, True, effectiveness, crit)
+            action = enemy_pkm.move_to_string(move_used, True, effectiveness, crit, enemy)
             print(action)
         else:
-            action = enemy_pkm.move_to_string(move_used, False, 0, 1)
+            action = enemy_pkm.move_to_string(move_used, False, 0, 1, enemy)
             print(action)
 
     #item

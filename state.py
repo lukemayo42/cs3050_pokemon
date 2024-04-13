@@ -30,6 +30,8 @@ class GameState:
         self.user_choice = 0
         self.character_sprite = ''
         self.action_list = []
+        self.previous_action = ["placeholder", "placeholder"]
+        self.prev_pkm = "none"
     def get_state(self):
         return self.state
     def get_rendered(self):
@@ -40,6 +42,10 @@ class GameState:
         return self.character_sprite
     def get_action_list(self):
         return self.action_list
+    def get_previous_action(self):
+        return self.previous_action
+    def get_prev_pkm(self):
+        return self.prev_pkm
     def set_action_list(self, new_list):
         self.action_list = new_list
     def add_new_action(self, value):
@@ -52,6 +58,10 @@ class GameState:
         self.user_choice = user_choice
     def set_character_sprite(self, character):
         self.character_sprite = character
+    def set_previous_action(self, prev_action):
+        self.previous_action = prev_action
+    def set_prev_pkm(self, previous):
+        self.prev_pkm = previous
     def remove_from_action_list(self):
         self.action_list.pop(0)
 

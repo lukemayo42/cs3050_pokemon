@@ -212,6 +212,7 @@ class Waiting(arcade.View):
             self.bar_sprite_list.draw()
 
         # should be handling weird swap case
+        '''
         if (self.player.get_curr_pkm().get_is_fainted() and self.player.chk_party()):
             print("current player pokemon fainted - swap pokemon")
             # Render swap screen so they can switch.
@@ -222,7 +223,7 @@ class Waiting(arcade.View):
             # start_view = PokemonSwap(self.player, self.enemy)
             # start_view.setup()
             # self.window.show_view(start_view)
-
+'''
     # This on_update method is called each frame of the game and calls the respective update methods of the sprites
     def on_update(self, delta_time):
         """ Movement and game logic """
@@ -249,8 +250,18 @@ class Waiting(arcade.View):
         if int(self.total_time) % 60 > 3:
             print("resume")
             self.total_time = 0.0
-            self.action_list.pop(0)
-            if len(self.action_list) == 0:
+            swap_flag = False
+            #if (self.player.get_curr_pkm().get_is_fainted() and self.player.chk_party()):
+            print(f"{self.action_list[0][0]}, {self.action_list[0][1]}")
+            if self.action_list[0][0] == "player" and self.action_list[0][1] == "fainted":
+                print("current player pokemon fainted - swap pokemon")
+                # Render swap screen so they can switch.
+                self.state.set_state(State.PokemonSwap)
+                swap_flag = True
+                self.action_list.pop(0)
+            else:
+                self.action_list.pop(0)
+            if len(self.action_list) == 0 and not swap_flag:
                 self.state.set_state(State.Battle)
             self.state.set_rendered(False)
 

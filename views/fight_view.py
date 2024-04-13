@@ -281,12 +281,13 @@ class PokemonGame(arcade.View):
             self.bar_sprite_list.draw()
 
         # should be handling weird swap case
+        '''
         if (self.player.get_curr_pkm().get_is_fainted() and self.player.chk_party()):
             print("current player pokemon fainted - swap pokemon")
             # Render swap screen so they can switch.
             self.state.set_state(State.PokemonSwap)
             self.state.set_rendered(False)
-
+'''
             # TODO: Call method to render sprites to swap with
             # start_view = PokemonSwap(self.player, self.enemy)
             # start_view.setup()

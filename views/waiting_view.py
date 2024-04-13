@@ -55,9 +55,15 @@ class Waiting(arcade.View):
 
         # Health bar
         self.bar_sprite_list = arcade.SpriteList()
-        if (self.action_list[0][1] == "move" or self.action_list[0][1] == "item"):
-            self.enemy_health_bar = HealthBar(self.enemy.get_curr_pkm(), self.bar_sprite_list, 350, 500, 515, False)
+        if self.action_list[0][1] == "move" or self.action_list[0][1] == "item":
             self.player_health_bar = HealthBar(self.player.get_curr_pkm(), self.bar_sprite_list, 550, 250, 265, False)
+            self.enemy_health_bar = HealthBar(self.enemy.get_curr_pkm(), self.bar_sprite_list, 350, 500, 515, False)
+        elif self.action_list[0][0] == "enemy":
+            self.player_health_bar = HealthBar(self.player.get_curr_pkm(), self.bar_sprite_list, 550, 250, 265, False)
+        elif self.action_list[0][0] == "player":
+            self.enemy_health_bar = HealthBar(self.enemy.get_curr_pkm(), self.bar_sprite_list, 350, 500, 515, False)
+
+
 
         # ANIMATIONS (future deliverables)
         self.move_up = False

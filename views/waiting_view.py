@@ -55,8 +55,9 @@ class Waiting(arcade.View):
 
         # Health bar
         self.bar_sprite_list = arcade.SpriteList()
-        self.enemy_health_bar = HealthBar(self.enemy.get_curr_pkm(), self.bar_sprite_list, 350, 500, 515, False)
-        self.player_health_bar = HealthBar(self.player.get_curr_pkm(), self.bar_sprite_list, 550, 250, 265, False)
+        if (self.action_list[0][1] == "move" or self.action_list[0][1] == "item"):
+            self.enemy_health_bar = HealthBar(self.enemy.get_curr_pkm(), self.bar_sprite_list, 350, 500, 515, False)
+            self.player_health_bar = HealthBar(self.player.get_curr_pkm(), self.bar_sprite_list, 550, 250, 265, False)
 
         # ANIMATIONS (future deliverables)
         self.move_up = False
@@ -146,8 +147,18 @@ class Waiting(arcade.View):
             # Draw all the sprites.
             
             self.manager.draw()
-            self.player_list.draw()
-            self.enemy_list.draw()
+            if self.action_list[0][0] == "player":
+                if (self.action_list[0][1] == "move" or self.action_list[0][1] == "item"):
+                    self.player_list.draw()
+                    self.enemy_list.draw()
+                else:
+                    self.enemy_list.draw()
+            if self.action_list[0][0] == "enemy":
+                if (self.action_list[0][1] == "move" or self.action_list[0][1] == "item"):
+                    self.enemy_list.draw()
+                    self.player_list.draw()
+                else:
+                    self.player_list.draw()
             self.bar_sprite_list.draw()
         # if(self.state == State.PokemonSwap):
         #     self.clear()
@@ -230,6 +241,16 @@ class Waiting(arcade.View):
         # Call update to move the sprite
         self.player_list.update()
         self.enemy_list.update()
+        # if self.action_list[0][0] == "player" and not(self.action_list[0][1] == "fainted"):
+        #     self.player_list.update()
+        #     self.enemy_list.update()
+        # else:
+        #     self.enemy_list.update()
+        # if self.action_list[0][0] == "enemy" and not(self.action_list[0][1] == "fainted"):
+        #     self.player_list.update()
+        #     self.enemy_list.update()
+        # else:
+        #     self.player_list.update()
         
 
 
@@ -238,14 +259,15 @@ class Waiting(arcade.View):
             self.total_time += delta_time
             # print("waiting")
 
-        if self.action_list[0][0] == "player" and self.action_list[0][1] == "move":
+        if self.action_list[0][0] == "player" and (self.action_list[0][1] == "move" or self.action_list[0][1] == "item"):
             self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
             self.enemy.get_curr_pkm().set_prev_hlth(self.enemy.get_curr_pkm().get_curr_hlth())
-        if self.action_list[0][0] == "enemy" and self.action_list[0][1] == "move":
+        if self.action_list[0][0] == "enemy" and (self.action_list[0][1] == "move" or self.action_list[0][1] == "item"):
             self.player_health_bar.health_bar_update(self.bar_sprite_list)
             self.player.get_curr_pkm().set_prev_hlth(self.player.get_curr_pkm().get_curr_hlth())
 
         self.bar_sprite_list.update()
+
         # if total time is greater than three seconds stop waiting and go to battle state
         if int(self.total_time) % 60 > 3:
             print("resume")

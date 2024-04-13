@@ -109,8 +109,9 @@ def battle(player, enemy, btn_info):
             elif enemy.get_curr_pkm().get_is_fainted():
                 # force enemy to switch pokemon
                 force_swap = True
+                action_list.append(["enemy", "fainted", f"{enemy.get_curr_pkm().get_name()} fainted"])
                 print(f"{enemy.get_curr_pkm().get_name()} fainted")
-                enemy_action = enemy_turn(enemy, player, force_swap)
+                enemy_action, action_str = enemy_turn(enemy, player, force_swap)
                 action_list.append(["enemy", "swap", enemy_action])
 
             # send to gui
@@ -207,7 +208,6 @@ def enemy_turn(enemy, player, force_swap):
                     enemy.get_item_bag()[item] -= 1
                     action = item.item_to_string(item, enemy)
                     print(action)
-                if use_item:
                     item_is_used = True
                     break
     #switch

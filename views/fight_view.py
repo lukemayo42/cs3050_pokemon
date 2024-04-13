@@ -51,8 +51,8 @@ class PokemonGame(arcade.View):
 
         # Health bar
         self.bar_sprite_list = arcade.SpriteList()
-        self.enemy_health_bar = HealthBar(self.enemy.get_curr_pkm(), self.bar_sprite_list, 350, 500, 515)
-        self.player_health_bar = HealthBar(self.player.get_curr_pkm(), self.bar_sprite_list, 550, 250, 265)
+        self.enemy_health_bar = HealthBar(self.enemy.get_curr_pkm(), self.bar_sprite_list, 350, 500, 515, True)
+        self.player_health_bar = HealthBar(self.player.get_curr_pkm(), self.bar_sprite_list, 550, 250, 265, True)
 
         # ANIMATIONS (future deliverables)
         self.move_up = False

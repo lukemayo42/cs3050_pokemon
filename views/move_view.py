@@ -41,8 +41,8 @@ class PokemonMove(arcade.View):
 
         # Health bar
         self.bar_sprite_list = arcade.SpriteList()
-        self.enemy_health_bar = HealthBar(self.enemy.get_curr_pkm(), self.bar_sprite_list, 350, 500, 515)
-        self.player_health_bar = HealthBar(self.player.get_curr_pkm(), self.bar_sprite_list, 550, 250, 265)
+        self.enemy_health_bar = HealthBar(self.enemy.get_curr_pkm(), self.bar_sprite_list, 350, 500, 515, True)
+        self.player_health_bar = HealthBar(self.player.get_curr_pkm(), self.bar_sprite_list, 550, 250, 265, True)
 
         # ANIMATIONS (future deliverables)
         self.move_up = False
@@ -191,8 +191,8 @@ class PokemonMove(arcade.View):
                 # fight_view.setup()
                 # self.window.show_view(fight_view)
             # Reflects changes in the sprite of the healthbar
-            self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
-            self.player_health_bar.health_bar_update(self.bar_sprite_list)
+            #self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
+            #self.player_health_bar.health_bar_update(self.bar_sprite_list)
             if(action1 != "win"):
                 # Render the fight screen again with the updated sprite
                 self.state.set_state(State.Wait)
@@ -225,8 +225,8 @@ class PokemonMove(arcade.View):
                 # fight_view = PokemonGame(self.player, self.enemy)
                 # fight_view.setup()
                 # self.window.show_view(fight_view)
-            self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
-            self.player_health_bar.health_bar_update(self.bar_sprite_list)
+            #self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
+            #self.player_health_bar.health_bar_update(self.bar_sprite_list)
 
             if(action1 != "win"):
                 # Render the fight screen again with the updated sprite
@@ -258,8 +258,8 @@ class PokemonMove(arcade.View):
                 # fight_view = PokemonGame(self.player, self.enemy)
                 # fight_view.setup()
                 # self.window.show_view(fight_view)
-            self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
-            self.player_health_bar.health_bar_update(self.bar_sprite_list)
+            #self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
+            #self.player_health_bar.health_bar_update(self.bar_sprite_list)
 
             if(action1 != "win"):
                 # Render the fight screen again with the updated sprite
@@ -290,8 +290,8 @@ class PokemonMove(arcade.View):
                 # fight_view = PokemonGame(self.player, self.enemy)
                 # fight_view.setup()
                 # self.window.show_view(fight_view)
-            self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
-            self.player_health_bar.health_bar_update(self.bar_sprite_list)
+            #self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
+            #self.player_health_bar.health_bar_update(self.bar_sprite_list)
 
             if(action1 != "win"):
                 # Render the fight screen again with the updated sprite

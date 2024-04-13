@@ -166,7 +166,7 @@ def enemy_turn(enemy, player, force_swap):
     # Need to add this to make sure there is no reference without assignment, although I can't see a case where action is not assigned
     # TODO: Figure out why need this
     action = "placeholder"
-
+    # action is set to placeholder when item is used sometimes
     enemy_pkm = enemy.get_curr_pkm()
     player_pkm = player.get_curr_pkm()
     action_str = "swap"

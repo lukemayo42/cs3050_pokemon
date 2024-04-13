@@ -31,10 +31,17 @@ class Sprite(arcade.Sprite):
 # This HealthBar class is a subclass of the Sprite arcade class that displays the health and name
 # of pokemon on the screen in text sprites. It has a health_bar_update method that rewrites the sprite.
 class HealthBar(arcade.Sprite):
-    def __init__(self, pokemon, sprite_list, pos_x, pos_y, name_pos):
+    def __init__(self, pokemon, sprite_list, pos_x, pos_y, name_pos, is_current):
         super().__init__()
         self.pokemon = pokemon
-        self.health = pokemon.get_curr_hlth()
+        self.is_current = is_current
+        self.health = 0
+        if self.is_current:
+            self.health = pokemon.get_curr_hlth()
+            print(f"current: {self.health}")
+        else:
+            self.health = pokemon.get_prev_hlth()
+            print(f"previous:{self.health}")
         self.max_health = pokemon.get_max_hlth()
         self.name = pokemon.get_name()
         self.pos_x = pos_x
@@ -100,3 +107,5 @@ class HealthBar(arcade.Sprite):
         self.health_text.center_x = self.pos_x
         self.health_text.center_y = self.pos_y
         sprite_list.append(self.health_text)
+
+    #we need a method that will update only one of the health bars at a time

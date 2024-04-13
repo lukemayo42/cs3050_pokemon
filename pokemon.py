@@ -50,6 +50,7 @@ class pokemon:
             self.atk_mod = 0
             self.def_mod = 0
             self.spd_mod = 0
+            self.prev_hlth = self.get_max_hlth()
         #regular contructor takes 7 arguments
         elif len(args) == 7:
             self.name = args[0]
@@ -67,6 +68,7 @@ class pokemon:
             self.atk_mod = 0
             self.def_mod = 0
             self.spd_mod = 0
+            self.prev_hlth = self.get_max_hlth()
    
     '''
     def __init__(self, pkm):
@@ -129,6 +131,9 @@ class pokemon:
 
     def get_spd_mod(self):
         return self.spd_mod
+    
+    def get_prev_hlth(self):
+        return self.prev_hlth
         
     #setters
     def set_curr_hlth(self, new_hlth):
@@ -158,15 +163,19 @@ class pokemon:
     def set_spd_mod(self, mod):
         self.spd_mod = mod
 
-    
+    def set_prev_hlth(self, prev_hlth):
+        self.prev_hlth = prev_hlth
+
 
     #add health and remove health functions
     def add_health(self, hlth):
+        self.prev_hlth = self.curr_hlth
         self.curr_hlth += hlth
         if self.curr_hlth > self.max_hlth:
             self.curr_hlth = self.max_hlth
 
     def remove_health(self, hlth):
+        self.prev_hlth = self.curr_hlth
         self.curr_hlth -= hlth
         if self.curr_hlth < 0:
             self.curr_hlth = 0

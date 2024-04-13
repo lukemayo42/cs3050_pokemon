@@ -109,15 +109,15 @@ class Waiting(arcade.View):
         self.player_sprite2 = Sprite(
             "../cs3050_pokemon/sprites/" + self.enemy.get_curr_pkm().get_name().lower() + "-front.png",
             OPPONENT_SPRITE_SCALING)
+        '''
         if self.state.get_state().value == State.Wait.value and self.player.get_prev_pkm() != -1:
-            self.player_sprite = Sprite("../cs3050_pokemon/sprites/" + self.player.get_pokemon_list()[
-                self.player.get_prev_pkm()].get_name().lower() + "-back.png")
+            self.player_sprite = Sprite("../cs3050_pokemon/sprites/" + self.player.get_pokemon_list()[self.player.get_prev_pkm()].get_name().lower() + "-back.png")
             self.player.set_prev_pkm_index()
         if self.state.get_state().value == State.Wait.value and self.player.get_prev_pkm() != -1:
             self.player_sprite2 = Sprite("../cs3050_pokemon/sprites/" + self.enemy.get_pokemon_list()[
                 self.enemy.get_prev_pkm()].get_name().lower() + "-front.png", OPPONENT_SPRITE_SCALING)
             self.enemy.set_prev_pkm_index()
-
+'''
         self.player_sprite.scale = 300 / (self.player_sprite.height * 1.2)
         # TODO: change these to constant variables
         self.player_sprite.center_x = 200

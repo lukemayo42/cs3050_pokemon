@@ -22,6 +22,8 @@ SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 W_SCREEN_TITLE = "Pokemon World"
 B_SCREEN_TITLE = "Battle"
+SPAWN_X = 50
+SPAWN_Y = 450
 
 #TODO: figure out waiting
 #right now we are wiating in the fight_view may want to make wait own view
@@ -143,6 +145,8 @@ class Pokemon(arcade.Window):
             self.state.set_rendered(True)
             reset_characters([self.player, pkm_obj.gym_leader, pkm_obj.youngster_joey, pkm_obj.team_rocket_member, pkm_obj.ace_trainer, self.enemy])
             self.player.remove_all_pokemon()
+            self.state.set_player_pos_x(SPAWN_X)
+            self.state.set_player_pos_y(SPAWN_Y)
             start_view = EndBattle(self.player, self.enemy, self.state)
             start_view.setup()
             self.show_view(start_view)
@@ -151,6 +155,8 @@ class Pokemon(arcade.Window):
             self.state.set_rendered(True)
             reset_characters([self.player, pkm_obj.gym_leader, pkm_obj.youngster_joey, pkm_obj.team_rocket_member, pkm_obj.ace_trainer, self.enemy])
             self.player.remove_all_pokemon()
+            self.state.set_player_pos_x(SPAWN_X)
+            self.state.set_player_pos_y(SPAWN_Y)
             start_view = EndBattle(self.player, self.enemy, self.state)
             start_view.setup()
             self.show_view(start_view)

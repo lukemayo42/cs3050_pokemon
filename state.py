@@ -1,4 +1,6 @@
 from enum import Enum
+SPAWN_X = 50
+SPAWN_Y = 450
 
 # Enum to hold the current state of the game, used to update the screen rendering
 class State(Enum):
@@ -41,8 +43,8 @@ class GameState:
         self.num_hlth_changes = 0
         self.hlth_change_flag = False
         self.curr_pkm = "none"
-        self.player_pos_x = 50
-        self.player_pos_y = 450
+        self.player_pos_x = SPAWN_X
+        self.player_pos_y = SPAWN_Y
         '''
         self.previous_action = ["placeholder", "placeholder"]
         self.prev_pkm = "none"

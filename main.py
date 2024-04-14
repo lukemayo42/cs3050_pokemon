@@ -131,6 +131,14 @@ class Pokemon(arcade.Window):
             item_view.setup()
             self.show_view(item_view)
         if(check_render(self.state, State.Win)):
+            print("won against trainer")
+            # reset_characters([self.player, pkm_obj.gym_leader, pkm_obj.youngster_joey, pkm_obj.team_rocket_member, pkm_obj.ace_trainer, self.enemy])
+            # self.player.remove_all_pokemon()
+            self.state.set_rendered(True)
+            map_view = WorldMap(self.player, self.enemy, self.state)
+            map_view.setup()
+            self.show_view(map_view)
+        if(check_render(self.state, State.FullWin)):
             print("won")
             self.state.set_rendered(True)
             reset_characters([self.player, pkm_obj.gym_leader, pkm_obj.youngster_joey, pkm_obj.team_rocket_member, pkm_obj.ace_trainer, self.enemy])

@@ -467,6 +467,11 @@ class Waiting(arcade.View):
                 print("win")
                 dont_switch_to_battle = True
                 self.action_list.pop(0)
+            elif self.action_list[0][1] == "fullwin":
+                self.state.set_state(State.FullWin)
+                print("win")
+                dont_switch_to_battle = True
+                self.action_list.pop(0)
             elif self.action_list[0][1] == "lost":
                 self.state.set_state(State.Loss)
                 print("lose")

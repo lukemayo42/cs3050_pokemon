@@ -21,6 +21,7 @@ class State(Enum):
     Party2 = 18
     PartyStat2 = 19
     Wait = 20
+    FullWin = 21
 
 class BattleState(Enum):
     Trainer1 = 1
@@ -40,6 +41,8 @@ class GameState:
         self.num_hlth_changes = 0
         self.hlth_change_flag = False
         self.curr_pkm = "none"
+        self.player_pos_x = 50
+        self.player_pos_y = 450
         '''
         self.previous_action = ["placeholder", "placeholder"]
         self.prev_pkm = "none"
@@ -64,6 +67,10 @@ class GameState:
         return self.curr_pkm
     def get_battle_state(self):
         return self.battle_state
+    def get_player_pos_x(self):
+        return self.player_pos_x
+    def get_player_pos_y(self):
+        return self.player_pos_y
     '''
     def get_previous_action(self):
         return self.previous_action
@@ -92,6 +99,10 @@ class GameState:
         self.curr_pkm = pkm
     def set_battle_state(self, state):
         self.battle_state = state
+    def set_player_pos_x(self, x):
+        self.player_pos_x = x
+    def set_player_pos_y(self, y):
+        self.player_pos_y = y
 
     '''
     def set_previous_action(self, prev_action):

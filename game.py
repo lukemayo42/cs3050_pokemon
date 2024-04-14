@@ -578,18 +578,14 @@ class WorldMap(arcade.View):
 
         # TEMPORARY SOLUTION TO START FIGHT
         global GLOBAL_STATE
-        if 150 <= self.player.center_x <= 160 and GLOBAL_STATE == State.World:
-            GLOBAL_STATE = State.Battle
-            fight_view = PokemonGame(self.pkm_player, self.pkm_enemy)
-            fight_view.setup()
-            self.window.show_view(fight_view)
 
-        if 130 <= self.player.center_x <= 140 and GLOBAL_STATE == State.World:
+        if 200 <= self.player.center_y <= 250 and 420 <= self.player.center_x <= 450:
             GLOBAL_STATE = State.Gym
             gym_view = Gym(self.pkm_player, self.pkm_enemy)
             gym_view.setup()
             self.window.show_view(gym_view)
 
+        GLOBAL_STATE = State.World
 
 class Gym(arcade.View):
     """ Main application class. """
@@ -716,7 +712,7 @@ class Gym(arcade.View):
 
         # TEMPORARY SOLUTION TO START FIGHT
         global GLOBAL_STATE
-        if(self.player.center_x >= 130 and self.player.center_x <= 140 and GLOBAL_STATE == State.World):
+        if self.player.center_y >= 370 and 360 <= self.player.center_x <= 400:
             GLOBAL_STATE = State.Battle
             fight_view = PokemonGame(self.pkm_player, self.pkm_enemy)
             fight_view.setup()

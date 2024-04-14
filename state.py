@@ -30,10 +30,15 @@ class GameState:
         self.user_choice = 0
         self.character_sprite = ''
         self.action_list = []
+        self.num_hlth_changes = 0
+        self.hlth_change_flag = False
+        self.curr_pkm = "none"
+        '''
         self.previous_action = ["placeholder", "placeholder"]
         self.prev_pkm = "none"
         self.swap_flag = False
         self.display_pokemon = "none"
+        '''
     def get_state(self):
         return self.state
     def get_rendered(self):
@@ -44,6 +49,13 @@ class GameState:
         return self.character_sprite
     def get_action_list(self):
         return self.action_list
+    def get_num_hlth_changes(self):
+        return self.num_hlth_changes
+    def get_hlth_change_flag(self):
+        return self.hlth_change_flag
+    def get_curr_pkm(self):
+        return self.curr_pkm
+    '''
     def get_previous_action(self):
         return self.previous_action
     def get_prev_pkm(self):
@@ -52,6 +64,7 @@ class GameState:
         return self.swap_flag
     def get_display_pkm(self):
         return self.display_pokemon
+    '''
     def set_action_list(self, new_list):
         self.action_list = new_list
     def add_new_action(self, value):
@@ -64,16 +77,30 @@ class GameState:
         self.user_choice = user_choice
     def set_character_sprite(self, character):
         self.character_sprite = character
+    def set_hlth_change_flag(self, flag):
+        self.hlth_change_flag = flag
+    def set_curr_pkm(self, pkm):
+        self.curr_pkm = pkm
+
+    '''
     def set_previous_action(self, prev_action):
         self.previous_action = prev_action
+    
     def set_prev_pkm(self, previous):
         self.prev_pkm = previous
     def set_swap_flag(self, swap):
         self.swap_flag = swap
     def set_display_pokemon(self, pkm):
         self.display_pokemon = pkm
+    '''
     def remove_from_action_list(self):
         self.action_list.pop(0)
+
+    def increment_num_hlth_changes(self):
+        self.num_hlth_changes+=1
+
+    def reset_num_hlth_changes(self):
+        self.num_hlth_changes = 0
 
 
 # State object used in main

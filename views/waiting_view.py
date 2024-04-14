@@ -34,7 +34,6 @@ class Waiting(arcade.View):
     title - the name of the screen - string
     player - Character object representing the player - Character
     enemy - Character object representing the enemy trainer - Character
-    wait - boolean whether game is waiting or not
     """
 
     def __init__(self, player, enemy, state):
@@ -43,11 +42,15 @@ class Waiting(arcade.View):
         self.state = state
         self.player = player
         self.enemy = enemy
-        self.player_display_pokemon = player.get_curr_pkm()
+        self.player_display_pokemon = self.player.get_curr_pkm()
+        print(f"current pkm after settiong to state: {self.player_display_pokemon.get_name()}")
         self.enemy_display_pokemon = enemy.get_curr_pkm()
         self.action_list = state.get_action_list()
         print(self.action_list)
         self.total_time = 0.0
+        self.enemy_num_health_changes = 0
+        self.player_num_health_changes = 0
+        #self.hlth_change_count = state.get_num_hlth_changes()
 
         #this 
         #make sure action_list is at teast two avoid exception
@@ -56,12 +59,13 @@ class Waiting(arcade.View):
             #check to see ff the current is move, the next is fainted if so display previous sprite instead of current sprite
             if (self.action_list[0][0] == "player" and self.action_list[0][1] == "move" and self.action_list[1][0] == "enemy" and self.action_list[1][1] == "fainted"):
                 self.enemy_display_pokemon = self.enemy.get_pokemon_list()[self.enemy.get_prev_pkm()]
-            
+            '''
             #check to see ff the current is move, the next is fainted if so display previous sprite instead of current sprite
             if self.action_list[0][0] == "enemy" and self.action_list[0][1] == "move" and self.action_list[1][0] == "player" and (self.action_list[1][1] == "fainted" or self.action_list[1][1] == "swap"):
                 self.player_display_pokemon = self.player.get_pokemon_list()[self.player.get_prev_pkm()]
+                print(f"setting display to: {self.player_display_pokemon.get_name()}")
+            '''
         
-
         if len(self.action_list) >=3:
             #check to see ff the current is move, the next is fainted if so display previous sprite instead of current sprite
             if (self.action_list[1][0] == "player" and self.action_list[1][1] == "move" and self.action_list[2][0] == "enemy" and self.action_list[2][1] == "fainted"):
@@ -70,6 +74,8 @@ class Waiting(arcade.View):
             #check to see ff the current is move, the next is fainted if so display previous sprite instead of current sprite
             if self.action_list[1][0] == "enemy" and self.action_list[1][1] == "move" and self.action_list[2][0] == "player" and self.action_list[2][1] == "fainted":
                 self.player_display_pokemon = self.player.get_pokemon_list()[self.player.get_prev_pkm()]
+                print(f"setting display to: {self.player_display_pokemon.get_name()}")
+            
         # Background image will be stored in this variable
         self.background = None
 
@@ -77,16 +83,112 @@ class Waiting(arcade.View):
         # self.player.get_curr_pkm().set_curr_hlth(1000)
 
         # Health bar
-        # TODO: need
+        # TODO: need to figure out why the health automatically updates after item and not move
+        # idea item case should not be set to previous - maybe use the hlth after item
+
+        #check to see of there is one or two
+        print(self.state.get_hlth_change_flag())
+        #case pokemon regains health using potion and takes damage - either user or enemy pokemon
+        if not state.get_hlth_change_flag() and self.state.get_num_hlth_changes() < 1:
+            for action in self.action_list:
+                if action[0] == "enemy" and action[1] == "move":
+                    self.player_num_health_changes+=1
+                if action[0] == "enemy" and action[1] == "item": 
+                    self.enemy_num_health_changes+=1
+                if action[0] == "player" and  action[1] == "item":
+                    self.player_num_health_changes+=1
+                if action[0] == "player" and  action[1] == "move":
+                    self.enemy_num_health_changes+=1
+            if self.player_num_health_changes < 2 and self.enemy_num_health_changes < 2:
+                #this always happens the second time around
+                print("one health operation or less")
+                self.state.set_hlth_change_flag(True)
+        
+        #this will only work if there is one health change in a turn because after one previous hlth, the previous hlth is set equal to the current health
         self.bar_sprite_list = arcade.SpriteList()
+        '''
         if self.action_list[0][1] == "move" or self.action_list[0][1] == "item":
             self.player_health_bar = HealthBar(self.player_display_pokemon, self.bar_sprite_list, 550, 250, 265, False)
             self.enemy_health_bar = HealthBar(self.enemy_display_pokemon, self.bar_sprite_list, 350, 500, 515, False)
-        elif self.action_list[0][0] == "enemy":
-            self.player_health_bar = HealthBar(self.player_display_pokemon, self.bar_sprite_list, 550, 250, 265, False)
-        elif self.action_list[0][0] == "player":
-            self.enemy_health_bar = HealthBar(self.enemy_display_pokemon, self.bar_sprite_list, 350, 500, 515, False)
+        '''
+        
+        #health_bar_update does not actualy update the health bar
+        if self.state.get_hlth_change_flag():
+            if self.action_list[0][0] == "player" and (self.action_list[0][1] == "move"):
+                
+                #self.enemy_health_bar = HealthBar(self.enemy_display_pokemon, self.bar_sprite_list, 550, 250, 265, False, self.enemy.get_curr_pkm().get_prev_hlth())
+                self.enemy_display_pokemon.set_prev_hlth(self.enemy_display_pokemon.get_curr_hlth())
+                #self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
+                print(self.enemy.get_curr_pkm().get_prev_hlth())
+            if self.action_list[0][0] == "enemy" and (self.action_list[0][1] == "move"):
+                #self.player_health_bar = HealthBar(self.player_display_pokemon, self.bar_sprite_list, 550, 250, 265, False, self.player.get_curr_pkm().get_prev_hlth())
+                self.player.get_curr_pkm().set_prev_hlth(self.player_display_pokemon.get_curr_hlth())
+                print(self.player_display_pokemon.get_name())
+                #self.player_health_bar.health_bar_update(self.bar_sprite_list)
+                #print(self.player.get_curr_pkm().get_prev_hlth())
+            if self.action_list[0][0] == "player" and self.action_list[0][1] == "item":
+                #self.player_health_bar = HealthBar(self.player_display_pokemon, self.bar_sprite_list, 550, 250, 265, False, self.player.get_curr_pkm().get_prev_hlth())
+                self.player.get_curr_pkm().set_prev_hlth(self.player_display_pokemon.get_curr_hlth())
+                #self.player_health_bar.health_bar_update(self.bar_sprite_list)
+            if self.action_list[0][0] == "enemy" and self.action_list[0][1] == "item":
+                #self.enemy_health_bar = HealthBar(self.enemy_display_pokemon, self.bar_sprite_list, 550, 250, 265, False, self.enemy.get_curr_pkm().get_prev_hlth())
+                self.enemy.get_curr_pkm().set_prev_hlth(self.enemy_display_pokemon.get_curr_hlth())
+                #self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
+            self.state.set_hlth_change_flag(False)
+        elif not self.state.get_hlth_change_flag():
+            #not getting here when it should be
+            print("two health operations")
+            if self.action_list[0][0] == "player" and (self.action_list[0][1] == "move"):
+                #self.enemy_health_bar = HealthBar(self.enemy_display_pokemon, self.bar_sprite_list, 550, 250, 265, False, self.enemy.get_curr_pkm().get_prev_hlth())
+                if self.state.get_num_hlth_changes() == 0:
+                    print(f"setting health to: {self.enemy.get_curr_pkm().get_hlth_after_move()} ")
+                    #self.enemy_health_bar = HealthBar(self.enemy_display_pokemon, self.bar_sprite_list, 550, 250, 265, False, self.enemy.get_curr_pkm().get_prev_hlth())
+                    self.enemy.get_curr_pkm().set_prev_hlth(self.enemy_display_pokemon.get_hlth_after_move())
+                else:
+                    self.enemy.get_curr_pkm().set_prev_hlth(self.enemy_display_pokemon.get_curr_hlth())
+                #self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
+                #print(self.enemy.get_curr_pkm().get_prev_hlth())
+            if self.action_list[0][0] == "enemy" and (self.action_list[0][1] == "move"):
+                #self.player_health_bar.health_bar_update(self.bar_sprite_list)
+                #self.player_health_bar = HealthBar(self.player_display_pokemon, self.bar_sprite_list, 550, 250, 265, False, self.player.get_curr_pkm().get_prev_hlth())
+                if self.state.get_num_hlth_changes() == 0:
+                    print(f"setting health to: {self.player_display_pokemon.get_hlth_after_move()} ")
+                    self.player.get_curr_pkm().set_prev_hlth(self.player_display_pokemon.get_hlth_after_move())
+                else:
+                    self.player.get_curr_pkm().set_prev_hlth(self.player_display_pokemon.get_curr_hlth())
+                #self.player_health_bar.health_bar_update(self.bar_sprite_list)
+                #print(self.player.get_curr_pkm().get_prev_hlth())
+            if self.action_list[0][0] == "player" and self.action_list[0][1] == "item":
+                #self.player_health_bar.health_bar_update(self.bar_sprite_list)
+                #self.player_health_bar = HealthBar(self.player_display_pokemon, self.bar_sprite_list, 550, 250, 265, False, self.player.get_curr_pkm().get_prev_hlth())
+                if self.state.get_num_hlth_changes() == 0:
+                    print(f"setting health to: {self.player.get_curr_pkm().get_hlth_after_item()} ")
+                    self.player.get_curr_pkm().set_prev_hlth(self.player_display_pokemon.get_hlth_after_item())
+                else:
+                    self.player.get_curr_pkm().set_prev_hlth(self.player_display_pokemon.get_curr_hlth())
+                #self.player_health_bar.health_bar_update(self.bar_sprite_list)
+            if self.action_list[0][0] == "enemy" and self.action_list[0][1] == "item":
+                #self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
+                #self.enemy_health_bar = HealthBar(self.enemy_display_pokemon, self.bar_sprite_list, 550, 250, 265, False, self.enemy.get_curr_pkm().get_prev_hlth())
+                if self.state.get_num_hlth_changes() == 0:
+                    print(f"setting health to: {self.enemy.get_curr_pkm().get_hlth_after_item()}")
+                    self.enemy.get_curr_pkm().set_prev_hlth(self.enemy_display_pokemon.get_hlth_after_item())
+                else:
+                    self.enemy.get_curr_pkm().set_prev_hlth(self.enemy_display_pokemon.get_curr_hlth())
+                #self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
+            self.state.increment_num_hlth_changes()
+            if self.state.get_num_hlth_changes() >= 2:
+                self.state.reset_num_hlth_changes()
 
+        if self.action_list[0][1] == "move" or self.action_list[0][1] == "item":
+            self.player_health_bar = HealthBar(self.player_display_pokemon, self.bar_sprite_list, 550, 250, 265, False, self.player_display_pokemon.get_prev_hlth())
+            self.enemy_health_bar = HealthBar(self.enemy_display_pokemon, self.bar_sprite_list, 350, 500, 515, False, self.enemy_display_pokemon.get_prev_hlth())
+        elif self.action_list[0][1] == "win":
+            self.player_health_bar = HealthBar(self.player_display_pokemon, self.bar_sprite_list, 550, 250, 265, False, self.player_display_pokemon.get_prev_hlth())
+        elif self.action_list[0][0] == "enemy":
+            self.player_health_bar = HealthBar(self.player_display_pokemon, self.bar_sprite_list, 550, 250, 265, False, self.player_display_pokemon.get_prev_hlth())
+        elif self.action_list[0][0] == "player" and self.action_list[0][1] != "win":
+            self.enemy_health_bar = HealthBar(self.enemy_display_pokemon, self.bar_sprite_list, 350, 500, 515, False, self.enemy_display_pokemon.get_prev_hlth())
 
         # ANIMATIONS (future deliverables)
         self.move_up = False
@@ -145,6 +247,9 @@ class Waiting(arcade.View):
             #check to see ff the current is move, the next is fainted if so display previous sprite instead of current sprite
             if self.action_list[0][0] == "player" and self.action_list[0][1] == "move" and self.action_list[1][0] == "enemy" and self.action_list[1][1] == "fainted":
                 print(self.enemy.get_pokemon_list()[self.enemy.get_prev_pkm()].get_name().lower())
+            if self.action_list[0][0] == "enemy" and self.action_list[0][1] == "move" and self.action_list[1][0] == "player" and self.action_list[1][1] == "fainted":
+                print(f"previous pkm: {self.player.get_pokemon_list()[self.player.get_prev_pkm()].get_name().lower()}")
+                print(f"current pokemon: {self.player.get_curr_pkm().get_name()}")
         '''
         if self.state.get_state().value == State.Wait.value and self.player.get_prev_pkm() != -1:
             self.player_sprite = Sprite("../cs3050_pokemon/sprites/" + self.player.get_pokemon_list()[self.player.get_prev_pkm()].get_name().lower() + "-back.png")
@@ -186,6 +291,8 @@ class Waiting(arcade.View):
                 if (self.action_list[0][1] == "move" or self.action_list[0][1] == "item"):
                     self.player_list.draw()
                     self.enemy_list.draw()
+                elif self.action_list[0][1] == "win":
+                    self.player_list.draw()
                 else:
                     self.enemy_list.draw()
             if self.action_list[0][0] == "enemy":
@@ -204,6 +311,7 @@ class Waiting(arcade.View):
         #     self.clear()
 
         # When the backend determines the enemy has been defeated, change states
+        '''
         if not self.enemy.chk_party():
             self.state.set_state(State.Win)
             self.state.set_rendered(False)
@@ -211,7 +319,7 @@ class Waiting(arcade.View):
         if not self.player.chk_party():
             self.state.set_state(State.Loss)
             self.state.set_rendered(False)
-
+        '''
         # if(self.state == State.Moves):
         #     self.clear()
         #     # Draw the background texture
@@ -293,39 +401,87 @@ class Waiting(arcade.View):
         if self.state.get_state().value == State.Wait.value:
             self.total_time += delta_time
             # print("waiting")
-
-        if self.action_list[0][0] == "player" and (self.action_list[0][1] == "move"):
-            self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
-            #self.enemy.get_curr_pkm().set_prev_hlth(self.enemy.get_curr_pkm().get_curr_hlth())
-            #print(self.enemy.get_curr_pkm().get_prev_hlth())
-        if self.action_list[0][0] == "enemy" and (self.action_list[0][1] == "move"):
-            self.player_health_bar.health_bar_update(self.bar_sprite_list)
-            #self.player.get_curr_pkm().set_prev_hlth(self.player.get_curr_pkm().get_curr_hlth())
-            #print(self.player.get_curr_pkm().get_prev_hlth())
-        if self.action_list[0][0] == "player" and self.action_list[0][1] == "item":
-            self.player_health_bar.health_bar_update(self.bar_sprite_list)
-            #self.player.get_curr_pkm().set_prev_hlth(self.player.get_curr_pkm().get_curr_hlth())
-        if self.action_list[0][0] == "enemy" and self.action_list[0][1] == "item":
-            self.player_health_bar.health_bar_update(self.bar_sprite_list)
-            #self.enemy.get_curr_pkm().set_prev_hlth(self.enemy.get_curr_pkm().get_curr_hlth())
+        # 2 cases - regular case - (health operation used on either pokemon / only one pokemon / no pokemon) 1 case
+        # 2nd case - helath operation on enemy, 3rd case health operation on user 
+        '''
+        if self.state.get_hlth_change_flag():
+            if self.action_list[0][0] == "player" and (self.action_list[0][1] == "move"):
+                self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
+                self.enemy.get_curr_pkm().set_prev_hlth(self.enemy.get_curr_pkm().get_curr_hlth())
+                #print(self.enemy.get_curr_pkm().get_prev_hlth())
+            if self.action_list[0][0] == "enemy" and (self.action_list[0][1] == "move"):
+                self.player_health_bar.health_bar_update(self.bar_sprite_list)
+                self.player.get_curr_pkm().set_prev_hlth(self.player.get_curr_pkm().get_curr_hlth())
+                #print(self.player.get_curr_pkm().get_prev_hlth())
+            if self.action_list[0][0] == "player" and self.action_list[0][1] == "item":
+                self.player_health_bar.health_bar_update(self.bar_sprite_list)
+                self.player.get_curr_pkm().set_prev_hlth(self.player.get_curr_pkm().get_curr_hlth())
+            if self.action_list[0][0] == "enemy" and self.action_list[0][1] == "item":
+                self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
+                self.enemy.get_curr_pkm().set_prev_hlth(self.enemy.get_curr_pkm().get_curr_hlth())
+            self.state.set_hlth_change_flag(False)
+        else:
+            #not getting here when it should be
+            #print("two health operations")
+            if self.action_list[0][0] == "player" and (self.action_list[0][1] == "move"):
+                self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
+                if self.state.get_num_hlth_changes == 0:
+                    self.enemy.get_curr_pkm().set_prev_hlth(self.enemy.get_curr_pkm().get_hlth_after_move())
+                else:
+                    self.enemy.get_curr_pkm().set_prev_hlth(self.enemy.get_curr_pkm().get_curr_hlth())
+                #print(self.enemy.get_curr_pkm().get_prev_hlth())
+            if self.action_list[0][0] == "enemy" and (self.action_list[0][1] == "move"):
+                self.player_health_bar.health_bar_update(self.bar_sprite_list)
+                if self.state.get_num_hlth_changes == 0:
+                    self.player.get_curr_pkm().set_prev_hlth(self.player.get_curr_pkm().get_hlth_after_move())
+                else:
+                    self.player.get_curr_pkm().set_prev_hlth(self.player.get_curr_pkm().get_curr_hlth())
+                #print(self.player.get_curr_pkm().get_prev_hlth())
+            if self.action_list[0][0] == "player" and self.action_list[0][1] == "item":
+                self.player_health_bar.health_bar_update(self.bar_sprite_list)
+                if self.state.get_num_hlth_changes == 0:
+                    self.player.get_curr_pkm().set_prev_hlth(self.player.get_curr_pkm().get_hlth_after_item())
+                else:
+                    self.player.get_curr_pkm().set_prev_hlth(self.player.get_curr_pkm().get_curr_hlth())
+            if self.action_list[0][0] == "enemy" and self.action_list[0][1] == "item":
+                self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
+                if self.state.get_num_hlth_changes == 0:
+                    self.enemy.get_curr_pkm().set_prev_hlth(self.enemy.get_curr_pkm().get_hlth_after_item())
+                else:
+                    self.enemy.get_curr_pkm().set_prev_hlth(self.enemy.get_curr_pkm().get_curr_hlth())
+            self.state.increment_num_hlth_changes()
+            if self.state.get_num_hlth_changes() >= 2:
+                self.state.reset_num_hlth_changes()
+        '''
         self.bar_sprite_list.update()
 
         # if total time is greater than three seconds stop waiting and go to battle state
-        if int(self.total_time) % 60 > 3:
+        if int(self.total_time) % 60 > 1:
             print("resume")
             self.total_time = 0.0
-            swap_flag = False
+            dont_switch_to_battle = False
             #if (self.player.get_curr_pkm().get_is_fainted() and self.player.chk_party()):
             #print(f"{self.action_list[0][0]}, {self.action_list[0][1]}")
-            if self.action_list[0][0] == "player" and self.action_list[0][1] == "fainted":
+            if self.action_list[0][1] == "win":
+                self.state.set_state(State.Win)
+                print("win")
+                dont_switch_to_battle = True
+                self.action_list.pop(0)
+            elif self.action_list[0][1] == "lost":
+                self.state.set_state(State.Loss)
+                print("lose")
+                dont_switch_to_battle = True
+                self.action_list.pop(0)
+            elif self.action_list[0][0] == "player" and self.action_list[0][1] == "fainted":
                 print("current player pokemon fainted - swap pokemon")
                 # Render swap screen so they can switch.
                 self.state.set_state(State.PokemonSwap)
-                swap_flag = True
+                dont_switch_to_battle = True
                 self.action_list.pop(0)
             else:
                 self.action_list.pop(0)
-            if len(self.action_list) == 0 and not swap_flag:
+            #deteremine whether to go to win/loss state or battle state
+            if len(self.action_list) == 0 and not dont_switch_to_battle:
                 self.state.set_state(State.Battle)
             self.state.set_rendered(False)
 

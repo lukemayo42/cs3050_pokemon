@@ -216,6 +216,7 @@ class PokemonSwap(arcade.View):
         if(not self.player.get_curr_pkm().get_is_fainted()):
             btn_info = ["swap", self.index]
             player_action, enemy_action, action_list = battle(self.player, self.enemy, btn_info)
+            self.state.set_curr_pkm(self.player.get_curr_pkm())
             self.state.set_action_list(action_list)
             if(player_action != "fainted" and self.state.get_state().value == State.PokemonSwap.value):
                 self.state.set_state(State.Wait)

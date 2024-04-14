@@ -184,17 +184,21 @@ class pokemon:
 
     #add health and remove health functions
     def add_health(self, hlth):
-        self.prev_hlth = self.curr_hlth
+        #self.prev_hlth = self.curr_hlth
         self.curr_hlth += hlth
         if self.curr_hlth > self.max_hlth:
             self.curr_hlth = self.max_hlth
+        
+        
 
     def remove_health(self, hlth):
-        self.prev_hlth = self.curr_hlth
+        #self.prev_hlth = self.curr_hlth
         self.curr_hlth -= hlth
         if self.curr_hlth < 0:
             self.curr_hlth = 0
             self.is_fainted = True
+            
+        self.set_hlth_after_move(self.get_curr_hlth())
 
 
     #print functions!!!! - need to know how gui wants text info

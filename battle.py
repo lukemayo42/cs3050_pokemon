@@ -132,7 +132,8 @@ def player_turn(player, enemy, btn_info):
             #send gui sometyhing saying it hit 
             dmg, effectiveness, crit = calc_dmg(player.get_curr_pkm(), enemy.get_curr_pkm(), move_used)
             enemy.get_curr_pkm().remove_health(dmg)
-            print(f"enemy health: {enemy.get_current_pokemon().get_curr_hlth()}")
+            
+            #print(f"enemy health: {enemy.get_current_pokemon().get_curr_hlth()}")
             enemy.get_curr_pkm().set_hlth_after_move(enemy.get_curr_pkm().get_curr_hlth())
             action_str = player.get_curr_pkm().move_to_string(move_used, True, effectiveness, crit, player)
             print(action_str)
@@ -166,7 +167,11 @@ def player_turn(player, enemy, btn_info):
     #if move calc damage using index 0 of both player and enemy
     #update curr health of enemy
     return action_str
-
+'''
+def set_prev_pkm(trainer):
+    if trainer.get_curr_pkm().get_is_fainted():
+        trainer.set_prev_pkm(trainer.get_curr_pkm())
+'''
 #single turn of an enemy character, takes in enemy, player, and a boolean saying whether the enemy is forced to swap or not
 def enemy_turn(enemy, player, force_swap):
     # Need to add this to make sure there is no reference without assignment, although I can't see a case where action is not assigned

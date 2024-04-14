@@ -51,8 +51,8 @@ class PokemonGame(arcade.View):
 
         # Health bar
         self.bar_sprite_list = arcade.SpriteList()
-        self.enemy_health_bar = HealthBar(self.enemy.get_curr_pkm(), self.bar_sprite_list, 350, 500, 515, True)
-        self.player_health_bar = HealthBar(self.player.get_curr_pkm(), self.bar_sprite_list, 550, 250, 265, True)
+        self.enemy_health_bar = HealthBar(self.enemy.get_curr_pkm(), self.bar_sprite_list, 350, 500, 515, True, self.enemy.get_curr_pkm().get_curr_hlth())
+        self.player_health_bar = HealthBar(self.player.get_curr_pkm(), self.bar_sprite_list, 550, 250, 265, True, self.player.get_curr_pkm().get_curr_hlth())
 
         # ANIMATIONS (future deliverables)
         self.move_up = False
@@ -228,11 +228,13 @@ class PokemonGame(arcade.View):
 
         # When the backend determines the enemy has been defeated, change states
         if not self.enemy.chk_party():
-            self.state.set_state(State.Win)
+            self.state.add_new_action(["player", "win", "The enemy is out of pokemon"])
+            self.state.set_state(State.Wait)
             self.state.set_rendered(False)
 
         if not self.player.chk_party():
-            self.state.set_state(State.Loss)
+            self.state.add_new_action(["player", "lost", "You are out of pokemon"])
+            self.state.set_state(State.Wait)
             self.state.set_rendered(False)
 
         # if(self.state == State.Moves):

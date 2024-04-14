@@ -48,6 +48,7 @@ class item:
     # use_item function takes in the current pokemon and uses the item on the pokemon.
     def use_item(self, pokemon):
         pokemon.add_health(self.health_recovered)
+        pokemon.set_hlth_after_item(pokemon.get_curr_hlth())
         '''
         if self.is_revive and pokemon.get_is_fainted():
             pokemon.add_health(pokemon.get_max_hlth()/2)

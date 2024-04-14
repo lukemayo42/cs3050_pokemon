@@ -15,7 +15,7 @@ class Character:
         self.item_bag = item_bag
         self.money = money
         self.speech_bubble_text = speech_bubble_text
-        self.prev_pkm_index = -1
+        self.prev_pkm_index = 0
 
     def display_character_info(self):
         print(f"Name: {self.name}")

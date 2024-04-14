@@ -14,6 +14,7 @@ from views.items_view import PokemonItem
 from views.choose_party_view import PokemonParty
 from views.end_battle import EndBattle
 from views.char_selection_view import PlayerSelectView
+from views.waiting_view import Waiting
 import state
 from state import State
 
@@ -21,6 +22,14 @@ SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 W_SCREEN_TITLE = "Pokemon World"
 B_SCREEN_TITLE = "Battle"
+
+#TODO: figure out waiting
+#right now we are wiating in the fight_view may want to make wait own view
+#idea: create different views on different waits - damage wait, fainted wait, swapping wait - some of these may be able to be in one view beacuse we just need to display text
+# send over list(or dictionary) of strings that will need to be displayed as text, would be 2 or three strings
+# based on list or dictionary determines what wait to do and we will display text, will need to wait multiple times to diplay text
+#need to do different thing on each wait, change user/enemy health, faint, swap  - make single view for waiting, take in value for text to be dislpayed and action that needs to happen, as well as the current state of the battle, and the number of actions that need to happen and the current action that the wait is on
+#what we need to do this - strings with the action text in them - strings saying what action is in each string - number of actions to be displayed - current action 
 
 # Pokemon is a python arcade window that renders the views from the directory and updates the rendering
 # as the views change the state of the game.
@@ -116,16 +125,22 @@ class Pokemon(arcade.Window):
             reset_characters([self.player, pkm_obj.gym_leader, pkm_obj.youngster_joey, pkm_obj.team_rocket_member, pkm_obj.ace_trainer, self.enemy])
             self.player.remove_all_pokemon()
             start_view = EndBattle(self.player, self.enemy, self.state)
-            self.show_view(start_view)
             start_view.setup()
+            self.show_view(start_view)
         if(check_render(self.state, State.Loss)):
             print("loss")
             self.state.set_rendered(True)
             reset_characters([self.player, pkm_obj.gym_leader, pkm_obj.youngster_joey, pkm_obj.team_rocket_member, pkm_obj.ace_trainer, self.enemy])
             self.player.remove_all_pokemon()
             start_view = EndBattle(self.player, self.enemy, self.state)
-            self.show_view(start_view)
             start_view.setup()
+            self.show_view(start_view)
+        if(check_render(self.state, State.Wait)):
+            print("wait")
+            self.state.set_rendered(True)
+            start_view = Waiting(self.player, self.enemy, self.state)
+            start_view.setup()
+            self.show_view(start_view)
 
 # Helper function to act as an overloaded operator and confirm the screen needs to be rendered
 def check_render(state, check_state):

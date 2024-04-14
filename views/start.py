@@ -4,7 +4,6 @@ import arcade.gui
 from arcade.gui import UIManager
 from arcade.gui.widgets import UITextArea, UITexturePane
 from state import State
-from views.button import CustomButton
 from views.health import Sprite
 
 SCREEN_WIDTH = 800

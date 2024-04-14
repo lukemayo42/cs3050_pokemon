@@ -15,7 +15,6 @@ import math
 import time
 from state import State
 from views.health import Sprite
-from views.button import CustomButton
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600

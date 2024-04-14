@@ -32,6 +32,8 @@ class GameState:
         self.action_list = []
         self.previous_action = ["placeholder", "placeholder"]
         self.prev_pkm = "none"
+        self.swap_flag = False
+        self.display_pokemon = "none"
     def get_state(self):
         return self.state
     def get_rendered(self):
@@ -46,6 +48,10 @@ class GameState:
         return self.previous_action
     def get_prev_pkm(self):
         return self.prev_pkm
+    def get_swap_flag(self):
+        return self.swap_flag
+    def get_display_pkm(self):
+        return self.display_pokemon
     def set_action_list(self, new_list):
         self.action_list = new_list
     def add_new_action(self, value):
@@ -62,6 +68,10 @@ class GameState:
         self.previous_action = prev_action
     def set_prev_pkm(self, previous):
         self.prev_pkm = previous
+    def set_swap_flag(self, swap):
+        self.swap_flag = swap
+    def set_display_pokemon(self, pkm):
+        self.display_pokemon = pkm
     def remove_from_action_list(self):
         self.action_list.pop(0)
 

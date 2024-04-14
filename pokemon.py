@@ -51,6 +51,8 @@ class pokemon:
             self.def_mod = 0
             self.spd_mod = 0
             self.prev_hlth = self.get_max_hlth()
+            self.hlth_after_move = self.get_max_hlth()
+            self.hlth_after_item = self.get_max_hlth()
         #regular contructor takes 7 arguments
         elif len(args) == 7:
             self.name = args[0]
@@ -69,6 +71,8 @@ class pokemon:
             self.def_mod = 0
             self.spd_mod = 0
             self.prev_hlth = self.get_max_hlth()
+            self.hlth_after_move = self.get_max_hlth()
+            self.hlth_after_item = self.get_max_hlth()
    
     '''
     def __init__(self, pkm):
@@ -134,7 +138,12 @@ class pokemon:
     
     def get_prev_hlth(self):
         return self.prev_hlth
-        
+    
+    def get_hlth_after_move(self):
+        return self.hlth_after_move
+    
+    def get_hlth_after_item(self):
+        return self.hlth_after_item
     #setters
     def set_curr_hlth(self, new_hlth):
         self.curr_hlth = new_hlth
@@ -165,6 +174,12 @@ class pokemon:
 
     def set_prev_hlth(self, prev_hlth):
         self.prev_hlth = prev_hlth
+
+    def set_hlth_after_move(self, new_hlth):
+        self.hlth_after_move = new_hlth
+    
+    def set_hlth_after_item(self, new_hlth):
+        self.hlth_after_item = new_hlth
 
 
     #add health and remove health functions

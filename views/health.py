@@ -35,7 +35,8 @@ class HealthBar(arcade.Sprite):
         super().__init__()
         self.pokemon = pokemon
         self.is_current = is_current
-        self.health = 0
+        #self.health = health
+        
         if self.is_current:
             self.health = pokemon.get_curr_hlth()
             print(f"current: {self.health}")

@@ -43,10 +43,33 @@ class Waiting(arcade.View):
         self.state = state
         self.player = player
         self.enemy = enemy
+        self.player_display_pokemon = player.get_curr_pkm()
+        self.enemy_display_pokemon = enemy.get_curr_pkm()
         self.action_list = state.get_action_list()
         print(self.action_list)
         self.total_time = 0.0
 
+        #this 
+        #make sure action_list is at teast two avoid exception
+        #TODO: may need to add more cases to handle items as well
+        if len(self.action_list) >= 2:
+            #check to see ff the current is move, the next is fainted if so display previous sprite instead of current sprite
+            if (self.action_list[0][0] == "player" and self.action_list[0][1] == "move" and self.action_list[1][0] == "enemy" and self.action_list[1][1] == "fainted"):
+                self.enemy_display_pokemon = self.enemy.get_pokemon_list()[self.enemy.get_prev_pkm()]
+            
+            #check to see ff the current is move, the next is fainted if so display previous sprite instead of current sprite
+            if self.action_list[0][0] == "enemy" and self.action_list[0][1] == "move" and self.action_list[1][0] == "player" and (self.action_list[1][1] == "fainted" or self.action_list[1][1] == "swap"):
+                self.player_display_pokemon = self.player.get_pokemon_list()[self.player.get_prev_pkm()]
+        
+
+        if len(self.action_list) >=3:
+            #check to see ff the current is move, the next is fainted if so display previous sprite instead of current sprite
+            if (self.action_list[1][0] == "player" and self.action_list[1][1] == "move" and self.action_list[2][0] == "enemy" and self.action_list[2][1] == "fainted"):
+                self.enemy_display_pokemon = self.enemy.get_pokemon_list()[self.enemy.get_prev_pkm()]
+            
+            #check to see ff the current is move, the next is fainted if so display previous sprite instead of current sprite
+            if self.action_list[1][0] == "enemy" and self.action_list[1][1] == "move" and self.action_list[2][0] == "player" and self.action_list[2][1] == "fainted":
+                self.player_display_pokemon = self.player.get_pokemon_list()[self.player.get_prev_pkm()]
         # Background image will be stored in this variable
         self.background = None
 
@@ -54,15 +77,15 @@ class Waiting(arcade.View):
         # self.player.get_curr_pkm().set_curr_hlth(1000)
 
         # Health bar
+        # TODO: need
         self.bar_sprite_list = arcade.SpriteList()
         if self.action_list[0][1] == "move" or self.action_list[0][1] == "item":
-            self.player_health_bar = HealthBar(self.player.get_curr_pkm(), self.bar_sprite_list, 550, 250, 265, False)
-            self.enemy_health_bar = HealthBar(self.enemy.get_curr_pkm(), self.bar_sprite_list, 350, 500, 515, False)
+            self.player_health_bar = HealthBar(self.player_display_pokemon, self.bar_sprite_list, 550, 250, 265, False)
+            self.enemy_health_bar = HealthBar(self.enemy_display_pokemon, self.bar_sprite_list, 350, 500, 515, False)
         elif self.action_list[0][0] == "enemy":
-            self.player_health_bar = HealthBar(self.player.get_curr_pkm(), self.bar_sprite_list, 550, 250, 265, False)
+            self.player_health_bar = HealthBar(self.player_display_pokemon, self.bar_sprite_list, 550, 250, 265, False)
         elif self.action_list[0][0] == "player":
-            self.enemy_health_bar = HealthBar(self.enemy.get_curr_pkm(), self.bar_sprite_list, 350, 500, 515, False)
-
+            self.enemy_health_bar = HealthBar(self.enemy_display_pokemon, self.bar_sprite_list, 350, 500, 515, False)
 
 
         # ANIMATIONS (future deliverables)
@@ -112,10 +135,16 @@ class Waiting(arcade.View):
         # Set up the player and enemy sprites
         # if the enemy is in the waiting state and pokemon has been swapped render previous pokemon until out of waiting state
         self.player_sprite = Sprite(
-            "../cs3050_pokemon/sprites/" + self.player.get_curr_pkm().get_name().lower() + "-back.png")
+            "../cs3050_pokemon/sprites/" + self.player_display_pokemon.get_name().lower() + "-back.png")
         self.player_sprite2 = Sprite(
-            "../cs3050_pokemon/sprites/" + self.enemy.get_curr_pkm().get_name().lower() + "-front.png",
+            "../cs3050_pokemon/sprites/" + self.enemy_display_pokemon.get_name().lower() + "-front.png",
             OPPONENT_SPRITE_SCALING)
+        
+        #check to the length of action list
+        if len(self.action_list) >= 2:
+            #check to see ff the current is move, the next is fainted if so display previous sprite instead of current sprite
+            if self.action_list[0][0] == "player" and self.action_list[0][1] == "move" and self.action_list[1][0] == "enemy" and self.action_list[1][1] == "fainted":
+                print(self.enemy.get_pokemon_list()[self.enemy.get_prev_pkm()].get_name().lower())
         '''
         if self.state.get_state().value == State.Wait.value and self.player.get_prev_pkm() != -1:
             self.player_sprite = Sprite("../cs3050_pokemon/sprites/" + self.player.get_pokemon_list()[self.player.get_prev_pkm()].get_name().lower() + "-back.png")
@@ -265,13 +294,20 @@ class Waiting(arcade.View):
             self.total_time += delta_time
             # print("waiting")
 
-        if self.action_list[0][0] == "player" and (self.action_list[0][1] == "move" or self.action_list[0][1] == "item"):
+        if self.action_list[0][0] == "player" and (self.action_list[0][1] == "move"):
             self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
-            self.enemy.get_curr_pkm().set_prev_hlth(self.enemy.get_curr_pkm().get_curr_hlth())
-        if self.action_list[0][0] == "enemy" and (self.action_list[0][1] == "move" or self.action_list[0][1] == "item"):
+            #self.enemy.get_curr_pkm().set_prev_hlth(self.enemy.get_curr_pkm().get_curr_hlth())
+            #print(self.enemy.get_curr_pkm().get_prev_hlth())
+        if self.action_list[0][0] == "enemy" and (self.action_list[0][1] == "move"):
             self.player_health_bar.health_bar_update(self.bar_sprite_list)
-            self.player.get_curr_pkm().set_prev_hlth(self.player.get_curr_pkm().get_curr_hlth())
-
+            #self.player.get_curr_pkm().set_prev_hlth(self.player.get_curr_pkm().get_curr_hlth())
+            #print(self.player.get_curr_pkm().get_prev_hlth())
+        if self.action_list[0][0] == "player" and self.action_list[0][1] == "item":
+            self.player_health_bar.health_bar_update(self.bar_sprite_list)
+            #self.player.get_curr_pkm().set_prev_hlth(self.player.get_curr_pkm().get_curr_hlth())
+        if self.action_list[0][0] == "enemy" and self.action_list[0][1] == "item":
+            self.player_health_bar.health_bar_update(self.bar_sprite_list)
+            #self.enemy.get_curr_pkm().set_prev_hlth(self.enemy.get_curr_pkm().get_curr_hlth())
         self.bar_sprite_list.update()
 
         # if total time is greater than three seconds stop waiting and go to battle state
@@ -280,7 +316,7 @@ class Waiting(arcade.View):
             self.total_time = 0.0
             swap_flag = False
             #if (self.player.get_curr_pkm().get_is_fainted() and self.player.chk_party()):
-            print(f"{self.action_list[0][0]}, {self.action_list[0][1]}")
+            #print(f"{self.action_list[0][0]}, {self.action_list[0][1]}")
             if self.action_list[0][0] == "player" and self.action_list[0][1] == "fainted":
                 print("current player pokemon fainted - swap pokemon")
                 # Render swap screen so they can switch.

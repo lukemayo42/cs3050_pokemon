@@ -224,7 +224,7 @@ class PokemonSwap(arcade.View):
                 print("returning to battle screen")
             elif(self.state.get_state().value == State.PokemonSwap.value):
                 # Force the swap and then return to fight
-                self.state.set_state(State.PokemonSwap)
+                self.state.set_state(State.Wait)
                 self.state.set_rendered(False)
         elif not state_switched:
             self.player.swap_pokemon(0, self.index)

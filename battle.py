@@ -132,10 +132,14 @@ def player_turn(player, enemy, btn_info):
             #send gui sometyhing saying it hit 
             dmg, effectiveness, crit = calc_dmg(player.get_curr_pkm(), enemy.get_curr_pkm(), move_used)
             enemy.get_curr_pkm().remove_health(dmg)
+            print(f"enemy health: {enemy.get_current_pokemon().get_curr_hlth()}")
+            enemy.get_curr_pkm().set_hlth_after_move(enemy.get_curr_pkm().get_curr_hlth())
             action_str = player.get_curr_pkm().move_to_string(move_used, True, effectiveness, crit, player)
             print(action_str)
         else:
             #send gui something saying it missed
+            print(f"enemy health: {enemy.get_current_pokemon().get_curr_hlth()}")
+            enemy.get_curr_pkm().set_hlth_after_move(enemy.get_curr_pkm().get_curr_hlth())
             action_str = player.get_curr_pkm().move_to_string(move_used, False, 10, 1, player)
             print(action_str)
         
@@ -147,6 +151,7 @@ def player_turn(player, enemy, btn_info):
         for item in player.get_item_bag():
             if btn_info[1] == item:
                 item.use_item(player.get_curr_pkm())
+                player.get_curr_pkm().set_hlth_after_item(player.get_curr_pkm().get_curr_hlth())
                 player.get_item_bag()[item] -= 1
                 action_str = item.item_to_string(item, player)
                 print(action_str)
@@ -186,9 +191,11 @@ def enemy_turn(enemy, player, force_swap):
         if roll_accuracy(move_used):
             dmg, effectiveness, crit = calc_dmg(enemy_pkm, player_pkm, move_used)
             player_pkm.remove_health(dmg)
+            player_pkm.set_hlth_after_move(player_pkm.get_curr_hlth())
             action = enemy_pkm.move_to_string(move_used, True, effectiveness, crit, enemy)
             print(action)
         else:
+            player_pkm.set_hlth_after_move(player_pkm.get_curr_hlth())
             action = enemy_pkm.move_to_string(move_used, False, 0, 1, enemy)
             print(action)
 
@@ -205,6 +212,7 @@ def enemy_turn(enemy, player, force_swap):
                     # pass
                 if num_items > 0 and use_item:
                     item.use_item(enemy_pkm)
+                    enemy_pkm.set_hlth_after_item(enemy_pkm.get_curr_hlth())
                     enemy.get_item_bag()[item] -= 1
                     action = item.item_to_string(item, enemy)
                     print(action)

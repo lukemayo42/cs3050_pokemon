@@ -122,16 +122,16 @@ class Pokemon(arcade.Window):
         if(check_render(self.state, State.Win)):
             print("won")
             self.state.set_rendered(True)
-            self.player.remove_all_pokemon()
             reset_characters([self.player, pkm_obj.gym_leader, pkm_obj.youngster_joey, pkm_obj.team_rocket_member, pkm_obj.ace_trainer, self.enemy])
+            self.player.remove_all_pokemon()
             start_view = EndBattle(self.player, self.enemy, self.state)
             start_view.setup()
             self.show_view(start_view)
         if(check_render(self.state, State.Loss)):
             print("loss")
             self.state.set_rendered(True)
-            self.player.remove_all_pokemon()
             reset_characters([self.player, pkm_obj.gym_leader, pkm_obj.youngster_joey, pkm_obj.team_rocket_member, pkm_obj.ace_trainer, self.enemy])
+            self.player.remove_all_pokemon()
             start_view = EndBattle(self.player, self.enemy, self.state)
             start_view.setup()
             self.show_view(start_view)

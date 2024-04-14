@@ -139,7 +139,7 @@ def player_turn(player, enemy, btn_info):
             print(action_str)
         else:
             #send gui something saying it missed
-            print(f"enemy health: {enemy.get_current_pokemon().get_curr_hlth()}")
+            #print(f"enemy health: {enemy.get_current_pokemon().get_curr_hlth()}")
             enemy.get_curr_pkm().set_hlth_after_move(enemy.get_curr_pkm().get_curr_hlth())
             action_str = player.get_curr_pkm().move_to_string(move_used, False, 10, 1, player)
             print(action_str)

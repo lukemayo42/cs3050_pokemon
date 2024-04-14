@@ -7,6 +7,7 @@ from arcade.gui.widgets import UITextArea, UITexturePane
 from views.health import HealthBar
 from views.health import Sprite
 from state import State
+import math
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
@@ -57,25 +58,25 @@ class Waiting(arcade.View):
         #TODO: may need to add more cases to handle items as well
         if len(self.action_list) >= 2:
             #check to see ff the current is move, the next is fainted if so display previous sprite instead of current sprite
-            if (self.action_list[0][0] == "player" and self.action_list[0][1] == "move" and self.action_list[1][0] == "enemy" and self.action_list[1][1] == "fainted"):
+            if (self.action_list[0][0] == "player" and self.action_list[0][1] == "move" and self.action_list[1][0] == "enemy" and (self.action_list[1][1] == "fainted" or self.action_list[1][1] == "swap")):
                 self.enemy_display_pokemon = self.enemy.get_pokemon_list()[self.enemy.get_prev_pkm()]
-            '''
+            
             #check to see ff the current is move, the next is fainted if so display previous sprite instead of current sprite
-            if self.action_list[0][0] == "enemy" and self.action_list[0][1] == "move" and self.action_list[1][0] == "player" and (self.action_list[1][1] == "fainted" or self.action_list[1][1] == "swap"):
+            if self.action_list[0][0] == "enemy" and self.action_list[0][1] == "move" and self.action_list[1][0] == "player" and self.action_list[1][1] == "swap":
                 self.player_display_pokemon = self.player.get_pokemon_list()[self.player.get_prev_pkm()]
                 print(f"setting display to: {self.player_display_pokemon.get_name()}")
-            '''
+            
         
         if len(self.action_list) >=3:
             #check to see ff the current is move, the next is fainted if so display previous sprite instead of current sprite
             if (self.action_list[1][0] == "player" and self.action_list[1][1] == "move" and self.action_list[2][0] == "enemy" and self.action_list[2][1] == "fainted"):
                 self.enemy_display_pokemon = self.enemy.get_pokemon_list()[self.enemy.get_prev_pkm()]
-            
+            '''
             #check to see ff the current is move, the next is fainted if so display previous sprite instead of current sprite
             if self.action_list[1][0] == "enemy" and self.action_list[1][1] == "move" and self.action_list[2][0] == "player" and self.action_list[2][1] == "fainted":
                 self.player_display_pokemon = self.player.get_pokemon_list()[self.player.get_prev_pkm()]
                 print(f"setting display to: {self.player_display_pokemon.get_name()}")
-            
+            '''
         # Background image will be stored in this variable
         self.background = None
 
@@ -117,22 +118,22 @@ class Waiting(arcade.View):
             if self.action_list[0][0] == "player" and (self.action_list[0][1] == "move"):
                 
                 #self.enemy_health_bar = HealthBar(self.enemy_display_pokemon, self.bar_sprite_list, 550, 250, 265, False, self.enemy.get_curr_pkm().get_prev_hlth())
-                self.enemy_display_pokemon.set_prev_hlth(self.enemy_display_pokemon.get_curr_hlth())
+                self.enemy_display_pokemon.set_prev_hlth(round_health(self.enemy_display_pokemon.get_curr_hlth()))
                 #self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
                 print(self.enemy.get_curr_pkm().get_prev_hlth())
             if self.action_list[0][0] == "enemy" and (self.action_list[0][1] == "move"):
                 #self.player_health_bar = HealthBar(self.player_display_pokemon, self.bar_sprite_list, 550, 250, 265, False, self.player.get_curr_pkm().get_prev_hlth())
-                self.player.get_curr_pkm().set_prev_hlth(self.player_display_pokemon.get_curr_hlth())
+                self.player.get_curr_pkm().set_prev_hlth(round_health(self.player_display_pokemon.get_curr_hlth()))
                 print(self.player_display_pokemon.get_name())
                 #self.player_health_bar.health_bar_update(self.bar_sprite_list)
                 #print(self.player.get_curr_pkm().get_prev_hlth())
             if self.action_list[0][0] == "player" and self.action_list[0][1] == "item":
                 #self.player_health_bar = HealthBar(self.player_display_pokemon, self.bar_sprite_list, 550, 250, 265, False, self.player.get_curr_pkm().get_prev_hlth())
-                self.player.get_curr_pkm().set_prev_hlth(self.player_display_pokemon.get_curr_hlth())
+                self.player.get_curr_pkm().set_prev_hlth(round_health(self.player_display_pokemon.get_curr_hlth()))
                 #self.player_health_bar.health_bar_update(self.bar_sprite_list)
             if self.action_list[0][0] == "enemy" and self.action_list[0][1] == "item":
                 #self.enemy_health_bar = HealthBar(self.enemy_display_pokemon, self.bar_sprite_list, 550, 250, 265, False, self.enemy.get_curr_pkm().get_prev_hlth())
-                self.enemy.get_curr_pkm().set_prev_hlth(self.enemy_display_pokemon.get_curr_hlth())
+                self.enemy.get_curr_pkm().set_prev_hlth(round_health(self.enemy_display_pokemon.get_curr_hlth()))
                 #self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
             self.state.set_hlth_change_flag(False)
         elif not self.state.get_hlth_change_flag():
@@ -143,9 +144,9 @@ class Waiting(arcade.View):
                 if self.state.get_num_hlth_changes() == 0:
                     print(f"setting health to: {self.enemy.get_curr_pkm().get_hlth_after_move()} ")
                     #self.enemy_health_bar = HealthBar(self.enemy_display_pokemon, self.bar_sprite_list, 550, 250, 265, False, self.enemy.get_curr_pkm().get_prev_hlth())
-                    self.enemy.get_curr_pkm().set_prev_hlth(self.enemy_display_pokemon.get_hlth_after_move())
+                    self.enemy.get_curr_pkm().set_prev_hlth(round(self.enemy_display_pokemon.get_hlth_after_move()))
                 else:
-                    self.enemy.get_curr_pkm().set_prev_hlth(self.enemy_display_pokemon.get_curr_hlth())
+                    self.enemy.get_curr_pkm().set_prev_hlth(round(self.enemy_display_pokemon.get_curr_hlth()))
                 #self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
                 #print(self.enemy.get_curr_pkm().get_prev_hlth())
             if self.action_list[0][0] == "enemy" and (self.action_list[0][1] == "move"):
@@ -153,9 +154,9 @@ class Waiting(arcade.View):
                 #self.player_health_bar = HealthBar(self.player_display_pokemon, self.bar_sprite_list, 550, 250, 265, False, self.player.get_curr_pkm().get_prev_hlth())
                 if self.state.get_num_hlth_changes() == 0:
                     print(f"setting health to: {self.player_display_pokemon.get_hlth_after_move()} ")
-                    self.player.get_curr_pkm().set_prev_hlth(self.player_display_pokemon.get_hlth_after_move())
+                    self.player.get_curr_pkm().set_prev_hlth(round_health(self.player_display_pokemon.get_hlth_after_move()))
                 else:
-                    self.player.get_curr_pkm().set_prev_hlth(self.player_display_pokemon.get_curr_hlth())
+                    self.player.get_curr_pkm().set_prev_hlth(round_health(self.player_display_pokemon.get_curr_hlth()))
                 #self.player_health_bar.health_bar_update(self.bar_sprite_list)
                 #print(self.player.get_curr_pkm().get_prev_hlth())
             if self.action_list[0][0] == "player" and self.action_list[0][1] == "item":
@@ -163,32 +164,34 @@ class Waiting(arcade.View):
                 #self.player_health_bar = HealthBar(self.player_display_pokemon, self.bar_sprite_list, 550, 250, 265, False, self.player.get_curr_pkm().get_prev_hlth())
                 if self.state.get_num_hlth_changes() == 0:
                     print(f"setting health to: {self.player.get_curr_pkm().get_hlth_after_item()} ")
-                    self.player.get_curr_pkm().set_prev_hlth(self.player_display_pokemon.get_hlth_after_item())
+                    self.player.get_curr_pkm().set_prev_hlth(round_health(self.player_display_pokemon.get_hlth_after_item()))
                 else:
-                    self.player.get_curr_pkm().set_prev_hlth(self.player_display_pokemon.get_curr_hlth())
+                    self.player.get_curr_pkm().set_prev_hlth(round_health(self.player_display_pokemon.get_curr_hlth()))
                 #self.player_health_bar.health_bar_update(self.bar_sprite_list)
             if self.action_list[0][0] == "enemy" and self.action_list[0][1] == "item":
                 #self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
                 #self.enemy_health_bar = HealthBar(self.enemy_display_pokemon, self.bar_sprite_list, 550, 250, 265, False, self.enemy.get_curr_pkm().get_prev_hlth())
                 if self.state.get_num_hlth_changes() == 0:
                     print(f"setting health to: {self.enemy.get_curr_pkm().get_hlth_after_item()}")
-                    self.enemy.get_curr_pkm().set_prev_hlth(self.enemy_display_pokemon.get_hlth_after_item())
+                    self.enemy.get_curr_pkm().set_prev_hlth(round_health(self.enemy_display_pokemon.get_hlth_after_item()))
                 else:
-                    self.enemy.get_curr_pkm().set_prev_hlth(self.enemy_display_pokemon.get_curr_hlth())
+                    self.enemy.get_curr_pkm().set_prev_hlth(round_health(self.enemy_display_pokemon.get_curr_hlth()))
                 #self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
             self.state.increment_num_hlth_changes()
             if self.state.get_num_hlth_changes() >= 2:
                 self.state.reset_num_hlth_changes()
 
         if self.action_list[0][1] == "move" or self.action_list[0][1] == "item":
-            self.player_health_bar = HealthBar(self.player_display_pokemon, self.bar_sprite_list, 550, 250, 265, False, self.player_display_pokemon.get_prev_hlth())
-            self.enemy_health_bar = HealthBar(self.enemy_display_pokemon, self.bar_sprite_list, 350, 500, 515, False, self.enemy_display_pokemon.get_prev_hlth())
+            self.player_health_bar = HealthBar(self.player_display_pokemon, self.bar_sprite_list, 550, 250, 265, False, round_health(self.player_display_pokemon.get_prev_hlth()))
+            self.enemy_health_bar = HealthBar(self.enemy_display_pokemon, self.bar_sprite_list, 350, 500, 515, False, round_health(self.enemy_display_pokemon.get_prev_hlth()))
         elif self.action_list[0][1] == "win":
-            self.player_health_bar = HealthBar(self.player_display_pokemon, self.bar_sprite_list, 550, 250, 265, False, self.player_display_pokemon.get_prev_hlth())
+            self.player_health_bar = HealthBar(self.player_display_pokemon, self.bar_sprite_list, 550, 250, 265, False, round_health(self.player_display_pokemon.get_prev_hlth()))
         elif self.action_list[0][0] == "enemy":
-            self.player_health_bar = HealthBar(self.player_display_pokemon, self.bar_sprite_list, 550, 250, 265, False, self.player_display_pokemon.get_prev_hlth())
+            self.player_health_bar = HealthBar(self.player_display_pokemon, self.bar_sprite_list, 550, 250, 265, False, round_health(self.player_display_pokemon.get_prev_hlth()))
         elif self.action_list[0][0] == "player" and self.action_list[0][1] != "win":
-            self.enemy_health_bar = HealthBar(self.enemy_display_pokemon, self.bar_sprite_list, 350, 500, 515, False, self.enemy_display_pokemon.get_prev_hlth())
+            self.enemy_health_bar = HealthBar(self.enemy_display_pokemon, self.bar_sprite_list, 350, 500, 515, False, round_health(self.enemy_display_pokemon.get_prev_hlth()))
+
+
 
         # ANIMATIONS (future deliverables)
         self.move_up = False
@@ -491,3 +494,8 @@ class Waiting(arcade.View):
             self.state.set_rendered(False)
 
 
+def round_health(health):
+    if(math.trunc(health) == 0 and health > 0):
+        return math.trunc(health) + 1
+    else:
+        return math.trunc(health)

@@ -188,14 +188,6 @@ class WorldMap(arcade.View):
             wall.center_y = 0
             self.wall_list.append(wall)
 
-        # Create a row of boxes
-        for x in range(0, 800, 64):
-            wall = arcade.Sprite(":resources:images/tiles/boxCrate_double.png",
-                                 MAP_CHARACTER_SCALING)
-            wall.center_x = x
-            wall.center_y = 450
-            self.wall_list.append(wall)
-
         # Create a column of boxes
         for y in range(0, 400, 64):
             wall = arcade.Sprite(":resources:images/tiles/boxCrate_double.png",
@@ -332,7 +324,7 @@ class WorldMap(arcade.View):
         # Draw all the sprites.
 
         arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
-        #self.wall_list.draw()
+        # self.wall_list.draw()
         self.player_list.draw()
 
     def on_key_press(self, key, modifiers):

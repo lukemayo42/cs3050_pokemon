@@ -42,7 +42,9 @@ class Pokemon(arcade.Window):
         self.enemy = enemy
         self.pokemon_bag_user = [pkm_obj.pikachu, pkm_obj.charizard, pkm_obj.bulbasaur, 
                                  pkm_obj.pidgeotto, pkm_obj.gengar, pkm_obj.butterfree, 
-                                 pkm_obj.slowbro, pkm_obj.lucario, pkm_obj.wooper]
+                                 pkm_obj.slowbro, pkm_obj.lucario, pkm_obj.wooper, pkm_obj.crobat,
+                                 pkm_obj.shiftry, pkm_obj.scyther, pkm_obj.farfetchd, pkm_obj.noctowl,
+                                 pkm_obj.dragonite, pkm_obj.gligar]
 
 
         # Background image will be stored in this variable

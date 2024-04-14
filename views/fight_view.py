@@ -7,6 +7,7 @@ from arcade.gui.widgets import UITextArea, UITexturePane
 from views.health import HealthBar
 from views.health import Sprite
 from state import State
+from state import BattleState
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
@@ -229,8 +230,8 @@ class PokemonGame(arcade.View):
         #     self.clear()
 
         # When the backend determines the enemy has been defeated, change states
-        if not self.enemy.chk_party():
-            self.state.add_new_action(["player", "win", "The enemy is out of pokemon"])
+        if not self.enemy.chk_party() and self.state.get_battle_state().value == BattleState.GymLeader.value:
+            self.state.add_new_action(["player", "fullwin", "The enemy is out of pokemon"])
             self.state.set_state(State.Wait)
             self.state.set_rendered(False)
 

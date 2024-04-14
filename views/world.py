@@ -1,6 +1,7 @@
 import arcade
 import arcade.gui
 from state import State, BattleState
+import pokemon_objects as pkm_obj
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
@@ -158,8 +159,8 @@ class WorldMap(arcade.View):
         # Set up the player
         self.player = PlayerCharacter(self.state.get_character_sprite())
 
-        self.player.center_x = 50
-        self.player.center_y = 450
+        self.player.center_x = self.state.get_player_pos_x()
+        self.player.center_y = self.state.get_player_pos_y()
         self.player.scale = 0.4
 
         self.player_list.append(self.player)
@@ -365,7 +366,9 @@ class WorldMap(arcade.View):
             self.state.set_state(State.Gym)
             self.state.set_rendered(False)
         
-        if 50 <= self.player.center_y <= 120 and 180 <= self.player.center_x <= 210:
+        if 50 <= self.player.center_y <= 120 and 180 <= self.player.center_x <= 210 and pkm_obj.youngster_joey.chk_party():
+            self.state.set_player_pos_x(self.player.center_x)
+            self.state.set_player_pos_y(self.player.center_y)
             self.state.set_state(State.Battle)
             self.state.set_rendered(False)
             self.state.set_battle_state(BattleState.Trainer1)
@@ -373,7 +376,9 @@ class WorldMap(arcade.View):
             #fight_view.setup()
             #self.window.show_view(fight_view)
 
-        if 350 <= self.player.center_y <= 380 and 420 <= self.player.center_x <= 440:
+        if 350 <= self.player.center_y <= 380 and 420 <= self.player.center_x <= 440 and pkm_obj.team_rocket_member.chk_party():
+            self.state.set_player_pos_x(self.player.center_x)
+            self.state.set_player_pos_y(self.player.center_y)
             self.state.set_state(State.Battle)
             self.state.set_rendered(False)
             self.state.set_battle_state(BattleState.Trainer2)
@@ -381,7 +386,9 @@ class WorldMap(arcade.View):
             #fight_view2.setup()
             #self.window.show_view(fight_view2)
 
-        if 380 <= self.player.center_y <= 395 and 520 <= self.player.center_x <= 550:
+        if 380 <= self.player.center_y <= 395 and 520 <= self.player.center_x <= 550 and pkm_obj.ace_trainer.chk_party():
+            self.state.set_player_pos_x(self.player.center_x)
+            self.state.set_player_pos_y(self.player.center_y)
             self.state.set_state(State.Battle)
             self.state.set_rendered(False)
             self.state.set_battle_state(BattleState.Trainer3)

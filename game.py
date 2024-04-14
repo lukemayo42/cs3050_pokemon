@@ -7,11 +7,13 @@ from arcade.gui import UIManager
 from arcade.gui.widgets import UITextArea, UIInputText, UITexturePane
 import os
 from enum import Enum
+
+import pokemon_objects
 from battle import battle
 from Character import Character
 from pokemon import pokemon
 from move import move
-import pokemon_objects
+from pokemon_objects import gym_leader, team_rocket_member, youngster_joey, ace_trainer
 import item_objects
 import math
 import time
@@ -417,6 +419,21 @@ class WorldMap(arcade.View):
 
         self.player_list.append(self.player)
 
+        joey = arcade.Sprite("sprites/youngster_joey.png", MAP_CHARACTER_SCALING-0.3)
+        joey.center_x = 200
+        joey.center_y = 70
+        self.player_list.append(joey)
+
+        ace = arcade.Sprite("sprites/ace_trainer.webp", MAP_CHARACTER_SCALING - 0.4)
+        ace.center_x = 535
+        ace.center_y = 390
+        self.player_list.append(ace)
+
+        rocket = arcade.Sprite("sprites/rocket_grunt.png", MAP_CHARACTER_SCALING - 0.05)
+        rocket.center_x = 435
+        rocket.center_y = 370
+        self.player_list.append(rocket)
+
         # -- Set up the walls
         # Create a row of boxes
         for x in range(0, 650, 64):
@@ -578,17 +595,32 @@ class WorldMap(arcade.View):
 
         # TEMPORARY SOLUTION TO START FIGHT
         global GLOBAL_STATE
-        if 150 <= self.player.center_x <= 160 and GLOBAL_STATE == State.World:
-            GLOBAL_STATE = State.Battle
-            fight_view = PokemonGame(self.pkm_player, self.pkm_enemy)
-            fight_view.setup()
-            self.window.show_view(fight_view)
 
-        if 130 <= self.player.center_x <= 140 and GLOBAL_STATE == State.World:
+        if 200 <= self.player.center_y <= 250 and 420 <= self.player.center_x <= 450:
             GLOBAL_STATE = State.Gym
             gym_view = Gym(self.pkm_player, self.pkm_enemy)
             gym_view.setup()
             self.window.show_view(gym_view)
+
+        if 50 <= self.player.center_y <= 120 and 180 <= self.player.center_x <= 210:
+            GLOBAL_STATE = State.Battle
+            fight_view = PokemonGame(self.pkm_player, youngster_joey)
+            fight_view.setup()
+            self.window.show_view(fight_view)
+
+        if 350 <= self.player.center_y <= 380 and 420 <= self.player.center_x <= 440:
+            GLOBAL_STATE = State.Battle
+            fight_view2 = PokemonGame(self.pkm_player, team_rocket_member)
+            fight_view2.setup()
+            self.window.show_view(fight_view2)
+
+        if 380 <= self.player.center_y <= 395 and 520 <= self.player.center_x <= 550:
+            GLOBAL_STATE = State.Battle
+            fight_view3 = PokemonGame(self.pkm_player, ace_trainer)
+            fight_view3.setup()
+            self.window.show_view(fight_view3)
+
+
 
 
 class Gym(arcade.View):
@@ -716,9 +748,9 @@ class Gym(arcade.View):
 
         # TEMPORARY SOLUTION TO START FIGHT
         global GLOBAL_STATE
-        if(self.player.center_x >= 130 and self.player.center_x <= 140 and GLOBAL_STATE == State.World):
+        if self.player.center_y >= 370 and 360 <= self.player.center_x <= 400:
             GLOBAL_STATE = State.Battle
-            fight_view = PokemonGame(self.pkm_player, self.pkm_enemy)
+            fight_view = PokemonGame(self.pkm_player, gym_leader)
             fight_view.setup()
             self.window.show_view(fight_view)
 

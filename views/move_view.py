@@ -41,8 +41,8 @@ class PokemonMove(arcade.View):
 
         # Health bar
         self.bar_sprite_list = arcade.SpriteList()
-        self.enemy_health_bar = HealthBar(self.enemy.get_curr_pkm(), self.bar_sprite_list, 350, 500, 515)
-        self.player_health_bar = HealthBar(self.player.get_curr_pkm(), self.bar_sprite_list, 550, 250, 265)
+        self.enemy_health_bar = HealthBar(self.enemy.get_curr_pkm(), self.bar_sprite_list, 350, 500, 515, True, self.enemy.get_curr_pkm().get_curr_hlth())
+        self.player_health_bar = HealthBar(self.player.get_curr_pkm(), self.bar_sprite_list, 550, 250, 265, True, self.player.get_curr_pkm().get_curr_hlth())
 
         # ANIMATIONS (future deliverables)
         self.move_up = False
@@ -176,33 +176,37 @@ class PokemonMove(arcade.View):
     def move_1_go(self, event):
         if(self.state.get_state().value == State.Moves.value):
             print("accessing first move")
-            self.state.set_state(State.Battle)
+            self.state.set_state(State.Wait)
             self.state.set_rendered(False)
             # GLOBAL_STATE = State.Battle
 
             btn_info = ["move", self.player.get_curr_pkm().get_moves()[0]]
-            action1, action2 = battle(self.player, self.enemy, btn_info)
+            action1, action2, action_dict = battle(self.player, self.enemy, btn_info)
+            self.state.set_action_list(action_dict)
+            
             if(self.enemy.get_curr_pkm().get_is_fainted()):
                 # Render the fight screen again with the updated sprite
-                self.state.set_state(State.Battle)
+                self.state.set_state(State.Wait)
                 self.state.set_rendered(False)
                 # fight_view = PokemonGame(self.player, self.enemy)
                 # fight_view.setup()
                 # self.window.show_view(fight_view)
             # Reflects changes in the sprite of the healthbar
-            self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
-            self.player_health_bar.health_bar_update(self.bar_sprite_list)
+            #self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
+            #self.player_health_bar.health_bar_update(self.bar_sprite_list)
             if(action1 != "win"):
                 # Render the fight screen again with the updated sprite
-                self.state.set_state(State.Battle)
+                self.state.set_state(State.Wait)
                 self.state.set_rendered(False)
+                print(f"current pokemon after button press: {self.player.get_curr_pkm().get_name()}")
+                self.state.set_curr_pkm(self.player.get_curr_pkm())
                 # fight_view = PokemonGame(self.player, self.enemy)
                 # fight_view.setup()
                 # self.window.show_view(fight_view)
             else:
                 # GLOBAL_STATE = State.Win
-                # self.state = State.Win
-                self.state.set_state(State.Win)
+                self.state.add_new_action(["player", "win", "The enemy is out of pokemon"])
+                self.state.set_state(State.Wait)
                 self.state.set_rendered(False)
 
     # This move_2_go method is called when the second move button is clicked, it passes button information
@@ -211,30 +215,33 @@ class PokemonMove(arcade.View):
     def move_2_go(self, event):
         global GLOBAL_STATE
         if(self.state.get_state().value == State.Moves.value):
-            self.state.set_state(State.Battle)
+            self.state.set_state(State.Wait)
             self.state.set_rendered(False)
             print("accessing second move")
             btn_info = ["move", self.player.get_curr_pkm().get_moves()[1]]
-            action1, action2 = battle(self.player, self.enemy, btn_info)
+            action1, action2, action_list = battle(self.player, self.enemy, btn_info)
+            self.state.set_action_list(action_list)
             if(self.enemy.get_curr_pkm().get_is_fainted()):
                 # Render the fight screen again with the updated sprite
-                self.state.set_state(State.Battle)
+                self.state.set_state(State.Wait)
                 self.state.set_rendered(False)
+                self.state.set_curr_pkm(self.player.get_curr_pkm())
                 # fight_view = PokemonGame(self.player, self.enemy)
                 # fight_view.setup()
                 # self.window.show_view(fight_view)
-            self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
-            self.player_health_bar.health_bar_update(self.bar_sprite_list)
+            #self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
+            #self.player_health_bar.health_bar_update(self.bar_sprite_list)
 
             if(action1 != "win"):
                 # Render the fight screen again with the updated sprite
-                self.state.set_state(State.Battle)
+                self.state.set_state(State.Wait)
                 self.state.set_rendered(False)
                 # fight_view = PokemonGame(self.player, self.enemy)
                 # fight_view.setup()
                 # self.window.show_view(fight_view)
             else:
-                self.state.set_state(State.Win)
+                self.state.add_new_action(["player", "win", "The enemy is out of pokemon"])
+                self.state.set_state(State.Wait)
                 self.state.set_rendered(False)
             
 
@@ -243,30 +250,33 @@ class PokemonMove(arcade.View):
     # HealthBar Sprites
     def move_3_go(self, event):
         if(self.state.get_state().value == State.Moves.value):
-            self.state.set_state(State.Battle)
+            self.state.set_state(State.Wait)
             self.state.set_rendered(False)
             print("accessing third move")
             btn_info = ["move", self.player.get_curr_pkm().get_moves()[2]]
-            action1, action2 = battle(self.player, self.enemy, btn_info)
+            action1, action2, action_list = battle(self.player, self.enemy, btn_info)
+            self.state.set_action_list(action_list)
             if(self.enemy.get_curr_pkm().get_is_fainted()):
                 # Render the fight screen again with the updated sprite
-                self.state.set_state(State.Battle)
+                self.state.set_state(State.Wait)
                 self.state.set_rendered(False)
+                self.state.set_curr_pkm(self.player.get_curr_pkm())
                 # fight_view = PokemonGame(self.player, self.enemy)
                 # fight_view.setup()
                 # self.window.show_view(fight_view)
-            self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
-            self.player_health_bar.health_bar_update(self.bar_sprite_list)
+            #self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
+            #self.player_health_bar.health_bar_update(self.bar_sprite_list)
 
             if(action1 != "win"):
                 # Render the fight screen again with the updated sprite
-                self.state.set_state(State.Battle)
+                self.state.set_state(State.Wait)
                 self.state.set_rendered(False)
                 # fight_view = PokemonGame(self.player, self.enemy)
                 # fight_view.setup()
                 # self.window.show_view(fight_view)
             else:
-                self.state.set_state(State.Win)
+                self.state.add_new_action(["player", "win", "The enemy is out of pokemon"])
+                self.state.set_state(State.Wait)
                 self.state.set_rendered(False)
 
     # This move_4_go method is called when the fourth move button is clicked, it passes button information
@@ -274,31 +284,35 @@ class PokemonMove(arcade.View):
     # HealthBar Sprites
     def move_4_go(self, event):
         if(self.state.get_state().value == State.Moves.value):
-            self.state.set_state(State.Battle)
+            self.state.set_state(State.Wait)
             self.state.set_rendered(False)
             print("accessing fourth move")
             btn_info = ["move", self.player.get_curr_pkm().get_moves()[3]]
-            action1, action2 = battle(self.player, self.enemy, btn_info)
+            action1, action2, action_list = battle(self.player, self.enemy, btn_info)
+            self.state.set_action_list(action_list)
             if(self.enemy.get_curr_pkm().get_is_fainted()):
                 # Render the fight screen again with the updated sprite
-                self.state.set_state(State.Battle)
+                self.state.set_state(State.Wait)
                 self.state.set_rendered(False)
+                self.state.set_curr_pkm(self.player.get_curr_pkm())
                 # fight_view = PokemonGame(self.player, self.enemy)
                 # fight_view.setup()
                 # self.window.show_view(fight_view)
-            self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
-            self.player_health_bar.health_bar_update(self.bar_sprite_list)
+            #self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
+            #self.player_health_bar.health_bar_update(self.bar_sprite_list)
 
             if(action1 != "win"):
                 # Render the fight screen again with the updated sprite
-                self.state.set_state(State.Battle)
+                self.state.set_state(State.Wait)
                 self.state.set_rendered(False)
                 # fight_view = PokemonGame(self.player, self.enemy)
                 # fight_view.setup()
                 # self.window.show_view(fight_view)
             else:
-                self.state.set_state(State.Win)
+                self.state.add_new_action(["player", "win", "The enemy is out of pokemon"])
+                self.state.set_state(State.Wait)
                 self.state.set_rendered(False)
+
 
     # This on_update method is called each frame of the game and calls the respective update methods of the sprites
     def on_update(self, delta_time):

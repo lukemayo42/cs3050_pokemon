@@ -1,28 +1,19 @@
-"""
-Move with a Sprite Animation
-
-Simple program to show basic sprite usage.
-
-Artwork from https://kenney.nl
-
-If Python and Arcade are installed, this example can be run from the command line with:
-python -m arcade.examples.sprite_move_animation
-"""
 import arcade
-from views.world import Gym
-from pokemon_objects import gym_leader
+from views.fight_view import PokemonGame
 from state import State
+
+import random
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 SCREEN_TITLE = "Move with a Sprite Animation Example"
 
-MAP_CHARACTER_SCALING = 0.5
+GYM_CHARACTER_SCALING = 0.5
 
 
 # How fast to move, and how fast to run the animation
 
-MAP_MOVEMENT_SPEED = 1.5
+GYM_MOVEMENT_SPEED = 1.5
 
 UPDATES_PER_FRAME = 5
 
@@ -69,7 +60,7 @@ class PlayerCharacter(arcade.Sprite):
 
         self.cur_texture = 0
 
-        self.scale = MAP_CHARACTER_SCALING
+        self.scale = GYM_CHARACTER_SCALING
 
         # Adjust the collision box. Default includes too much empty space
 
@@ -148,8 +139,7 @@ class PlayerCharacter(arcade.Sprite):
 
         self.texture = self.walk_textures[frame][direction]
 
-
-class WorldMap(arcade.View):
+class Gym(arcade.View):
     """ Main application class. """
 
     # def __init__(self, width, height, title):
@@ -179,117 +169,43 @@ class WorldMap(arcade.View):
         # Set up the player
         self.player = PlayerCharacter()
 
-        self.player.center_x = 50
-        self.player.center_y = 450
-        self.player.scale = 0.4
+        self.player.center_x = 400
+        self.player.center_y = 100
+        self.player.scale = 0.8
 
-        joey = arcade.Sprite("sprites/youngster_joey.png", MAP_CHARACTER_SCALING - 0.3)
-        joey.center_x = 200
-        joey.center_y = 70
-        self.player_list.append(joey)
+        self.player_list.append(self.player)
+
         # -- Set up the walls
         # Create a row of boxes
-        for x in range(0, 650, 64):
+        for x in range(0, 800, 64):
             wall = arcade.Sprite(":resources:images/tiles/boxCrate_double.png",
-                                 MAP_CHARACTER_SCALING)
+                                 GYM_CHARACTER_SCALING)
             wall.center_x = x
             wall.center_y = 0
             self.wall_list.append(wall)
 
         # Create a row of boxes
-        for x in range(400, 600, 64):
+        for x in range(0, 800, 64):
             wall = arcade.Sprite(":resources:images/tiles/boxCrate_double.png",
-                                 MAP_CHARACTER_SCALING)
+                                 GYM_CHARACTER_SCALING)
             wall.center_x = x
-            wall.center_y = 580
-            self.wall_list.append(wall)
-
-        # Create a row of boxes
-        for x in range(80, 350, 64):
-            wall = arcade.Sprite(":resources:images/tiles/boxCrate_double.png",
-                                 MAP_CHARACTER_SCALING)
-            wall.center_x = x
-            wall.center_y = 520
-            self.wall_list.append(wall)
-
-        # Create a row of boxes
-        for x in range(500, 580, 24):
-            wall = arcade.Sprite(":resources:images/tiles/boxCrate_double.png",
-                                 MAP_CHARACTER_SCALING-0.3)
-            wall.center_x = x
-            wall.center_y = 240
-            self.wall_list.append(wall)
-
-        # Create a row of boxes
-        for x in range(330, 520, 64):
-            wall = arcade.Sprite(":resources:images/tiles/boxCrate_double.png",
-                                 MAP_CHARACTER_SCALING + 0.2)
-            wall.center_x = x
-            wall.center_y = 120
-            self.wall_list.append(wall)
-
-        wall = arcade.Sprite(":resources:images/tiles/boxCrate_double.png",
-                             MAP_CHARACTER_SCALING + 0.7)
-        wall.center_x = 220
-        wall.center_y = 340
-        self.wall_list.append(wall)
-
-        wall = arcade.Sprite(":resources:images/tiles/boxCrate_double.png",
-                             MAP_CHARACTER_SCALING + 0.2)
-        wall.center_x = 460
-        wall.center_y = 430
-        self.wall_list.append(wall)
-
-        wall = arcade.Sprite(":resources:images/tiles/boxCrate_double.png",
-                             MAP_CHARACTER_SCALING + 0.2)
-        wall.center_x = 420
-        wall.center_y = 280
-        self.wall_list.append(wall)
-
-        wall = arcade.Sprite(":resources:images/tiles/boxCrate_double.png",
-                             MAP_CHARACTER_SCALING - 0.2)
-        wall.center_x = 305
-        wall.center_y = 185
-        self.wall_list.append(wall)
-
-        # Create a column of boxes
-        for y in range(250, 380, 34):
-            wall = arcade.Sprite(":resources:images/tiles/boxCrate_double.png",
-                                 MAP_CHARACTER_SCALING - 0.2)
-            wall.center_x = 490
-            wall.center_y = y
+            wall.center_y = 450
             self.wall_list.append(wall)
 
         # Create a column of boxes
-        for y in range(310, 430, 64):
+        for y in range(0, 400, 64):
             wall = arcade.Sprite(":resources:images/tiles/boxCrate_double.png",
-                                 MAP_CHARACTER_SCALING+0.2)
-            wall.center_x = 310
+                                 GYM_CHARACTER_SCALING)
             wall.center_y = y
+            wall.center_x = 0
             self.wall_list.append(wall)
 
         # Create a column of boxes
-        for y in range(0, 700, 64):
+        for y in range(0, 400, 64):
             wall = arcade.Sprite(":resources:images/tiles/boxCrate_double.png",
-                                 MAP_CHARACTER_SCALING)
-            wall.center_x = 50
+                                 GYM_CHARACTER_SCALING)
             wall.center_y = y
-            self.wall_list.append(wall)
-
-        # Create a column of boxes
-        for y in range(0, 700, 64):
-            wall = arcade.Sprite(":resources:images/tiles/boxCrate_double.png",
-                                 MAP_CHARACTER_SCALING)
-            wall.center_x = 600
-            wall.center_y = y
-            self.wall_list.append(wall)
-
-        # Create a column of boxes
-        for y in range(120, 220, 54):
-            wall = arcade.Sprite(":resources:images/tiles/boxCrate_double.png",
-                                 MAP_CHARACTER_SCALING+0.1)
-            wall.center_x = 185
-            wall.center_y = y
+            wall.center_x = 800
             self.wall_list.append(wall)
 
         self.physics_engine = arcade.PhysicsEngineSimple(self.player, self.wall_list)
@@ -297,7 +213,7 @@ class WorldMap(arcade.View):
         # Set the background color
 
         arcade.set_background_color(arcade.color.AMAZON)
-        self.background = arcade.load_texture("images/world_background.png")
+        self.background = arcade.load_texture("images/poke-gym.png")
 
     def on_draw(self):
         """
@@ -318,13 +234,13 @@ class WorldMap(arcade.View):
         Called whenever a key is pressed.
         """
         if key == arcade.key.UP:
-            self.player.change_y = MAP_MOVEMENT_SPEED
+            self.player.change_y = GYM_MOVEMENT_SPEED
         elif key == arcade.key.DOWN:
-            self.player.change_y = -MAP_MOVEMENT_SPEED
+            self.player.change_y = -GYM_MOVEMENT_SPEED
         elif key == arcade.key.LEFT:
-            self.player.change_x = -MAP_MOVEMENT_SPEED
+            self.player.change_x = -GYM_MOVEMENT_SPEED
         elif key == arcade.key.RIGHT:
-            self.player.change_x = MAP_MOVEMENT_SPEED
+            self.player.change_x = GYM_MOVEMENT_SPEED
 
     def on_key_release(self, key, modifiers):
         """
@@ -348,25 +264,9 @@ class WorldMap(arcade.View):
 
         # TEMPORARY SOLUTION TO START FIGHT
         global GLOBAL_STATE
+        if self.player.center_y >= 370 and 360 <= self.player.center_x <= 400:
+            GLOBAL_STATE = State.Battle
+            fight_view = PokemonGame(self.pkm_player, )
+            fight_view.setup()
+            self.window.show_view(fight_view)
 
-        if 200 <= self.player.center_y <= 250 and 420 <= self.player.center_x <= 450:
-            GLOBAL_STATE = State.Gym
-            gym_view = Gym(self.pkm_player, gym_leader)
-            gym_view.setup()
-            self.window.show_view(gym_view)
-
-        if 200 <= self.player.center_y <= 250 and 420 <= self.player.center_x <= 450:
-            GLOBAL_STATE = State.Gym
-            gym_view = Gym(self.pkm_player, gym_leader)
-            gym_view.setup()
-            self.window.show_view(gym_view)
-
-def main():
-    """ Main function """
-    window = WorldMap(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
-    window.setup()
-    arcade.run()
-
-
-if __name__ == "__main__":
-    main()

@@ -47,6 +47,9 @@ class item:
 
     # use_item function takes in the current pokemon and uses the item on the pokemon.
     def use_item(self, pokemon):
+        pokemon.add_health(self.health_recovered)
+        pokemon.set_hlth_after_item(pokemon.get_curr_hlth())
+        '''
         if self.is_revive and pokemon.get_is_fainted():
             pokemon.add_health(pokemon.get_max_hlth()/2)
             pokemon.set_is_fainted(False)
@@ -55,6 +58,6 @@ class item:
                 pokemon.set_curr_hlth(pokemon.get_max_hlth())
             else:
                 pokemon.add_health(self.health_recovered)
-
+'''
     def item_to_string(self, item_used, player):
         return f"{player.get_name()} used {item_used.get_name()} on {player.get_curr_pkm().get_name()}"

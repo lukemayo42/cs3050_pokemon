@@ -50,6 +50,9 @@ class pokemon:
             self.atk_mod = 0
             self.def_mod = 0
             self.spd_mod = 0
+            self.prev_hlth = self.get_max_hlth()
+            self.hlth_after_move = self.get_max_hlth()
+            self.hlth_after_item = self.get_max_hlth()
         #regular contructor takes 7 arguments
         elif len(args) == 7:
             self.name = args[0]
@@ -67,6 +70,9 @@ class pokemon:
             self.atk_mod = 0
             self.def_mod = 0
             self.spd_mod = 0
+            self.prev_hlth = self.get_max_hlth()
+            self.hlth_after_move = self.get_max_hlth()
+            self.hlth_after_item = self.get_max_hlth()
    
     '''
     def __init__(self, pkm):
@@ -129,7 +135,15 @@ class pokemon:
 
     def get_spd_mod(self):
         return self.spd_mod
-        
+    
+    def get_prev_hlth(self):
+        return self.prev_hlth
+    
+    def get_hlth_after_move(self):
+        return self.hlth_after_move
+    
+    def get_hlth_after_item(self):
+        return self.hlth_after_item
     #setters
     def set_curr_hlth(self, new_hlth):
         self.curr_hlth = new_hlth
@@ -158,33 +172,53 @@ class pokemon:
     def set_spd_mod(self, mod):
         self.spd_mod = mod
 
+    def set_prev_hlth(self, prev_hlth):
+        self.prev_hlth = prev_hlth
+
+    def set_hlth_after_move(self, new_hlth):
+        self.hlth_after_move = new_hlth
     
+    def set_hlth_after_item(self, new_hlth):
+        self.hlth_after_item = new_hlth
+
 
     #add health and remove health functions
     def add_health(self, hlth):
+        #self.prev_hlth = self.curr_hlth
         self.curr_hlth += hlth
         if self.curr_hlth > self.max_hlth:
             self.curr_hlth = self.max_hlth
+        
+        
 
     def remove_health(self, hlth):
+        #self.prev_hlth = self.curr_hlth
         self.curr_hlth -= hlth
         if self.curr_hlth <= 0:
             self.curr_hlth = 0
             self.is_fainted = True
+            
+        self.set_hlth_after_move(self.get_curr_hlth())
 
 
     #print functions!!!! - need to know how gui wants text info
 
-    def move_to_string(self, move_used, hit, effectiveness):
+    def move_to_string(self, move_used, hit, effectiveness, crit, character):
+        return_string = ""
         if hit:
             if effectiveness == 1:
-                return f"{self.name} used {move_used.get_name()}"
+                return_string = f"{character.get_name()}'s {self.name} used {move_used.get_name()}"
             elif effectiveness == .5 or effectiveness == .25:
-                return f"{self.name} used {move_used.get_name()}. It's not very effective."
-            elif effectiveness == 2 or 4:
-                return f"{self.name} used {move_used.get_name()}. It's Super Effective!"
+                return_string =  f"{character.get_name()}'s {self.name} used {move_used.get_name()}. It's not very effective."
+            elif effectiveness == 2 or effectiveness == 4:
+                return_string =  f"{character.get_name()}'s {self.name} used {move_used.get_name()}. It's Super Effective!"
+            elif effectiveness == 0:
+                return f"{character.get_name()}'s {self.name} used {move_used.get_name()}. It had no effect"
+            if crit == 2:
+                return_string += " It's a Critical Hit!"
+            return return_string
         else:
-            return f"{self.name}'s move missed"
+            return f"{character.get_name()}'s {self.name}'s move missed"
     
     '''
     def get_move_names(self):

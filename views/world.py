@@ -385,9 +385,9 @@ class WorldMap(arcade.View):
             self.state.set_state(State.Battle)
             self.state.set_rendered(False)
             self.state.set_battle_state(BattleState.Trainer3)
-            fight_view3 = PokemonGame(self.pkm_player, ace_trainer)
-            fight_view3.setup()
-            self.window.show_view(fight_view3)
+            #fight_view3 = PokemonGame(self.pkm_player, ace_trainer)
+            #fight_view3.setup()
+            #self.window.show_view(fight_view3)
         '''
         if 150 <= self.player.center_x <= 160 and self.state.get_state().value == State.World.value:
             self.state.set_state(State.Battle)

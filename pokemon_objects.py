@@ -149,8 +149,8 @@ enemy_item_bag = {item_objects.potion: 1, item_objects.super_potion: 1, item_obj
                       item_objects.max_potion: 1}
 youngster_joey = Character("Youngster Joey", [enemy_rattata, enemy_farfetchd, enemy_wooper], enemy_item_bag, 0, "Let's Battle")
 
-# gym_leader = Character("Gym Leader Red", [enemy_dragonite, enemy_charizard, enemy_shiftry], enemy_item_bag, 0, "Get Ready to lose!")
-gym_leader = Character("Gym Leader Red", [enemy_pikachu, enemy_bulbasaur, enemy_farfetchd], enemy_item_bag, 0, "Get Ready to lose!")
+gym_leader = Character("Gym Leader Red", [enemy_dragonite, enemy_charizard, enemy_shiftry], enemy_item_bag, 0, "Get Ready to lose!")
+# gym_leader = Character("Gym Leader Red", [enemy_pikachu, enemy_bulbasaur, enemy_farfetchd], enemy_item_bag, 0, "Get Ready to lose!")
 
 
 team_rocket_member = Character("Team Rocket Grunt", [enemy_noctowl, enemy_crobat, enemy_gligar],  enemy_item_bag, 0, "I'm gonna steal your pokemon!")

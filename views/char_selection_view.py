@@ -1,5 +1,6 @@
 import arcade
 from state import State
+from Character import Character
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
@@ -17,16 +18,17 @@ class Button:
         self.is_pressed = False
 
     def draw(self):
-        # Determine color based on button state
-        if self.is_pressed:
-            color = arcade.color.BLUE
-        elif self.is_hovered:
-            color = arcade.color.LIGHT_GRAY
-        else:
-            color = arcade.color.DARK_GRAY
+        # Set the color and border color of buttons
+        color = (50, 75, 125)
+        border_color = arcade.color.WHITE
 
         # Draw button rectangle and text
         arcade.draw_rectangle_filled(self.x, self.y, self.width, self.height, color)
+
+        # Draw button rectangle outline (border)
+        if self.is_hovered or self.is_pressed:
+            arcade.draw_rectangle_outline(self.x, self.y, self.width, self.height, border_color, border_width=3)
+
         arcade.draw_text(self.text, self.x, self.y, arcade.color.WHITE, font_size=20, anchor_x="center", anchor_y="center")
 
     def check_collision(self, x, y):
@@ -36,18 +38,19 @@ class Button:
         return False
 
 class PlayerSelectView(arcade.View):
-    def __init__(self, state):
+    def __init__(self, player, state):
         super().__init__()
         self.state = state
+        self.player = player
         self.selected_player = None
         self.buttons = []
         self.character_sprites = arcade.SpriteList()
 
         # List of player names
-        player_names = ["Billy Bob", "John Doe"]
+        player_names = ["Ace Darkstar", "Nova Blaze"]
 
         # Load Pokémon-like sprites
-        self.character_sprites.append(arcade.Sprite(":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png", scale=2, center_x=SCREEN_WIDTH / 4, center_y=SCREEN_HEIGHT / 4 * 2 + 40))
+        self.character_sprites.append(arcade.Sprite(":resources:images/animated_characters/male_person/malePerson_idle.png", scale=2, center_x=SCREEN_WIDTH / 4, center_y=SCREEN_HEIGHT / 4 * 2 + 40))
         self.character_sprites.append(arcade.Sprite(":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png", scale=2, center_x=SCREEN_WIDTH * 3 / 4, center_y=SCREEN_HEIGHT / 4 * 2 + 40))
 
         # Load and play background music
@@ -103,11 +106,13 @@ class PlayerSelectView(arcade.View):
         for btn in self.buttons:
             if btn.is_pressed and btn.check_collision(x, y):
                 self.selected_player = btn.text
-                if (self.selected_player == "Billy Bob"):
-                    self.state.set_character_sprite(":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png")
+                if (self.selected_player == "Ace Darkstar"):
+                    self.state.set_character_sprite(":resources:images/animated_characters/male_person/malePerson_idle.png")
+                    self.player.set_name("Ace Darkstar")
                 else:
                     self.state.set_character_sprite(
                         ":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png")
+                    self.player.set_name("Nova Blaze")
 
                 if (self.state.get_state().value == State.CharacterSelect.value):
                     self.state.set_state(State.Party)

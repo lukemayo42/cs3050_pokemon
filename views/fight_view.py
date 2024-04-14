@@ -204,8 +204,10 @@ class PokemonGame(arcade.View):
         """ Render the screen. """
         # print(self.player.get_curr_pkm().get_name())
         # print(self.player.chk_party())
+
         #print(self.player.get_curr_pkm().get_is_fainted())
         if (self.state.get_state().value == State.Battle.value):
+
             # Clear the screen
             self.clear()
             # Draw the background texture

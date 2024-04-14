@@ -194,7 +194,7 @@ class pokemon:
     def remove_health(self, hlth):
         #self.prev_hlth = self.curr_hlth
         self.curr_hlth -= hlth
-        if self.curr_hlth < 0:
+        if self.curr_hlth <= 0:
             self.curr_hlth = 0
             self.is_fainted = True
             

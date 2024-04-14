@@ -60,12 +60,12 @@ class Waiting(arcade.View):
             #check to see ff the current is move, the next is fainted if so display previous sprite instead of current sprite
             if (self.action_list[0][0] == "player" and self.action_list[0][1] == "move" and self.action_list[1][0] == "enemy" and (self.action_list[1][1] == "fainted" or self.action_list[1][1] == "swap")):
                 self.enemy_display_pokemon = self.enemy.get_pokemon_list()[self.enemy.get_prev_pkm()]
-            '''
+            
             #check to see ff the current is move, the next is fainted if so display previous sprite instead of current sprite
-            if self.action_list[0][0] == "enemy" and self.action_list[0][1] == "move" and self.action_list[1][0] == "player" and (self.action_list[1][1] == "fainted" or self.action_list[1][1] == "swap"):
+            if self.action_list[0][0] == "enemy" and self.action_list[0][1] == "move" and self.action_list[1][0] == "player" and self.action_list[1][1] == "swap":
                 self.player_display_pokemon = self.player.get_pokemon_list()[self.player.get_prev_pkm()]
                 print(f"setting display to: {self.player_display_pokemon.get_name()}")
-            '''
+            
         
         if len(self.action_list) >=3:
             #check to see ff the current is move, the next is fainted if so display previous sprite instead of current sprite
@@ -498,4 +498,4 @@ def round_health(health):
     if(math.trunc(health) == 0 and health > 0):
         return math.trunc(health) + 1
     else:
-        return round(health)
+        return math.trunc(health)

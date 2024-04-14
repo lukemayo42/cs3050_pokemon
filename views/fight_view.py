@@ -234,6 +234,10 @@ class PokemonGame(arcade.View):
             self.state.add_new_action(["player", "fullwin", "The enemy is out of pokemon"])
             self.state.set_state(State.Wait)
             self.state.set_rendered(False)
+        if not self.enemy.chk_party() and self.state.get_battle_state().value != BattleState.GymLeader.value:
+            self.state.add_new_action(["player", "win", "The enemy is out of pokemon"])
+            self.state.set_state(State.Wait)
+            self.state.set_rendered(False)
 
         if not self.player.chk_party():
             self.state.add_new_action(["player", "lost", "You are out of pokemon"])

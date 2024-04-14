@@ -155,7 +155,7 @@ gym_leader = Character("Gym Leader Red", [enemy_dragonite, enemy_charizard, enem
 
 team_rocket_member = Character("Team Rocket Grunt", [enemy_noctowl, enemy_crobat, enemy_gligar],  enemy_item_bag, 0, "I'm gonna steal your pokemon!")
 
-ace_trainer = Character("Ace Trainer Jane", [enemy_crobat, enemy_scyther, enemy_piloswine], enemy_item_bag, 0 ,"No way I'll lose!")
+ace_trainer = Character("Ace Trainer Jane", [enemy_crobat, enemy_scyther, enemy_mr_mime], enemy_item_bag, 0 ,"No way I'll lose!")
 
 
 

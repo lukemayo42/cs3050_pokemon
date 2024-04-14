@@ -1,6 +1,6 @@
 import arcade
 import arcade.gui
-from state import State
+from state import State, BattleState
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
@@ -354,14 +354,19 @@ class WorldMap(arcade.View):
         self.physics_engine.update()
 
         # TEMPORARY SOLUTION TO START FIGHT
+        if 200 <= self.player.center_y <= 250 and 420 <= self.player.center_x <= 450 and self.state.get_state().value == State.World.value:
+            self.state.set_state(State.Gym)
+            self.state.set_rendered(False)
+        '''
         if 150 <= self.player.center_x <= 160 and self.state.get_state().value == State.World.value:
             self.state.set_state(State.Battle)
             self.state.set_rendered(False) 
-
+        '''
         # if 130 <= self.player.center_x <= 140 and self.state.get_state().value == State.World.value:
         #     self.state.set_state(State.Gym)
         #     self.state.set_rendered(False)
 
+    # def __init__(self, width, height, title):
 class Gym(arcade.View):
     """ Main application class. """
 
@@ -391,7 +396,7 @@ class Gym(arcade.View):
         self.player_list = arcade.SpriteList()
         self.wall_list = arcade.SpriteList()
         # Set up the player
-        self.player = PlayerCharacter()
+        self.player = PlayerCharacter(self.state.get_character_sprite())
 
         self.player.center_x = 400
         self.player.center_y = 100
@@ -487,8 +492,11 @@ class Gym(arcade.View):
         self.physics_engine.update()
 
         # TEMPORARY SOLUTION TO START FIGHT
-        if(self.player.center_x >= 130 and self.player.center_x <= 140 and self.state.get_state().value == State.World.value):
+        
+        if self.player.center_y >= 370 and 360 <= self.player.center_x <= 400 and self.state.get_state().value == State.Gym.value:
             self.state.set_state(State.Battle)
+            self.state.set_battle_state(BattleState.GymLeader)
+            print(self.state.get_battle_state().value)
             self.state.set_rendered(False)
             
 

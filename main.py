@@ -16,7 +16,7 @@ from views.end_battle import EndBattle
 from views.char_selection_view import PlayerSelectView
 from views.waiting_view import Waiting
 import state
-from state import State
+from state import State, BattleState
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
@@ -38,6 +38,7 @@ class Pokemon(arcade.Window):
         super().__init__(width, height, title)
         self.state = state
         self.player = player
+
         self.enemy = enemy
         self.pokemon_bag_user = [pkm_obj.pikachu, pkm_obj.charizard, pkm_obj.bulbasaur, 
                                  pkm_obj.pidgeotto, pkm_obj.gengar, pkm_obj.butterfree, 
@@ -49,6 +50,14 @@ class Pokemon(arcade.Window):
 
     # Check states set by individual views and update rendering
     def on_update(self, delta_time):
+        if self.state.get_battle_state().value == BattleState.Trainer1.value:
+            self.enemy = pkm_obj.youngster_joey
+        elif self.state.get_battle_state().value == BattleState.Trainer2.value:
+            self.enemy = pkm_obj.team_rocket_member
+        elif self.state.get_battle_state().value == BattleState.Trainer3.value:
+            self.enemy = pkm_obj.ace_trainer
+        elif self.state.get_battle_state().value == BattleState.GymLeader.value:
+            self.enemy = pkm_obj.gym_leader
         # print(self.state.get_state())
         if(check_render(self.state, State.Start)):
             print("rendering")
@@ -139,6 +148,12 @@ class Pokemon(arcade.Window):
             print("wait")
             self.state.set_rendered(True)
             start_view = Waiting(self.player, self.enemy, self.state)
+            start_view.setup()
+            self.show_view(start_view)
+        if(check_render(self.state, State.Gym)):
+            print("Gym")
+            self.state.set_rendered(True)
+            start_view = Gym(self.player, pkm_obj.gym_leader, self.state)
             start_view.setup()
             self.show_view(start_view)
 

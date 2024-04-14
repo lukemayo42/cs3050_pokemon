@@ -22,10 +22,17 @@ class State(Enum):
     PartyStat2 = 19
     Wait = 20
 
+class BattleState(Enum):
+    Trainer1 = 1
+    Trainer2 = 2
+    Trainer3 = 3
+    GymLeader = 4
+
 # GameState object to store information about the current state of the game
 class GameState:
-    def __init__(self, state):
+    def __init__(self, state, battle_state):
         self.state = state
+        self.battle_state = battle_state
         self.rendered = False
         self.user_choice = 0
         self.character_sprite = ''
@@ -55,6 +62,8 @@ class GameState:
         return self.hlth_change_flag
     def get_curr_pkm(self):
         return self.curr_pkm
+    def get_battle_state(self):
+        return self.battle_state
     '''
     def get_previous_action(self):
         return self.previous_action
@@ -81,6 +90,8 @@ class GameState:
         self.hlth_change_flag = flag
     def set_curr_pkm(self, pkm):
         self.curr_pkm = pkm
+    def set_battle_state(self, state):
+        self.battle_state = state
 
     '''
     def set_previous_action(self, prev_action):
@@ -104,4 +115,4 @@ class GameState:
 
 
 # State object used in main
-game_state = GameState(State.Start)
+game_state = GameState(State.Start, BattleState.Trainer1)

@@ -362,7 +362,7 @@ class WorldMap(arcade.View):
         self.physics_engine.update()
 
         # TEMPORARY SOLUTION TO START FIGHT
-        if 200 <= self.player.center_y <= 250 and 420 <= self.player.center_x <= 450 and self.state.get_state().value == State.World.value:
+        if 200 <= self.player.center_y <= 250 and 420 <= self.player.center_x <= 450:
             self.state.set_state(State.Gym)
             self.state.set_rendered(False)
         

@@ -1,3 +1,5 @@
+### NO LONGER USED (game runs through main.py)
+
 import arcade
 from arcade import load_texture
 import arcade.gui
@@ -5,13 +7,16 @@ from arcade.gui import UIManager
 from arcade.gui.widgets import UITextArea, UIInputText, UITexturePane
 import os
 from enum import Enum
+
+import pokemon_objects
 from battle import battle
 from Character import Character
 from pokemon import pokemon
 from move import move
-import pokemon_objects
+from pokemon_objects import gym_leader, team_rocket_member, youngster_joey, ace_trainer
 import item_objects
 import math
+import time
 
 # Enum to hold the current state of the game, used to update the screen rendering
 class State(Enum):
@@ -23,6 +28,12 @@ class State(Enum):
     PokemonSwap = 6
     Bag = 7
     Loss = 8
+    Swap = 9
+    Item = 10
+    Stat = 11
+    Rules = 12
+    Gym = 13
+
 
 # Constants for sprite rendering and sprite movement
 SPRITE_SCALING = 3.5
@@ -55,6 +66,8 @@ RULES = ''' **IMPORTANT** In order to fight, press the right arrow key in the ma
         When you feel ready to fight, enter the gym and challenge an opponent. You can choose between 'Fight' which gives you 4 move options, 'Pokemon' to switch between the Pokemon in your party, and 'Items' which allows you to use special items like health potions.'''
 RULES_WIDTH = 400
 RULES_HEIGHT = 350
+
+GLOBAL_STATE = State.Start
 
 # Possible TODOs
 # Create subclass for the user
@@ -164,6 +177,7 @@ class PokemonStart(arcade.View):
         super().__init__()
         self.player = player
         self.enemy = enemy
+        self.state = State.Start
 
         # Background image will be stored in this variable
         self.background = None
@@ -210,16 +224,22 @@ class PokemonStart(arcade.View):
         # self.window.show_view(fight_view)
 
         ## MAP VIEW
-        map_view = WorldMap(self.player, self.enemy)
-        map_view.setup()
-        self.window.show_view(map_view)
+        global GLOBAL_STATE
+        if(GLOBAL_STATE == State.Start):
+            GLOBAL_STATE = State.World
+            map_view = WorldMap(self.player, self.enemy)
+            map_view.setup()
+            self.window.show_view(map_view)
 
     def rules_button_action(self, event):
         # TODO: Render a list of rules/how to play
-        print("Here is how to play the game")
-        rules_view = PokemonRules(self.player, self.enemy)
-        rules_view.setup()
-        self.window.show_view(rules_view)
+        global GLOBAL_STATE
+        if(GLOBAL_STATE == State.Start):
+            print("Here is how to play the game")
+            GLOBAL_STATE = State.Rules
+            rules_view = PokemonRules(self.player, self.enemy)
+            rules_view.setup()
+            self.window.show_view(rules_view)
 
     def on_draw(self):
             # Clear the screen
@@ -399,6 +419,21 @@ class WorldMap(arcade.View):
 
         self.player_list.append(self.player)
 
+        joey = arcade.Sprite("sprites/youngster_joey.png", MAP_CHARACTER_SCALING-0.3)
+        joey.center_x = 200
+        joey.center_y = 70
+        self.player_list.append(joey)
+
+        ace = arcade.Sprite("sprites/ace_trainer.webp", MAP_CHARACTER_SCALING - 0.4)
+        ace.center_x = 535
+        ace.center_y = 390
+        self.player_list.append(ace)
+
+        rocket = arcade.Sprite("sprites/rocket_grunt.png", MAP_CHARACTER_SCALING - 0.05)
+        rocket.center_x = 435
+        rocket.center_y = 370
+        self.player_list.append(rocket)
+
         # -- Set up the walls
         # Create a row of boxes
         for x in range(0, 650, 64):
@@ -559,10 +594,166 @@ class WorldMap(arcade.View):
         self.physics_engine.update()
 
         # TEMPORARY SOLUTION TO START FIGHT
-        if(self.player.center_x >= 130 and self.player.center_x <= 140):
-            fight_view = PokemonGame(self.pkm_player, self.pkm_enemy)
+        global GLOBAL_STATE
+
+        if 200 <= self.player.center_y <= 250 and 420 <= self.player.center_x <= 450:
+            GLOBAL_STATE = State.Gym
+            gym_view = Gym(self.pkm_player, self.pkm_enemy)
+            gym_view.setup()
+            self.window.show_view(gym_view)
+
+        if 50 <= self.player.center_y <= 120 and 180 <= self.player.center_x <= 210:
+            GLOBAL_STATE = State.Battle
+            fight_view = PokemonGame(self.pkm_player, youngster_joey)
             fight_view.setup()
             self.window.show_view(fight_view)
+
+        if 350 <= self.player.center_y <= 380 and 420 <= self.player.center_x <= 440:
+            GLOBAL_STATE = State.Battle
+            fight_view2 = PokemonGame(self.pkm_player, team_rocket_member)
+            fight_view2.setup()
+            self.window.show_view(fight_view2)
+
+        if 380 <= self.player.center_y <= 395 and 520 <= self.player.center_x <= 550:
+            GLOBAL_STATE = State.Battle
+            fight_view3 = PokemonGame(self.pkm_player, ace_trainer)
+            fight_view3.setup()
+            self.window.show_view(fight_view3)
+
+
+
+
+class Gym(arcade.View):
+    """ Main application class. """
+
+    # def __init__(self, width, height, title):
+    def __init__(self, player, enemy):
+        """ Set up the game and initialize the variables. """
+        # super().__init__(width, height, title)
+        super().__init__()
+        self.pkm_player = player
+        self.pkm_enemy = enemy
+
+        # Sprite lists
+        self.physics_engine = None
+        self.player_list = None
+
+        # Set up bounds on map
+        self.wall_list = None
+
+        # Set up the player
+        self.player = None
+
+        # Set up map image as background
+        self.background = None
+
+    def setup(self):
+        self.player_list = arcade.SpriteList()
+        self.wall_list = arcade.SpriteList()
+        # Set up the player
+        self.player = PlayerCharacter()
+
+        self.player.center_x = 400
+        self.player.center_y = 100
+        self.player.scale = 0.8
+
+        self.player_list.append(self.player)
+
+        # -- Set up the walls
+        # Create a row of boxes
+        for x in range(0, 800, 64):
+            wall = arcade.Sprite(":resources:images/tiles/boxCrate_double.png",
+                                 MAP_CHARACTER_SCALING)
+            wall.center_x = x
+            wall.center_y = 0
+            self.wall_list.append(wall)
+
+        # Create a row of boxes
+        for x in range(0, 800, 64):
+            wall = arcade.Sprite(":resources:images/tiles/boxCrate_double.png",
+                                 MAP_CHARACTER_SCALING)
+            wall.center_x = x
+            wall.center_y = 450
+            self.wall_list.append(wall)
+
+        # Create a column of boxes
+        for y in range(0, 400, 64):
+            wall = arcade.Sprite(":resources:images/tiles/boxCrate_double.png",
+                                 MAP_CHARACTER_SCALING)
+            wall.center_y = y
+            wall.center_x = 0
+            self.wall_list.append(wall)
+
+        # Create a column of boxes
+        for y in range(0, 400, 64):
+            wall = arcade.Sprite(":resources:images/tiles/boxCrate_double.png",
+                                 MAP_CHARACTER_SCALING)
+            wall.center_y = y
+            wall.center_x = 800
+            self.wall_list.append(wall)
+
+        self.physics_engine = arcade.PhysicsEngineSimple(self.player, self.wall_list)
+
+        # Set the background color
+
+        arcade.set_background_color(arcade.color.AMAZON)
+        self.background = arcade.load_texture("images/poke-gym.png")
+
+    def on_draw(self):
+        """
+        Render the screen.
+        """
+
+        # This command has to happen before we start drawing
+        self.clear()
+
+        # Draw all the sprites.
+
+        arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
+        #self.wall_list.draw()
+        self.player_list.draw()
+
+    def on_key_press(self, key, modifiers):
+        """
+        Called whenever a key is pressed.
+        """
+        if key == arcade.key.UP:
+            self.player.change_y = MAP_MOVEMENT_SPEED
+        elif key == arcade.key.DOWN:
+            self.player.change_y = -MAP_MOVEMENT_SPEED
+        elif key == arcade.key.LEFT:
+            self.player.change_x = -MAP_MOVEMENT_SPEED
+        elif key == arcade.key.RIGHT:
+            self.player.change_x = MAP_MOVEMENT_SPEED
+
+    def on_key_release(self, key, modifiers):
+        """
+        Called when the user releases a key.
+        """
+        if key == arcade.key.UP or key == arcade.key.DOWN:
+            self.player.change_y = 0
+        elif key == arcade.key.LEFT or key == arcade.key.RIGHT:
+            self.player.change_x = 0
+
+    def on_update(self, delta_time):
+        """ Movement and game logic """
+
+        # Move the player
+        self.player_list.update()
+
+        # Update the players animation
+
+        self.player_list.update_animation()
+        self.physics_engine.update()
+
+        # TEMPORARY SOLUTION TO START FIGHT
+        global GLOBAL_STATE
+        if self.player.center_y >= 370 and 360 <= self.player.center_x <= 400:
+            GLOBAL_STATE = State.Battle
+            fight_view = PokemonGame(self.pkm_player, gym_leader)
+            fight_view.setup()
+            self.window.show_view(fight_view)
+
 
 # This PokemonSwap view class gives the fighter a chance to switch between all of the pokemon in their party during the fight.
 class PokemonSwap(arcade.View):
@@ -571,6 +762,7 @@ class PokemonSwap(arcade.View):
         self.player = player
         self.enemy = enemy
         self.pokemon = player.get_curr_pkm()
+        self.state = State.Swap
 
         # This variable keeps track of what pokemon you are looking at
         self.index = 0
@@ -666,10 +858,13 @@ class PokemonSwap(arcade.View):
 
     def back_button_action(self, event):
         # switch screen to fighting screen
-        print("returning to fight screen")
-        fight_view = PokemonGame(self.player, self.enemy)
-        fight_view.setup()
-        self.window.show_view(fight_view)
+        global GLOBAL_STATE
+        if(GLOBAL_STATE == State.Swap):
+            print("returning to fight screen")
+            GLOBAL_STATE = State.Battle
+            fight_view = PokemonGame(self.player, self.enemy)
+            fight_view.setup()
+            self.window.show_view(fight_view)
 
     def create_pokemon_buttons(self, pos_x, pos_y, top, fainted):
         # Create the option to swap to the pokemon if it hasn't fainted and to see stats
@@ -729,24 +924,41 @@ class PokemonSwap(arcade.View):
     def generate_stats(self):
         # Get the selected pokemon and pass it to the stats view
         pokemon = self.player.get_pokemon_list()[self.index]
-        print("going to stats screen")
-        stats_view = PokemonStats(self.player, self.enemy, pokemon)
-        stats_view.setup()
-        self.window.show_view(stats_view)
+        global GLOBAL_STATE
+        if(GLOBAL_STATE == State.Swap):
+            print("going to stats screen")
+            GLOBAL_STATE = State.Stat
+            stats_view = PokemonStats(self.player, self.enemy, pokemon)
+            stats_view.setup()
+            self.window.show_view(stats_view)
 
     def swap_pokemon(self):
         # Call backend method to swap the pokemon order so that the first pokemon is back in front
         # Return to the battle screen
-        btn_info = ["swap", self.index]
-        player_action, enemy_action = battle(self.player, self.enemy, btn_info)
-        if(player_action != "fainted"):
-            print("returning to battle screen")
-            fight_view = PokemonGame(self.player, self.enemy)
-            fight_view.setup()
-            self.window.show_view(fight_view)
+        global GLOBAL_STATE
+        if(not self.player.get_curr_pkm().get_is_fainted()):
+            btn_info = ["swap", self.index]
+            player_action, enemy_action = battle(self.player, self.enemy, btn_info)
+            if(player_action != "fainted" and GLOBAL_STATE == State.Swap):
+                GLOBAL_STATE = State.Battle
+                print("returning to battle screen")
+                fight_view = PokemonGame(self.player, self.enemy)
+                fight_view.setup()
+                self.window.show_view(fight_view)
+            elif(GLOBAL_STATE == State.Swap):
+                # Force the swap and then return to fight
+                swap_view = PokemonSwap(self.player, self.enemy)
+                swap_view.setup()
+                self.window.show_view(swap_view)
+                # print("fainted")
+                # self.player.swap_pokemon(0, self.index)
+                # GLOBAL_STATE = State.Battle
+                # fight_view = PokemonGame(self.player, self.enemy)
+                # fight_view.setup()
+                # self.window.show_view(fight_view)
         else:
-            # Force the swap and then return to fight
             self.player.swap_pokemon(0, self.index)
+            GLOBAL_STATE = State.Battle
             fight_view = PokemonGame(self.player, self.enemy)
             fight_view.setup()
             self.window.show_view(fight_view)
@@ -766,6 +978,7 @@ class PokemonItem(arcade.View):
         self.player = player
         self.enemy = enemy
         self.pokemon = player.get_curr_pkm()
+        self.state = State.Item
 
         # This variable keeps track of what item you are looking at
         self.index = 0
@@ -865,10 +1078,13 @@ class PokemonItem(arcade.View):
 
     def back_button_action(self, event):
         # switch screen to fighting screen
-        print("returning to fight screen")
-        fight_view = PokemonGame(self.player, self.enemy)
-        fight_view.setup()
-        self.window.show_view(fight_view)
+        global GLOBAL_STATE
+        if(GLOBAL_STATE == State.Item):
+            print("returning to fight screen")
+            GLOBAL_STATE = State.Battle
+            fight_view = PokemonGame(self.player, self.enemy)
+            fight_view.setup()
+            self.window.show_view(fight_view)
 
     def create_item_buttons(self):
         # Create a button to use an item for each of the items in the dictionary with a value over 0
@@ -931,23 +1147,25 @@ class PokemonItem(arcade.View):
     
     def use(self):
         # Call battle function with the request to use an item
-        btn_info = []
-        if(self.index == "Potion"):
-            btn_info = ["item", item_objects.potion]
-        elif(self.index == "Super Potion"):
-            btn_info = ["item", item_objects.super_potion]
-        elif(self.index == "Hyper Potion"):
-            btn_info = ["item", item_objects.hyper_potion]
-        elif(self.index == "Max Potion"):
-            btn_info = ["item", item_objects.max_potion]
-        action1, action2 = battle(self.player, self.enemy, btn_info)
-        
-        print("using " + self.index)
-
-        # Return to the fight view
-        fight_view = PokemonGame(self.player, self.enemy)
-        fight_view.setup()
-        self.window.show_view(fight_view)
+        global GLOBAL_STATE
+        if(GLOBAL_STATE == State.Item):
+            btn_info = []
+            if(self.index == "Potion"):
+                btn_info = ["item", item_objects.potion]
+            elif(self.index == "Super Potion"):
+                btn_info = ["item", item_objects.super_potion]
+            elif(self.index == "Hyper Potion"):
+                btn_info = ["item", item_objects.hyper_potion]
+            elif(self.index == "Max Potion"):
+                btn_info = ["item", item_objects.max_potion]
+            action1, action2 = battle(self.player, self.enemy, btn_info)
+            
+            print("using " + self.index)
+            GLOBAL_STATE = State.Battle
+            # Return to the fight view
+            fight_view = PokemonGame(self.player, self.enemy)
+            fight_view.setup()
+            self.window.show_view(fight_view)
 
 
     def on_draw(self):
@@ -966,6 +1184,7 @@ class PokemonStats(arcade.View):
         self.pokemon = pokemon
         self.player = player
         self.enemy = enemy
+        self.state = State.Stat
 
         # Background image will be stored in this variable
         self.background = None
@@ -1041,10 +1260,13 @@ class PokemonStats(arcade.View):
 
     def back_button_action(self, event):
         # switch screen to swapping screen
-        print("returning to swap screen")
-        swap_view = PokemonSwap(self.player, self.enemy)
-        swap_view.setup()
-        self.window.show_view(swap_view)
+        global GLOBAL_STATE
+        if(GLOBAL_STATE == State.Stat):
+            print("returning to swap screen")
+            GLOBAL_STATE = State.Swap
+            swap_view = PokemonSwap(self.player, self.enemy)
+            swap_view.setup()
+            self.window.show_view(swap_view)
 
     def on_draw(self):
             # Clear the screen
@@ -1062,6 +1284,7 @@ class PokemonRules(arcade.View):
         super().__init__()
         self.player = player
         self.enemy = enemy
+        self.state = State.Rules
 
         # Background image will be stored in this variable
         self.background = None
@@ -1112,10 +1335,13 @@ class PokemonRules(arcade.View):
 
     def back_button_action(self, event):
         #TODO: switch screen to starting screen
-        print("returning to start screen")
-        start_view = PokemonStart(self.player, self.enemy)
-        start_view.setup()
-        self.window.show_view(start_view)
+        global GLOBAL_STATE
+        if(GLOBAL_STATE == State.Rules):
+            print("returning to start screen")
+            GLOBAL_STATE = State.Start
+            start_view = PokemonStart(self.player, self.enemy)
+            start_view.setup()
+            self.window.show_view(start_view)
 
 
     def on_draw(self):
@@ -1128,6 +1354,7 @@ class PokemonRules(arcade.View):
 # This PokemonGame class is created with two trainers passed in, the player and the enemy trainer
 # the pokemon bags of each trainer are represented on the screen with Sprites and health_bar sprites.
 class PokemonGame(arcade.View):
+
     """
     constructor for PokemonGame class 
     attributes of class
@@ -1250,22 +1477,31 @@ class PokemonGame(arcade.View):
 
     # This fight_action method is called when the fight button is clicked, it changes the state and adds new buttons
     def fight_action(self, event):
-        self.state = State.Moves
-        self.add_move_buttons()
-        self.on_draw()
+        global GLOBAL_STATE
+        if(GLOBAL_STATE == State.Battle):
+            GLOBAL_STATE = State.Moves
+            self.state = State.Moves
+            self.add_move_buttons()
+            self.on_draw()
 
     def pokemon_button_action(self, event):
-        self.state = State.PokemonSwap
-        # TODO: Call method to render sprites to swap with
-        start_view = PokemonSwap(self.player, self.enemy)
-        start_view.setup()
-        self.window.show_view(start_view)
+        global GLOBAL_STATE
+        if(GLOBAL_STATE == State.Battle):
+            self.state = State.PokemonSwap
+            GLOBAL_STATE = State.Swap
+            # TODO: Call method to render sprites to swap with
+            start_view = PokemonSwap(self.player, self.enemy)
+            start_view.setup()
+            self.window.show_view(start_view)
 
     def items_button_action(self, event):
-        self.state = State.Bag
-        bag_view = PokemonItem(self.player, self.enemy)
-        bag_view.setup()
-        self.window.show_view(bag_view)
+        global GLOBAL_STATE
+        if(GLOBAL_STATE == State.Battle):
+            self.state = State.Bag
+            GLOBAL_STATE = State.Item
+            bag_view = PokemonItem(self.player, self.enemy)
+            bag_view.setup()
+            self.window.show_view(bag_view)
 
     # This setup method is called when creating all the sprites to be stored on the screen when the window is rendered
     def setup(self):
@@ -1292,7 +1528,7 @@ class PokemonGame(arcade.View):
     # This on_draw method renders all of the buttons and sprites depending on what the current state is
     def on_draw(self):
         """ Render the screen. """
-        # print(self.enemy.get_curr_pkm().get_name())
+        #print(self.player.get_curr_pkm().get_name())
         # print(self.player.chk_party())
         if(self.state == State.Battle):
             # Clear the screen
@@ -1320,6 +1556,8 @@ class PokemonGame(arcade.View):
             self.state = State.Win
         if not self.player.chk_party():
             self.state = State.Loss
+
+        
         if(self.state == State.Moves):
             self.clear()
             # Draw the background texture
@@ -1364,14 +1602,18 @@ class PokemonGame(arcade.View):
             self.health_text.center_y = 500
             self.bar_sprite_list.append(self.health_text)
             self.bar_sprite_list.draw()
+
+        #should be handling weird swap case
         if(self.player.get_curr_pkm().get_is_fainted() and self.player.chk_party()):
+            print("current player pokemon fainted - swap pokemon")
             # Render swap screen so they can switch.
             self.state = State.PokemonSwap
+            global GLOBAL_STATE
+            GLOBAL_STATE = State.Swap
             # TODO: Call method to render sprites to swap with
             start_view = PokemonSwap(self.player, self.enemy)
             start_view.setup()
             self.window.show_view(start_view)
-
     # This add_move_buttons methis is called from the fight on_click method and adds the move buttons to
     # the vertical box storing the window's buttons. 
     def add_move_buttons(self):
@@ -1455,82 +1697,114 @@ class PokemonGame(arcade.View):
     # to the backend where the battle function is called. The results of the tern are reflected in the 
     # HealthBar Sprites
     def move_1_go(self, event):
-        print("accessing first move")
+        global GLOBAL_STATE
+        if(GLOBAL_STATE == State.Moves):
+            print("accessing first move")
+            GLOBAL_STATE = State.Battle
 
-        # TODO: Add some sort of movement for sprite when move is performed
-        self.move_1_animate()
+            # TODO: Add some sort of movement for sprite when move is performed
+            self.move_1_animate()
 
-        btn_info = ["move", self.player.get_curr_pkm().get_moves()[0]]
-        action1, action2 = battle(self.player, self.enemy, btn_info)
-        if(self.enemy.get_curr_pkm().get_is_fainted()):
-            # Render the fight screen again with the updated sprite
-            fight_view = PokemonGame(self.player, self.enemy)
-            fight_view.setup()
-            self.window.show_view(fight_view)
-        # Reflects changes in the sprite of the healthbar
-        self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
-        self.player_health_bar.health_bar_update(self.bar_sprite_list)
-        if(action1 != "win"):
-            # Render the fight screen again with the updated sprite
-            fight_view = PokemonGame(self.player, self.enemy)
-            fight_view.setup()
-            self.window.show_view(fight_view)
-        else:
-            self.state = State.Win
+            btn_info = ["move", self.player.get_curr_pkm().get_moves()[0]]
+            action1, action2 = battle(self.player, self.enemy, btn_info)
+            if(self.enemy.get_curr_pkm().get_is_fainted()):
+                # Render the fight screen again with the updated sprite
+                fight_view = PokemonGame(self.player, self.enemy)
+                fight_view.setup()
+                self.window.show_view(fight_view)
+            # Reflects changes in the sprite of the healthbar
+            self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
+            self.player_health_bar.health_bar_update(self.bar_sprite_list)
+            if(action1 != "win"):
+                # Render the fight screen again with the updated sprite
+                fight_view = PokemonGame(self.player, self.enemy)
+                fight_view.setup()
+                self.window.show_view(fight_view)
+            else:
+                GLOBAL_STATE = State.Win
+                self.state = State.Win
 
     # This move_2_go method is called when the second move button is clicked, it passes button information
     # to the backend where the battle function is called. The results of the tern are reflected in the 
     # HealthBar Sprites
     def move_2_go(self, event):
-        print("accessing second move")
-        btn_info = ["move", self.player.get_curr_pkm().get_moves()[1]]
-        action1, action2 = battle(self.player, self.enemy, btn_info)
-        self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
-        self.player_health_bar.health_bar_update(self.bar_sprite_list)
+        global GLOBAL_STATE
+        if(GLOBAL_STATE == State.Moves):
+            GLOBAL_STATE = State.Battle
+            print("accessing second move")
+            btn_info = ["move", self.player.get_curr_pkm().get_moves()[1]]
+            action1, action2 = battle(self.player, self.enemy, btn_info)
+            if(self.enemy.get_curr_pkm().get_is_fainted()):
+                # Render the fight screen again with the updated sprite
+                fight_view = PokemonGame(self.player, self.enemy)
+                fight_view.setup()
+                self.window.show_view(fight_view)
+            self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
+            self.player_health_bar.health_bar_update(self.bar_sprite_list)
 
-        if(action1 != "win"):
-            # Render the fight screen again with the updated sprite
-            fight_view = PokemonGame(self.player, self.enemy)
-            fight_view.setup()
-            self.window.show_view(fight_view)
-        else:
-            self.state = State.Win
+            if(action1 != "win"):
+                # Render the fight screen again with the updated sprite
+                fight_view = PokemonGame(self.player, self.enemy)
+                fight_view.setup()
+                self.window.show_view(fight_view)
+            else:
+                GLOBAL_STATE = State.Win
+                self.state = State.Win
+            
 
     # This move_3_go method is called when the third move button is clicked, it passes button information
     # to the backend where the battle function is called. The results of the tern are reflected in the 
     # HealthBar Sprites
     def move_3_go(self, event):
-        print("accessing third move")
-        btn_info = ["move", self.player.get_curr_pkm().get_moves()[2]]
-        action1, action2 = battle(self.player, self.enemy, btn_info)
-        self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
-        self.player_health_bar.health_bar_update(self.bar_sprite_list)
+        global GLOBAL_STATE
+        if(GLOBAL_STATE == State.Moves):
+            GLOBAL_STATE = State.Battle
+            print("accessing third move")
+            btn_info = ["move", self.player.get_curr_pkm().get_moves()[2]]
+            action1, action2 = battle(self.player, self.enemy, btn_info)
+            if(self.enemy.get_curr_pkm().get_is_fainted()):
+                # Render the fight screen again with the updated sprite
+                fight_view = PokemonGame(self.player, self.enemy)
+                fight_view.setup()
+                self.window.show_view(fight_view)
+            self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
+            self.player_health_bar.health_bar_update(self.bar_sprite_list)
 
-        if(action1 != "win"):
-            # Render the fight screen again with the updated sprite
-            fight_view = PokemonGame(self.player, self.enemy)
-            fight_view.setup()
-            self.window.show_view(fight_view)
-        else:
-            self.state = State.Win
+            if(action1 != "win"):
+                # Render the fight screen again with the updated sprite
+                fight_view = PokemonGame(self.player, self.enemy)
+                fight_view.setup()
+                self.window.show_view(fight_view)
+            else:
+                GLOBAL_STATE = State.Win
+                self.state = State.Win
 
     # This move_4_go method is called when the fourth move button is clicked, it passes button information
     # to the backend where the battle function is called. The results of the tern are reflected in the 
     # HealthBar Sprites
     def move_4_go(self, event):
-        print("accessing fourth move")
-        btn_info = ["move", self.player.get_curr_pkm().get_moves()[3]]
-        action1, action2 = battle(self.player, self.enemy, btn_info)
-        self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
-        self.player_health_bar.health_bar_update(self.bar_sprite_list)
+        global GLOBAL_STATE
+        if(GLOBAL_STATE == State.Moves):
+            GLOBAL_STATE = State.Battle
+            print("accessing fourth move")
+            btn_info = ["move", self.player.get_curr_pkm().get_moves()[3]]
+            action1, action2 = battle(self.player, self.enemy, btn_info)
+            if(self.enemy.get_curr_pkm().get_is_fainted()):
+                # Render the fight screen again with the updated sprite
+                fight_view = PokemonGame(self.player, self.enemy)
+                fight_view.setup()
+                self.window.show_view(fight_view)
+            self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
+            self.player_health_bar.health_bar_update(self.bar_sprite_list)
 
-        if(action1 != "win"):
-            # Render the fight screen again with the updated sprite
-            fight_view = PokemonGame(self.player, self.enemy)
-            fight_view.setup()
-            self.window.show_view(fight_view)
-        else:
-            self.state = State.Win
+            if(action1 != "win"):
+                # Render the fight screen again with the updated sprite
+                fight_view = PokemonGame(self.player, self.enemy)
+                fight_view.setup()
+                self.window.show_view(fight_view)
+            else:
+                GLOBAL_STATE = State.Win
+                self.state = State.Win
 
     # This move_1_animate method is for future deliverables and will animate the sprite when a turn is processed
     def move_1_animate(self):

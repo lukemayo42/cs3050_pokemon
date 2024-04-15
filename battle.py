@@ -3,6 +3,7 @@ from move import move
 from Character import Character
 import random
 import pokemon_objects
+import time
 
 #we are assuming that we are receiving the type of button that is pressed (pokemon, move, item) and the specific move/pokemon/item that is used/switched
 #please write a method in the button class which we can call that will give us a list containing the type of button that 
@@ -13,9 +14,19 @@ import pokemon_objects
 #then the item is used
 #2. if the text bubble is updated in battle, will it be rendered in the gui?, or will it have to wait for battle to be returned for the gui to be updated
 # in this case, it may be better to do the logic, waiting, and updated text bubble in the gui
-
+#ideas for text bubble waiting in battle - wait using threads in the backend
 # the battle logic/ implementation may need to change
 
+#idea for waiting and text bubbles - invisible timer - set timer to 0 and set condition to continue after x amount of time - using deltatime
+#timer = 0 //using deltatime
+# if timer > 5:
+#   continue;
+
+#wierd thing happening with charizard and bulbasuar swapping: heres what I think is happening
+#user is faster than enemy so bulbasuar gets thrown out, bulbasuar is out and battle is called, 
+#bulbasaur faints and for some reason gui then automatically renders charizard back out as pokemon
+
+#when you swap and the current pokemon faints sometimes the message doesnt get printed in the terminal
 
 #returns 2 strings, what move player did and what move the enemy did
 #TODO:implement the text bubble from gui and add as parameter
@@ -24,23 +35,30 @@ def battle(player, enemy, btn_info):
     player_pkm = player.get_curr_pkm()
     enemy_pkm = enemy.get_curr_pkm()
     force_swap = False
+    action_list = []
     #if player pokemon faster than enemy pokemon
     if chk_spd(player_pkm, enemy_pkm):
         player_action = player_turn(player, enemy, btn_info)
+        action_list.append(["player", btn_info[0], player_action]) 
         # If enemy's party is out of pokemon
         if not enemy.chk_party():
             #TODO: update text bubble to "The enemy is out of pokemon! You Win!"
             # For now we need to do this to make sure we don't reference something without assignment
             player_action = "win"
             enemy_action = "lose"
+            
         #force enemy to switch pokemon if current pokemon is fainted - takes up enemy's turn
         elif enemy.get_curr_pkm().get_is_fainted():
             force_swap = True
-            enemy_action = enemy_turn(enemy, player, force_swap)
+            action_list.append(["enemy", "fainted", f"{enemy.get_curr_pkm().get_name()} fainted"])
+            print(f"{enemy.get_curr_pkm().get_name()} fainted")
+            enemy_action, action_str = enemy_turn(enemy, player, force_swap)
+            action_list.append(["enemy", action_str, enemy_action])
             
         #enemy pokemon has not fainted
         else:
-            enemy_action = enemy_turn(enemy, player, force_swap)
+            enemy_action, action_str = enemy_turn(enemy, player, force_swap)
+            action_list.append(["enemy", action_str, enemy_action])
             if not player.chk_party():
                 #TODO: update check bubble to say player lost
                 # For now we need to do this to make sure we don't reference something without assignment
@@ -51,11 +69,16 @@ def battle(player, enemy, btn_info):
                 #TODO: updat text bubble saying that that the current pokemon ais died and prompt user to switch
                 # For now we need to do this to make sure we don't reference something without assignment
                 player_action = "fainted"
+                print(f"{player.get_curr_pkm().get_name()} fainted")
+                action_list.append(["player", "fainted", f"{player.get_curr_pkm().get_name()} fainted"])
+                #TODO: get string and action string from swap pokemon and add it to action_dict
+                #force player to switch
             # send to gui
     # if enemy pokemon faster than player pokemon
     else:
         # Take enemy action
-        enemy_action = enemy_turn(enemy, player, force_swap)
+        enemy_action, action_str = enemy_turn(enemy, player, force_swap)
+        action_list.append(["enemy", action_str, enemy_action])
         # If the player party is fully fainted
         if not player.chk_party():
             # TODO: update text bubble saying that the player has lost
@@ -68,10 +91,16 @@ def battle(player, enemy, btn_info):
             force_swap = True
             #update player_turn to handle force switch case
             player_action = "fainted"
+            print(f"{player.get_curr_pkm().get_name()} fainted")
+            action_list.append(["player", "fainted", f"{player.get_curr_pkm().get_name()} fainted"])
+            
+            #TODO: fix this case - player pokemon is faster than enemy pokemon, and the player pokemon faints, current pokemon stays the same without prompt being asked
         # The enemy turn didn't result in anything needing the player to do anything
         else:
             player_action = player_turn(player, enemy, btn_info)
             # If the player turn results in the enemy's party being all fainted
+            action_list.append(["player", btn_info[0], player_action])
+
             if not enemy.chk_party():
                 # tell gui player wins
                 player_action = "win"
@@ -80,12 +109,18 @@ def battle(player, enemy, btn_info):
             elif enemy.get_curr_pkm().get_is_fainted():
                 # force enemy to switch pokemon
                 force_swap = True
-                enemy_action = enemy_turn(enemy, player, force_swap)
+                action_list.append(["enemy", "fainted", f"{enemy.get_curr_pkm().get_name()} fainted"])
+                print(f"{enemy.get_curr_pkm().get_name()} fainted")
+                enemy_action, action_str = enemy_turn(enemy, player, force_swap)
+                action_list.append(["enemy", "swap", enemy_action])
+
             # send to gui
     # Return the first action that was done and the second action that was done
-    return player_action, enemy_action
+    return player_action, enemy_action, action_list
     
-
+#this function reads an action string and determines what the action was and adds it to the given dictionary
+def add_to_dict(action):
+    pass
 #player is a character object
 #button info is a alist containing the type of button and the move/item/pokemon switched - gives index of nrew pokemon to be put into 0 index in list
 #returns bool whether action was succesful
@@ -95,13 +130,18 @@ def player_turn(player, enemy, btn_info):
         move_used = btn_info[1]
         if roll_accuracy(move_used):
             #send gui sometyhing saying it hit 
-            dmg, effectiveness = calc_dmg(player.get_curr_pkm(), enemy.get_curr_pkm(), move_used)
+            dmg, effectiveness, crit = calc_dmg(player.get_curr_pkm(), enemy.get_curr_pkm(), move_used)
             enemy.get_curr_pkm().remove_health(dmg)
-            action_str = player.get_curr_pkm().move_to_string(move_used, True, effectiveness)
+            
+            #print(f"enemy health: {enemy.get_current_pokemon().get_curr_hlth()}")
+            enemy.get_curr_pkm().set_hlth_after_move(enemy.get_curr_pkm().get_curr_hlth())
+            action_str = player.get_curr_pkm().move_to_string(move_used, True, effectiveness, crit, player)
             print(action_str)
         else:
             #send gui something saying it missed
-            action_str = player.get_curr_pkm().move_to_string(move_used, False, 10)
+            #print(f"enemy health: {enemy.get_current_pokemon().get_curr_hlth()}")
+            enemy.get_curr_pkm().set_hlth_after_move(enemy.get_curr_pkm().get_curr_hlth())
+            action_str = player.get_curr_pkm().move_to_string(move_used, False, 10, 1, player)
             print(action_str)
         
         
@@ -112,6 +152,7 @@ def player_turn(player, enemy, btn_info):
         for item in player.get_item_bag():
             if btn_info[1] == item:
                 item.use_item(player.get_curr_pkm())
+                player.get_curr_pkm().set_hlth_after_item(player.get_curr_pkm().get_curr_hlth())
                 player.get_item_bag()[item] -= 1
                 action_str = item.item_to_string(item, player)
                 print(action_str)
@@ -126,13 +167,17 @@ def player_turn(player, enemy, btn_info):
     #if move calc damage using index 0 of both player and enemy
     #update curr health of enemy
     return action_str
-
+'''
+def set_prev_pkm(trainer):
+    if trainer.get_curr_pkm().get_is_fainted():
+        trainer.set_prev_pkm(trainer.get_curr_pkm())
+'''
 #single turn of an enemy character, takes in enemy, player, and a boolean saying whether the enemy is forced to swap or not
 def enemy_turn(enemy, player, force_swap):
     # Need to add this to make sure there is no reference without assignment, although I can't see a case where action is not assigned
     # TODO: Figure out why need this
     action = "placeholder"
-
+    # action is set to placeholder when item is used sometimes
     enemy_pkm = enemy.get_curr_pkm()
     player_pkm = player.get_curr_pkm()
     action_str = "swap"
@@ -149,12 +194,14 @@ def enemy_turn(enemy, player, force_swap):
         move_used = enemy_pkm.get_moves()[move_index]
         # If the move hits, do damage
         if roll_accuracy(move_used):
-            dmg, effectiveness = calc_dmg(enemy_pkm, player_pkm, move_used)
+            dmg, effectiveness, crit = calc_dmg(enemy_pkm, player_pkm, move_used)
             player_pkm.remove_health(dmg)
-            action = enemy_pkm.move_to_string(move_used, True, effectiveness)
+            player_pkm.set_hlth_after_move(player_pkm.get_curr_hlth())
+            action = enemy_pkm.move_to_string(move_used, True, effectiveness, crit, enemy)
             print(action)
         else:
-            action = enemy_pkm.move_to_string(move_used, False, 0)
+            player_pkm.set_hlth_after_move(player_pkm.get_curr_hlth())
+            action = enemy_pkm.move_to_string(move_used, False, 0, 1, enemy)
             print(action)
 
     #item
@@ -170,10 +217,10 @@ def enemy_turn(enemy, player, force_swap):
                     # pass
                 if num_items > 0 and use_item:
                     item.use_item(enemy_pkm)
+                    enemy_pkm.set_hlth_after_item(enemy_pkm.get_curr_hlth())
                     enemy.get_item_bag()[item] -= 1
                     action = item.item_to_string(item, enemy)
                     print(action)
-                if use_item:
                     item_is_used = True
                     break
     #switch
@@ -196,7 +243,7 @@ def enemy_turn(enemy, player, force_swap):
     
     #calc damg
     #update curr health of player
-    return action
+    return action, action_str
 
 
 # Function is enemy's "intelligence"
@@ -263,12 +310,13 @@ def calc_dmg(atk_pkm, def_pkm, move):
     #STAB * TYPE 1 EFFECTIVE * TYPE 2 EFFECTIVE at end of equation
     #random variable in damage equation
     effectiveness = chk_effective(move, def_pkm)
+    crit = roll_crit()
 
     random_variable = random.randint(217, 255) / 255
-    dmg = (((((2 * level * roll_crit())/5) + 2)* move.get_power() * (atk_pkm.get_curr_atk()/def_pkm.get_curr_def())/50) + 2 ) * random_variable * effectiveness
-    return dmg , effectiveness
+    dmg = (((((2 * level * crit)/5) + 2)* move.get_power() * (atk_pkm.get_curr_atk()/def_pkm.get_curr_def())/50) + 2 ) * random_variable * effectiveness
+    return dmg , effectiveness, crit
 
-#rerturns True if user spedd is greater then enemy otherwise False
+#rerturns True if the user will fo first , false if the enemy will go first
 def chk_spd(user_pkm, enemy_pkm):
     user_spd = user_pkm.get_curr_spd()
     enemy_spd = enemy_pkm.get_curr_spd()
@@ -336,7 +384,6 @@ def chk_effective(move_used, pkm):
         #not very effective moves
         if move_type == "water" or move_type == "electric" or move_type == "grass" or move_type == "ground":
             effectiveness/=2
-        #
         elif move_type == "fire" or move_type == "ice" or move_type == "poison" or move_type == "flying" or move_type == "bug":
             effectiveness*=2
     #defending pokemon ice
@@ -455,6 +502,10 @@ def roll_accuracy(move):
         return True
     else:
         return False
+    
+#this function waits for 5 seconds in a different thread so that the screen keeps rendering
+def thread_wait():
+    time.sleep()
 
 
 ''' for testing only

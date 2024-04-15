@@ -25,14 +25,6 @@ B_SCREEN_TITLE = "Battle"
 SPAWN_X = 50
 SPAWN_Y = 450
 
-#TODO: figure out waiting
-#right now we are wiating in the fight_view may want to make wait own view
-#idea: create different views on different waits - damage wait, fainted wait, swapping wait - some of these may be able to be in one view beacuse we just need to display text
-# send over list(or dictionary) of strings that will need to be displayed as text, would be 2 or three strings
-# based on list or dictionary determines what wait to do and we will display text, will need to wait multiple times to diplay text
-#need to do different thing on each wait, change user/enemy health, faint, swap  - make single view for waiting, take in value for text to be dislpayed and action that needs to happen, as well as the current state of the battle, and the number of actions that need to happen and the current action that the wait is on
-#what we need to do this - strings with the action text in them - strings saying what action is in each string - number of actions to be displayed - current action 
-
 # Pokemon is a python arcade window that renders the views from the directory and updates the rendering
 # as the views change the state of the game.
 class Pokemon(arcade.Window):
@@ -62,7 +54,6 @@ class Pokemon(arcade.Window):
             self.enemy = pkm_obj.ace_trainer
         elif self.state.get_battle_state().value == BattleState.GymLeader.value:
             self.enemy = pkm_obj.gym_leader
-        # print(self.state.get_state())
         if(check_render(self.state, State.Start)):
             print("rendering")
             self.state.set_rendered(True)
@@ -134,8 +125,6 @@ class Pokemon(arcade.Window):
             self.show_view(item_view)
         if(check_render(self.state, State.Win)) and self.state.get_battle_state().value != BattleState.GymLeader.value:
             print("won against trainer")
-            # reset_characters([self.player, pkm_obj.gym_leader, pkm_obj.youngster_joey, pkm_obj.team_rocket_member, pkm_obj.ace_trainer, self.enemy])
-            # self.player.remove_all_pokemon()
             self.state.set_rendered(True)
             map_view = WorldMap(self.player, self.enemy, self.state)
             map_view.setup()

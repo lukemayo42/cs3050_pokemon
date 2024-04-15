@@ -11,10 +11,12 @@ SCREEN_HEIGHT = 600
 BUTTON_WIDTH = 175
 
 # Rules page formatting
-RULES = ''' **IMPORTANT** In order to fight, press the right arrow key in the map until the battle pops up!
+RULES = ''' 
         Welcome to our Pokemon Game. 
-        When you are ready, return to the start menu and click start to enter the world of Pokemon. You will select a Pokemon party of 3 Pokemon that will fight for you. Each have different attack moves and health so choose wisely. 
-        When you feel ready to fight, enter the gym and challenge an opponent. You can choose between 'Fight' which gives you 4 move options, 'Pokemon' to switch between the Pokemon in your party, and 'Items' which allows you to use special items like health potions.'''
+        When you are ready, return to the start menu and click start to enter the world of Pokemon. You will select an avatar and then a Pokemon party of 3 Pokemon that will fight for you. Each have different attack moves and health so choose wisely. 
+        When you feel ready to fight, enter the world and challenge an opponent by walking up to them. You can choose between 'Fight' which gives you 4 move options, 'Pokemon' to switch between the Pokemon in your party, and 'Items' which allows you to use special items like health potions.
+        There are three unique trainers around the map with varying difficulty. You can fight each of them once (or skip them if you are feeling ready) and enter the gym (center building with the brown roof) to fight the gym trainer.
+        Remember, once you enter the gym you cannot leave!'''
 RULES_WIDTH = 400
 RULES_HEIGHT = 350
 

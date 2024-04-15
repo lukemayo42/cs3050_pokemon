@@ -110,4 +110,3 @@ class HealthBar(arcade.Sprite):
         self.health_text.center_y = self.pos_y
         sprite_list.append(self.health_text)
 
-    #we need a method that will update only one of the health bars at a time

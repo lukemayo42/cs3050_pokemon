@@ -106,7 +106,6 @@ class PokemonParty(arcade.View):
             sprite = Sprite("../cs3050_pokemon/sprites/" + self.pokemon_list[i].get_name().lower() + "-front.png")
             sprite.scale = SCREEN_HEIGHT / (sprite.height * 5)
             
-            # TODO: Have both x and y be based on i so it goes across the page
             # Even i will be top row, odd will be bottom row
             if(self.state.get_state().value == State.Party.value):
                 if(i % 2 == 0):
@@ -122,8 +121,6 @@ class PokemonParty(arcade.View):
                 else:
                     sprite.center_x = ((i - 8) * (SCREEN_WIDTH / 8))
                     sprite.center_y = BOTTOM_ROW
-            # sprite.center_x = SCREEN_HEIGHT
-            # sprite.center_y = i * SCREEN_WIDTH / 3.2
             self.sprite_list.append(sprite)
 
             # Add the pokemon name to the list of sprites to render
@@ -137,19 +134,16 @@ class PokemonParty(arcade.View):
             name.center_y = sprite.bottom - SCREEN_HEIGHT / 30
 
             self.sprite_list.append(name)
-            # if(self.pokemon_list[i] in self.player.get_pokemon_list()):
             if(i % 2 == 0):
                 self.create_choices(i, sprite.center_x, .85 * TOP_ROW, self.pokemon_list[i] in self.player.get_pokemon_list())
             else:
                 self.create_choices(i, sprite.center_x, 2*BOTTOM_ROW/3, self.pokemon_list[i] in self.player.get_pokemon_list())
-            # TODO: Call function to render buttons for the sprite
-            # self.create_party_options(SCREEN_HEIGHT, sprite.bottom - SCREEN_HEIGHT / 30, i == 1, self.pokemon_list[i].get_is_fainted())
-
+            
     def create_choices(self, index, pos_x, pos_y, in_party):
         button_box = arcade.gui.UIBoxLayout(vertical=False)
         stats_button = arcade.gui.UIFlatButton(text="Stats", width=BUTTON_WIDTH / 2)
         button_box.add(stats_button.with_space_around(left=10))
-        # TODO: THis is ridiculous how do I dynamically create the on click method??
+        # Problems with dynamically allocating the on_click method... (sorry)
         if(index == 0):
             stats_button.on_click = self.generate_stats_view_1
         elif(index == 1):

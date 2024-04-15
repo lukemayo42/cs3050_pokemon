@@ -36,9 +36,6 @@ class PokemonMove(arcade.View):
         # Background image will be stored in this variable
         self.background = None
 
-        #TODO: FOR TESTING PURPOSES, this overrides the original health of the pokemon object
-        #self.player.get_curr_pkm().set_curr_hlth(1000)
-
         # Health bar
         self.bar_sprite_list = arcade.SpriteList()
         self.enemy_health_bar = HealthBar(self.enemy.get_curr_pkm(), self.bar_sprite_list, 350, 500, 515, True, self.enemy.get_curr_pkm().get_curr_hlth())
@@ -188,23 +185,14 @@ class PokemonMove(arcade.View):
                 # Render the fight screen again with the updated sprite
                 self.state.set_state(State.Wait)
                 self.state.set_rendered(False)
-                # fight_view = PokemonGame(self.player, self.enemy)
-                # fight_view.setup()
-                # self.window.show_view(fight_view)
-            # Reflects changes in the sprite of the healthbar
-            #self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
-            #self.player_health_bar.health_bar_update(self.bar_sprite_list)
+                
             if(action1 != "win"):
                 # Render the fight screen again with the updated sprite
                 self.state.set_state(State.Wait)
                 self.state.set_rendered(False)
                 print(f"current pokemon after button press: {self.player.get_curr_pkm().get_name()}")
                 self.state.set_curr_pkm(self.player.get_curr_pkm())
-                # fight_view = PokemonGame(self.player, self.enemy)
-                # fight_view.setup()
-                # self.window.show_view(fight_view)
             else:
-                # GLOBAL_STATE = State.Win
                 self.state.add_new_action(["player", "win", "The enemy is out of pokemon"])
                 self.state.set_state(State.Wait)
                 self.state.set_rendered(False)
@@ -226,19 +214,10 @@ class PokemonMove(arcade.View):
                 self.state.set_state(State.Wait)
                 self.state.set_rendered(False)
                 self.state.set_curr_pkm(self.player.get_curr_pkm())
-                # fight_view = PokemonGame(self.player, self.enemy)
-                # fight_view.setup()
-                # self.window.show_view(fight_view)
-            #self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
-            #self.player_health_bar.health_bar_update(self.bar_sprite_list)
-
             if(action1 != "win"):
                 # Render the fight screen again with the updated sprite
                 self.state.set_state(State.Wait)
                 self.state.set_rendered(False)
-                # fight_view = PokemonGame(self.player, self.enemy)
-                # fight_view.setup()
-                # self.window.show_view(fight_view)
             else:
                 self.state.add_new_action(["player", "win", "The enemy is out of pokemon"])
                 self.state.set_state(State.Wait)
@@ -261,19 +240,11 @@ class PokemonMove(arcade.View):
                 self.state.set_state(State.Wait)
                 self.state.set_rendered(False)
                 self.state.set_curr_pkm(self.player.get_curr_pkm())
-                # fight_view = PokemonGame(self.player, self.enemy)
-                # fight_view.setup()
-                # self.window.show_view(fight_view)
-            #self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
-            #self.player_health_bar.health_bar_update(self.bar_sprite_list)
 
             if(action1 != "win"):
                 # Render the fight screen again with the updated sprite
                 self.state.set_state(State.Wait)
                 self.state.set_rendered(False)
-                # fight_view = PokemonGame(self.player, self.enemy)
-                # fight_view.setup()
-                # self.window.show_view(fight_view)
             else:
                 self.state.add_new_action(["player", "win", "The enemy is out of pokemon"])
                 self.state.set_state(State.Wait)
@@ -295,19 +266,12 @@ class PokemonMove(arcade.View):
                 self.state.set_state(State.Wait)
                 self.state.set_rendered(False)
                 self.state.set_curr_pkm(self.player.get_curr_pkm())
-                # fight_view = PokemonGame(self.player, self.enemy)
-                # fight_view.setup()
-                # self.window.show_view(fight_view)
-            #self.enemy_health_bar.health_bar_update(self.bar_sprite_list)
-            #self.player_health_bar.health_bar_update(self.bar_sprite_list)
 
             if(action1 != "win"):
                 # Render the fight screen again with the updated sprite
                 self.state.set_state(State.Wait)
                 self.state.set_rendered(False)
-                # fight_view = PokemonGame(self.player, self.enemy)
-                # fight_view.setup()
-                # self.window.show_view(fight_view)
+
             else:
                 self.state.add_new_action(["player", "win", "The enemy is out of pokemon"])
                 self.state.set_state(State.Wait)

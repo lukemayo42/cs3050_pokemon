@@ -149,13 +149,6 @@ class PokemonSwap(arcade.View):
                 swap_button = arcade.gui.UIFlatButton(text="Swap", width=BUTTON_WIDTH / 2)
                 self.button_box_1.add(swap_button.with_space_around(left=20))
                 swap_button.on_click = self.swap_action_1
-            # Create widgets to hold the button_box_1 widgets, that will center the buttons
-            # self.manager.add(
-            #     arcade.gui.UIAnchorWidget(align_x=pos_x / 3, align_y=pos_y,
-            #         anchor_x="center_x",
-            #         anchor_y="center_y",
-            #         child=self.button_box_1)
-            # )
             self.manager.add(
                 arcade.gui.UIAnchorWidget(align_x=pos_x / 3, align_y=(pos_y - (SCREEN_HEIGHT / 20)) - SCREEN_HEIGHT / 2,
                     anchor_x="center_x",

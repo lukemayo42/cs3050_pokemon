@@ -47,9 +47,6 @@ class PokemonGame(arcade.View):
         # Background image will be stored in this variable
         self.background = None
 
-        # TODO: FOR TESTING PURPOSES, this overrides the original health of the pokemon object
-        # self.player.get_curr_pkm().set_curr_hlth(1000)
-
         # Health bar
         self.bar_sprite_list = arcade.SpriteList()
         self.enemy_health_bar = HealthBar(self.enemy.get_curr_pkm(), self.bar_sprite_list, 350, 500, 515, True, self.enemy.get_curr_pkm().get_curr_hlth())
@@ -153,28 +150,18 @@ class PokemonGame(arcade.View):
         if (self.state.get_state().value == State.Battle.value):
             self.state.set_state(State.Moves)
             self.state.set_rendered(False)
-            # self.state = State.Moves
-            # self.add_move_buttons()
-            # self.on_draw()
 
     def pokemon_button_action(self, event):
         if (self.state.get_state().value == State.Battle.value):
             self.state.set_state(State.PokemonSwap)
             self.state.set_rendered(False)
-            # TODO: Call method to render sprites to swap with
-            # start_view = PokemonSwap(self.player, self.enemy)
-            # start_view.setup()
-            # self.window.show_view(start_view)
-
+            
     def items_button_action(self, event):
         if (self.state.get_state().value == State.Battle.value):
             self.state.set_state(State.Item)
             self.state.set_rendered(False)
 
-            # bag_view = PokemonItem(self.player, self.enemy)
-            # bag_view.setup()
-            # self.window.show_view(bag_view)
-
+            
     # This setup method is called when creating all the sprites to be stored on the screen when the window is rendered
     def setup(self):
         """ Set up the game and initialize the variables. """
@@ -203,10 +190,6 @@ class PokemonGame(arcade.View):
     # This on_draw method renders all of the buttons and sprites depending on what the current state is
     def on_draw(self):
         """ Render the screen. """
-        # print(self.player.get_curr_pkm().get_name())
-        # print(self.player.chk_party())
-
-        #print(self.player.get_curr_pkm().get_is_fainted())
         if (self.state.get_state().value == State.Battle.value):
 
             # Clear the screen
@@ -221,13 +204,6 @@ class PokemonGame(arcade.View):
             self.player_list.draw()
             self.enemy_list.draw()
             self.bar_sprite_list.draw()
-        # if(self.state == State.PokemonSwap):
-        #     self.clear()
-        #     # Iterate through pokemon in party and display the sprites on screen
-        #     # If you click on a sprite, it will swap and return to the battle screen
-        #     # Give an option to check summary stats or click swap (called from pokemon_button onclick function)
-        # if(self.state == State.Bag):
-        #     self.clear()
 
         # When the backend determines the enemy has been defeated, change states
         if not self.enemy.chk_party() and self.state.get_battle_state().value == BattleState.GymLeader.value:
@@ -244,23 +220,10 @@ class PokemonGame(arcade.View):
             self.state.set_state(State.Wait)
             self.state.set_rendered(False)
 
-        # if(self.state == State.Moves):
-        #     self.clear()
-        #     # Draw the background texture
-        #     arcade.draw_lrwh_rectangle_textured(0, 150,
-        #                                     SCREEN_WIDTH, SCREEN_HEIGHT,
-        #                                     self.background)
-        #     # Draw the sprites
-        #     self.manager.draw()
-        #     self.player_list.draw()
-        #     self.enemy_list.draw()
-
-        #     self.bar_sprite_list.draw()
         if (self.state.get_state().value == State.Win.value):
             self.clear()
             self.bar_sprite_list.clear()
 
-            # TODO: Set up a winning screen for later deliverables
             arcade.set_background_color(arcade.color.RED)
             self.health_text = arcade.create_text_sprite(
                 start_x=350,
@@ -276,7 +239,6 @@ class PokemonGame(arcade.View):
             self.clear()
             self.bar_sprite_list.clear()
 
-            # TODO: Set up a winning screen for later deliverables
             arcade.set_background_color(arcade.color.BLUE)
             self.health_text = arcade.create_text_sprite(
                 start_x=350,
@@ -289,98 +251,7 @@ class PokemonGame(arcade.View):
             self.bar_sprite_list.append(self.health_text)
             self.bar_sprite_list.draw()
 
-        # should be handling weird swap case
-        '''
-        if (self.player.get_curr_pkm().get_is_fainted() and self.player.chk_party()):
-            print("current player pokemon fainted - swap pokemon")
-            # Render swap screen so they can switch.
-            self.state.set_state(State.PokemonSwap)
-            self.state.set_rendered(False)
-'''
-            # TODO: Call method to render sprites to swap with
-            # start_view = PokemonSwap(self.player, self.enemy)
-            # start_view.setup()
-            # self.window.show_view(start_view)
-
-    # # This add_move_buttons methis is called from the fight on_click method and adds the move buttons to
-    # # the vertical box storing the window's buttons.
-    # def add_move_buttons(self):
-    #     self.v_box.clear()
-    #     self.v_box_2.clear()
-    #     # Create two vertical BoxGroup widges to align buttons
-    #     self.v_box = arcade.gui.UIBoxLayout()
-    #     self.v_box_2 = arcade.gui.UIBoxLayout()
-
-    #     # Create the buttons
-    #     move_1 = arcade.gui.UIFlatButton(text=self.player.get_curr_pkm().moves[0].name, width=BUTTON_WIDTH)
-    #     self.v_box.add(move_1.with_space_around(bottom=20))
-    #     move_1.on_click = self.move_1_go
-
-    #     move_2 = arcade.gui.UIFlatButton(text=self.player.get_curr_pkm().moves[1].name, width=BUTTON_WIDTH)
-    #     self.v_box.add(move_2.with_space_around(bottom=20))
-    #     move_2.on_click = self.move_2_go
-
-    #     move_3 = arcade.gui.UIFlatButton(text=self.player.get_curr_pkm().moves[2].name, width=BUTTON_WIDTH)
-    #     self.v_box_2.add(move_3.with_space_around(bottom=20))
-    #     move_3.on_click = self.move_3_go
-
-    #     move_4 = arcade.gui.UIFlatButton(text=self.player.get_curr_pkm().moves[3].name, width=BUTTON_WIDTH)
-    #     self.v_box_2.add(move_4.with_space_around(bottom=20))
-    #     move_4.on_click = self.move_4_go
-
-    #     # Create widgets to hold the v_box and v_box_2 widgets, that will center the buttons
-    #     self.manager.add(
-    #         arcade.gui.UIAnchorWidget(align_x=V_BOX_X, align_y= V_BOX_Y,
-    #             anchor_x="center_x",
-    #             anchor_y="center_y",
-    #             child=self.v_box)
-    #     )
-    #     self.manager.add(
-    #         arcade.gui.UIAnchorWidget(align_x=V_BOX_2_X, align_y= V_BOX_Y,
-    #             anchor_x="center_x",
-    #             anchor_y="center_y",
-    #             child=self.v_box_2)
-    #     )
-
-    # # This add_move_buttons methis is called from the fight on_click method and adds the move buttons to
-    # # the vertical box storing the window's buttons.
-    # def remove_move_buttons(self):
-    #     # Remove move button widgets
-    #     self.v_box.clear()
-    #     self.v_box_2.clear()
-    #     # Create two vertical BoxGroup widges to align buttons
-    #     self.v_box = arcade.gui.UIBoxLayout()
-    #     self.v_box_2 = arcade.gui.UIBoxLayout()
-
-    #     # Fight button to access the moves
-    #     fight = arcade.gui.UIFlatButton(text="Fight", width=BUTTON_WIDTH)
-    #     self.v_box.add(fight.with_space_around(bottom=20))
-    #     fight.on_click = self.fight_action
-
-    #     # Look at your pokemon and swap
-    #     pokemon_button = arcade.gui.UIFlatButton(text="Pokemon", width=BUTTON_WIDTH)
-    #     self.v_box.add(pokemon_button.with_space_around(bottom=20))
-    #     pokemon_button.on_click = self.pokemon_button_action
-
-    #     # Bag button to access items
-    #     items_button = arcade.gui.UIFlatButton(text="Items", width=BUTTON_WIDTH)
-    #     self.v_box_2.add(items_button.with_space_around(bottom=20))
-    #     items_button.on_click = self.items_button_action
-
-    #     # Create widgets to hold the v_box and v_box_2 widgets, that will center the buttons
-    #     self.manager.add(
-    #         arcade.gui.UIAnchorWidget(align_x=V_BOX_X, align_y= V_BOX_Y,
-    #             anchor_x="center_x",
-    #             anchor_y="center_y",
-    #             child=self.v_box)
-    #     )
-    #     self.manager.add(
-    #         arcade.gui.UIAnchorWidget(align_x=V_BOX_2_X, align_y= V_BOX_2_Y,
-    #             anchor_x="center_x",
-    #             anchor_y="center_y",
-    #             child=self.v_box_2)
-    #     )
-
+        
     # This on_update method is called each frame of the game and calls the respective update methods of the sprites
     def on_update(self, delta_time):
         """ Movement and game logic """

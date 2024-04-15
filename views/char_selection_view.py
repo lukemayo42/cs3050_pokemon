@@ -53,10 +53,6 @@ class PlayerSelectView(arcade.View):
         self.character_sprites.append(arcade.Sprite(":resources:images/animated_characters/male_person/malePerson_idle.png", scale=2, center_x=SCREEN_WIDTH / 4, center_y=SCREEN_HEIGHT / 4 * 2 + 40))
         self.character_sprites.append(arcade.Sprite(":resources:images/animated_characters/female_adventurer/femaleAdventurer_idle.png", scale=2, center_x=SCREEN_WIDTH * 3 / 4, center_y=SCREEN_HEIGHT / 4 * 2 + 40))
 
-        # Load and play background music
-        # self.background_music = arcade.load_sound(":resources:music/funkyrobot.mp3")
-        # self.background_music_player = None
-
         # Create buttons below players
         for i in range(2):
             button = Button(player_names[i], SCREEN_WIDTH / 4 + i * SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4 - BUTTON_HEIGHT / 2 - 10, BUTTON_WIDTH, BUTTON_HEIGHT)
@@ -65,9 +61,7 @@ class PlayerSelectView(arcade.View):
     def on_show(self):
         # Set background color and start background music
         arcade.set_background_color(arcade.color.LIGHT_BLUE)
-        # if self.background_music_player is None:
-        #     self.background_music_player = arcade.play_sound(self.background_music, volume=0.5)
-
+       
     def on_draw(self):
         # Draw everything on the screen
         arcade.start_render()
@@ -118,7 +112,5 @@ class PlayerSelectView(arcade.View):
                     self.state.set_state(State.Party)
                     self.state.set_rendered(False)
 
-                # if self.background_music_player is not None:
-                #     arcade.stop_sound(self.background_music_player)
                 break
             btn.is_pressed = False

@@ -79,26 +79,16 @@ class PokemonStart(arcade.View):
         self.background_sky = arcade.load_texture("../cs3050_pokemon/images/screen_background.png")
 
     def start_button_action(self, event):
-        #TODO: switch screen to choosing pokemon party
         print("starting")
-        # fight_view = PokemonGame(self.player, self.enemy)
-        # fight_view.setup()
-        # self.window.show_view(fight_view)
-
         ## MAP VIEW
-        # global GLOBAL_STATE
         if(self.state.get_state().value == State.Start.value):
-            # self.state = State.World
             self.state.set_state(State.CharacterSelect)
             self.state.set_rendered(False)
         
 
     def rules_button_action(self, event):
-        # TODO: Render a list of rules/how to play
-        # global GLOBAL_STATE
         if(self.state.get_state().value == State.Start.value):
             print("Here is how to play the game")
-            # self.state = State.Rules
             self.state.set_state(State.Rules)
             rules_view = PokemonRules(self.player, self.enemy, self.state)
             rules_view.setup()
@@ -169,13 +159,10 @@ class PokemonRules(arcade.View):
         )
 
     def setup(self):
-        # TODO: create any sprites needed for rules page
         self.background_sky = arcade.load_texture("../cs3050_pokemon/images/screen_background.png")
         print("setting up rules")
 
     def back_button_action(self, event):
-        #TODO: switch screen to starting screen
-        # global GLOBAL_STATE
         if(self.state.get_state().value == State.Rules.value):
             print("returning to start screen")
             self.state.set_state(State.Start)
